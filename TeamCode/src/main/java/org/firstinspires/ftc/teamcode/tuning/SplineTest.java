@@ -16,24 +16,22 @@ public final class SplineTest extends LinearOpMode {
             MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
             waitForStart();
-
+            Vector2d strafeVector = new Vector2d(24, 12);
             Actions.runBlocking(
-                drive.actionBuilder(beginPose).turn(90)
-                        .splineTo(new Vector2d(30, 30), Math.PI / 2)
-                        .splineTo(new Vector2d(0, 60), Math.PI)
+                //drive.actionBuilder(beginPose).splineTo(new Vector2d(24, 24), Math.PI / 2)
+                    drive.actionBuilder(beginPose).setTangent(0)
+                            //.splineToConstantHeading(new Vector2d(24, 24),  Math.toRadians(180))
+                          //  .splineToConstantHeading(new Vector2d())
+                            .strafeTo(new Vector2d(24, 24))
+                            .strafeTo(new Vector2d(48, 24))
+                            .strafeTo(new Vector2d(72, 0))
                         .build());
-        } else if (TuningOpModes.DRIVE_CLASS.equals(TankDrive.class)) {
-            TankDrive drive = new TankDrive(hardwareMap, beginPose);
 
-            waitForStart();
+            drive.updatePoseEstimate();
+            Pose2d position = drive.localizer.getPose();
 
-            Actions.runBlocking(
-                    drive.actionBuilder(beginPose)
-                            .splineTo(new Vector2d(30, 30), Math.PI / 2)
-                            .splineTo(new Vector2d(0, 60), Math.PI)
-                            .build());
-        } else {
-            throw new RuntimeException();
+            telemetry.addLine(position.toString());
+            sleep(5000);
         }
     }
 }
