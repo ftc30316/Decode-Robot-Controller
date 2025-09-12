@@ -2,29 +2,23 @@ package org.firstinspires.ftc.teamcode.tuning;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.TankDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-public class LocalizationTest extends LinearOpMode {
+public class AprilTagTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        //Servo servo1 = hardwareMap.get(Servo.class, "servo1");
 
         AprilTagProcessor myAprilTagProcessor;
         // Create the AprilTag processor and assign it to a variable.
@@ -57,15 +51,15 @@ public class LocalizationTest extends LinearOpMode {
                 AprilTagDetection myAprilTagDetection;         // current detection in for() loop
                 int myAprilTagIdCode;                           // ID code of current detection, in for() loop
 
-// Get a list of AprilTag detections.
+                // Get a list of AprilTag detections.
                 myAprilTagDetections = myAprilTagProcessor.getDetections();
 
-// Cycle through through the list and process each AprilTag.
+                // Cycle through through the list and process each AprilTag.
 
                 telemetry.addLine(String.valueOf(myAprilTagDetections.size()));
 
-               for(int i = 0; i < myAprilTagDetections.size(); i++) {
-                   myAprilTagDetection = myAprilTagDetections.get(i);
+                for (int i = 0; i < myAprilTagDetections.size(); i++) {
+                    myAprilTagDetection = myAprilTagDetections.get(i);
 
                     myAprilTagIdCode = myAprilTagDetection.id;
 
@@ -76,44 +70,9 @@ public class LocalizationTest extends LinearOpMode {
                 }
 
                 telemetry.update();
-//LLResult result = limelight.getLatestResult();
-//if (result != null && result.isValid()) {
-//    double tx = result.getTx(); // How far left or right the target is (degrees)
-//    double ty = result.getTy(); // How far up or down the target is (degrees)
-//    double ta = result.getTa(); // How big the target looks (0%-100% of the image)
-//
-//    telemetry.addData("Target X", tx);
-//    telemetry.addData("Target Y", ty);
-//    telemetry.addData("Target Area", ta);
-//} else {
-//    telemetry.addData("Limelight", "No Targets");
-//}
-//                //gives random error between -1 and 1; supposed to simulate limelight
-//                double error = (Math.random() * 2) - 1.0;
-//                //moves servo to counteract error
-//                servo1.setPosition(error * -1);
-//
-//                Pose2d pose = drive.localizer.getPose();
-//
-//                //when goal is positioned at 60,60, we get relative distance for x and y values
-//                double xDistanceFromGoal = Math.abs(pose.position.x -  60);
-//                double yDistanceFromGoal = Math.abs(pose.position.y -  60);
-//
-//                telemetry.addData("x", pose.position.x);
-//                telemetry.addData("y", pose.position.y);
-//                telemetry.addData("heading (deg)", Math.toDegrees(pose.heading.toDouble()));
-//                telemetry.addData("distance from goal:" , String.valueOf(xDistanceFromGoal) + "," + String.valueOf(yDistanceFromGoal));
-//                telemetry.addData("error: " , String.valueOf(error));
-//                telemetry.update();
-//                sleep(1000);
 
-//                TelemetryPacket packet = new TelemetryPacket();
-//                packet.fieldOverlay().setStroke("#3F51B5");
-//                Drawing.drawRobot(packet.fieldOverlay(), pose);
-//                FtcDashboard.getInstance().sendTelemetryPacket(packet);
             }
-
-        } else {
+        } else{
             throw new RuntimeException();
         }
     }
