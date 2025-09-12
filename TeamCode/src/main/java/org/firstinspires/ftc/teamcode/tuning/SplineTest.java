@@ -37,6 +37,8 @@ public final class SplineTest extends LinearOpMode {
 
             viperSlide.setPower(1.0);
 
+            Pose2d distanceFromGoal = new Pose2d(0, 0, 0);
+
         while (opModeIsActive()){
             drive.updatePoseEstimate();
             //Pose2d pose = drive.localizer.setPose();
@@ -44,6 +46,7 @@ public final class SplineTest extends LinearOpMode {
             telemetry.addData("x: in" , "%.2f" , pose.position.x);
             telemetry.addData("y: in" , "%.2f" , pose.position.y);
             telemetry.addData("heading: deg" , "%.2f" , pose.heading.real);
+            telemetry.addData("distance from goal", pose.position.x - 60);
             telemetry.update();
             sleep(50);
         }
