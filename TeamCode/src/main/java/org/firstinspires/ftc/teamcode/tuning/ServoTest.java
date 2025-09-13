@@ -7,7 +7,9 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -18,6 +20,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
+
+@TeleOp
 
 public class ServoTest extends LinearOpMode {
     @Override
@@ -39,6 +43,19 @@ public class ServoTest extends LinearOpMode {
                 ));
 
                 drive.updatePoseEstimate();
+
+//                LLResult result = limelight.getLatestResult();
+//                if (result != null && result.isValid()) {
+//                    double tx = result.getTx(); // How far left or right the target is (degrees)
+//                    double ty = result.getTy(); // How far up or down the target is (degrees)
+//                    double ta = result.getTa(); // How big the target looks (0%-100% of the image)
+//
+//                    telemetry.addData("Target X", tx);
+//                    telemetry.addData("Target Y", ty);
+//                    telemetry.addData("Target Area", ta);
+//                } else {
+//                    telemetry.addData("Limelight", "No Targets");
+//                }
 
                 //gives random error between -1 and 1; supposed to simulate limelight
                 double error = (Math.random() * 2) - 1.0;
