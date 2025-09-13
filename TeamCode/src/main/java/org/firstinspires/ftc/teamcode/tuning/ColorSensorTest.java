@@ -37,33 +37,46 @@ public class ColorSensorTest extends LinearOpMode {
             NormalizedRGBA color2 = artifactSlot2.getNormalizedColors();
 
             //Determining the amount of red, green, and blue
-            telemetry.addData("Red", "%.3f", color1.red);
-            telemetry.addData("Green", "%.3f", color1.green);
-            telemetry.addData("Blue", "%.3f", color1.blue);
+            telemetry.addData("Red1", color1.red);
+            telemetry.addData("Green1", color1.green);
+            telemetry.addData("Blue1", color1.blue);
 
-            telemetry.addData("Red", "%.3f", color2.red);
-            telemetry.addData("Green", "%.3f", color2.green);
-            telemetry.addData("Blue", "%.3f", color2.blue);
+            telemetry.addData("Red2", color2.red);
+            telemetry.addData("Green2", color2.green);
+            telemetry.addData("Blue2", color2.blue);
 
-            //If blue is the greatest value, the color is purple. If blue is greater than red and green, the color is purple.
-            //If green is the greatest value, the color is green. If green is greater than red and blue, the color is green.
-            //If all colors are less than 0.01, no color is being sensed. If all colors are balanced and close to zero, no color is being sensed.
 
             colorDetection(color1);
             colorDetection(color2);
 
             telemetry.update();
+
+            TelemetryPacket packet = new TelemetryPacket();
+            packet.put("Red1", color1.red);
+            packet.put("Green1", color1.green);
+            packet.put("Blue1", color1.blue);
+
+            packet.put("Red2", color2.red);
+            packet.put("Green2", color2.green);
+            packet.put("Blue2", color2.blue);
+            FtcDashboard.getInstance().sendTelemetryPacket(packet);
         }
     }
 
     private void colorDetection(NormalizedRGBA colorSensor) {
 
-        if (colorSensor.blue > colorSensor.green) {
-            telemetry.addLine("The color is purple!");
+        //If blue is the greatest value, the color is purple. If blue is greater than red and green, the color is purple.
+        //If green is the greatest value, the color is green. If green is greater than red and blue, the color is green.
+        //If all colors are less than 0.01, no color is being sensed. If all colors are balanced and close to zero, no color is being sensed.
+
+        if (colorSensor.red < 0.01 && colorSensor.blue < 0.01 && colorSensor.green < 0.01){
+            telemetry.addLine("No color is detected.");
         } else if (colorSensor.green > colorSensor.blue) {
             telemetry.addLine("The color is green!");
+        } else if (colorSensor.blue > colorSensor.green) {
+            telemetry.addLine("The color is purple!");
         } else {
-            telemetry.addLine("No color is detected.");
+            telemetry.addLine("Cannot detect color.");
         }
 
     }
