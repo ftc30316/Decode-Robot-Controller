@@ -8,23 +8,25 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-//import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc
+
 import java.util.List;
+
 @TeleOp
-public class AprilTagTest extends LinearOpMode {
+public class TurretCorrectionTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
+        Servo servo2 = hardwareMap.get(Servo.class, "servo2");
+        servo2.setPosition(0.5);
         AprilTagProcessor myAprilTagProcessor;
         // Create the AprilTag processor and assign it to a variable.
         //myAprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
@@ -78,13 +80,31 @@ public class AprilTagTest extends LinearOpMode {
 
                     myAprilTagIdCode = myAprilTagDetection.id;
 
+
+                    // Now take action based on this tag's ID code, or store info for later action.
+
+                    double currentPosition = servo2.getPosition();
+                    double servoDegrees = myAprilTagDetection.ftcPose.bearing / 360.0;
+                    double newPosition = currentPosition - servoDegrees;
+
+                    servo2.setPosition(newPosition);
+                    sleep(100);
+
                     telemetry.addLine(String.valueOf(myAprilTagIdCode));
                     TelemetryPacket packet = new TelemetryPacket();
                     packet.put("range", myAprilTagDetection.ftcPose.range); // distance from camera to target
                     packet.put("bearing", myAprilTagDetection.ftcPose.bearing); // angle the camera must turn (left/right) to face target
                     packet.put("elevation", myAprilTagDetection.ftcPose.elevation); // angle the camera must tilt (up/down) to face target
+                    packet.put("current position", currentPosition);
+                    packet.put("servo degrees", servoDegrees);
+                    packet.put("new position", newPosition);
                     FtcDashboard.getInstance().sendTelemetryPacket(packet);
-                    // Now take action based on this tag's ID code, or store info for later action.
+
+//                    Pose2d pose = drive.localizer.getPose();
+//
+//                    telemetry.addData("error: " , String.valueOf(error));
+//                    telemetry.update();
+//                    sleep(1000);
 
 
                 }
