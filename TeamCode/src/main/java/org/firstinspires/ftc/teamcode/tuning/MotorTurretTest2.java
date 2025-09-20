@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -22,12 +23,11 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
 @TeleOp
-public class TurretCorrectionTest extends LinearOpMode {
+public class MotorTurretTest2 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        Servo servo2 = hardwareMap.get(Servo.class, "servo2");
-        servo2.setPosition(0.5);
+        DcMotorEx leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
         AprilTagProcessor myAprilTagProcessor;
         // Create the AprilTag processor and assign it to a variable.
         //myAprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
@@ -49,19 +49,23 @@ public class TurretCorrectionTest extends LinearOpMode {
         myVisionPortal.setProcessorEnabled(myAprilTagProcessor, true);
 
         if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
-            MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+            //MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+
+            // Reset the encoder during initialization
+            leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
             waitForStart();
 
             while (opModeIsActive()) {
-                drive.setDrivePowers(new PoseVelocity2d(
-                        new Vector2d(
-                                -gamepad1.left_stick_y,
-                                -gamepad1.left_stick_x
-                        ),
-                        -gamepad1.right_stick_x
-                ));
-
-                drive.updatePoseEstimate();
+//                drive.setDrivePowers(new PoseVelocity2d(
+//                        new Vector2d(
+//                                -gamepad1.left_stick_y,
+//                                -gamepad1.left_stick_x
+//                        ),
+//                        -gamepad1.right_stick_x
+//                ));
+//
+//                drive.updatePoseEstimate();
 
                 List<AprilTagDetection> myAprilTagDetections;  // list of all detections
                 AprilTagDetection myAprilTagDetection;         // current detection in for() loop
@@ -84,11 +88,11 @@ public class TurretCorrectionTest extends LinearOpMode {
 
                     // Now take action based on this tag's ID code, or store info for later action.
 
-                    double currentPosition = servo2.getPosition();
+                    double currentPosition = leftBack.getCurrentPosition();
                     double servoDegrees = myAprilTagDetection.ftcPose.bearing / 360.0;
                     double newPosition = currentPosition - servoDegrees;
 
-                    servo2.setPosition(newPosition);
+                    leftBack.setTargetPosition((int) newPosition);
                     sleep(100);
 
                     telemetry.addLine(String.valueOf(myAprilTagIdCode));
@@ -99,6 +103,11 @@ public class TurretCorrectionTest extends LinearOpMode {
                     packet.put("current position", currentPosition);
                     packet.put("servo degrees", servoDegrees);
                     packet.put("new position", newPosition);
+                    FtcDashboard.getInstance().sendTelemetryPacket(packet);
+                    packet = new TelemetryPacket();
+                    packet.put("velocity", leftBack.getVelocity());
+                    packet.put("position", leftBack.getCurrentPosition());
+                    packet.put("is at target", !leftBack.isBusy());
                     FtcDashboard.getInstance().sendTelemetryPacket(packet);
 
 //                    Pose2d pose = drive.localizer.getPose();
@@ -113,6 +122,15 @@ public class TurretCorrectionTest extends LinearOpMode {
                 telemetry.update();
 
             }
+
+            //Set the amount of ticks to move
+            leftBack.setTargetPosition((int) 0);
+
+            // Switch to RUN_TO_POSITION mode
+            leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // Start the motor moving by setting the max velocity to ___ ticks per second
+            leftBack.setVelocity(50);
 
         } else{
             throw new RuntimeException();

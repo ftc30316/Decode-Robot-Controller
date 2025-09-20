@@ -28,8 +28,8 @@ public class FlywheelTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            flywheel1.setPower(1.00);
-            flywheel2.setPower(1.00);
+            flywheel1.setPower(0.5);
+            flywheel2.setPower(0.5);
 
             idle();
         }
