@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -23,11 +22,11 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
 @TeleOp
-public class MotorTurretTest2 extends LinearOpMode {
+public class MotorTurretTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        DcMotorEx leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
+        DcMotorEx turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
         AprilTagProcessor myAprilTagProcessor;
         // Create the AprilTag processor and assign it to a variable.
         //myAprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
@@ -52,10 +51,19 @@ public class MotorTurretTest2 extends LinearOpMode {
             //MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
 
             // Reset the encoder during initialization
-            leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            //Set the amount of ticks to move
+            //turretMotor.setTargetPosition((int) (90.0 * 5.3277777778));
+            turretMotor.setTargetPosition(0);
+
+            // Switch to RUN_TO_POSITION mode
+            turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // Start the motor moving by setting the max velocity to ___ ticks per second
+            turretMotor.setVelocity(2781.1);
 
             waitForStart();
-
             while (opModeIsActive()) {
 //                drive.setDrivePowers(new PoseVelocity2d(
 //                        new Vector2d(
@@ -88,27 +96,28 @@ public class MotorTurretTest2 extends LinearOpMode {
 
                     // Now take action based on this tag's ID code, or store info for later action.
 
-                    double currentPosition = leftBack.getCurrentPosition();
-                    double servoDegrees = myAprilTagDetection.ftcPose.bearing / 360.0;
-                    double newPosition = currentPosition - servoDegrees;
+                    double currentPosition = turretMotor.getCurrentPosition();
+                    double motorTicks = myAprilTagDetection.ftcPose.bearing * 5.3277777778;
+                    double newPosition = currentPosition - motorTicks;
 
-                    leftBack.setTargetPosition((int) newPosition);
-                    sleep(100);
+                    turretMotor.setTargetPosition((int) newPosition);
+//                    turretMotor.setVelocity(myTagPoseBearing);
 
                     telemetry.addLine(String.valueOf(myAprilTagIdCode));
                     TelemetryPacket packet = new TelemetryPacket();
                     packet.put("range", myAprilTagDetection.ftcPose.range); // distance from camera to target
                     packet.put("bearing", myAprilTagDetection.ftcPose.bearing); // angle the camera must turn (left/right) to face target
                     packet.put("elevation", myAprilTagDetection.ftcPose.elevation); // angle the camera must tilt (up/down) to face target
-                    packet.put("current position", currentPosition);
-                    packet.put("servo degrees", servoDegrees);
-                    packet.put("new position", newPosition);
+//                    packet.put("current position", currentPosition);
+//                    packet.put("motor ticks", motorTicks);
+//                    packet.put("new position", newPosition);
                     FtcDashboard.getInstance().sendTelemetryPacket(packet);
                     packet = new TelemetryPacket();
-                    packet.put("velocity", leftBack.getVelocity());
-                    packet.put("position", leftBack.getCurrentPosition());
-                    packet.put("is at target", !leftBack.isBusy());
+                    packet.put("velocity", turretMotor.getVelocity());
+                    packet.put("position", turretMotor.getCurrentPosition());
+                    packet.put("is at target", !turretMotor.isBusy());
                     FtcDashboard.getInstance().sendTelemetryPacket(packet);
+                    sleep(25);
 
 //                    Pose2d pose = drive.localizer.getPose();
 //
@@ -122,15 +131,6 @@ public class MotorTurretTest2 extends LinearOpMode {
                 telemetry.update();
 
             }
-
-            //Set the amount of ticks to move
-            leftBack.setTargetPosition((int) 0);
-
-            // Switch to RUN_TO_POSITION mode
-            leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // Start the motor moving by setting the max velocity to ___ ticks per second
-            leftBack.setVelocity(50);
 
         } else{
             throw new RuntimeException();
