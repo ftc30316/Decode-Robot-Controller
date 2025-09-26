@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.tuning;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,8 +31,17 @@ public class FlywheelTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            flywheel1.setPower(0.5);
-            flywheel2.setPower(0.5);
+            double power = -gamepad1.left_stick_y * 0.6;
+
+            flywheel1.setPower(power);
+            flywheel2.setPower(power);
+
+            telemetry.addData("Power:", power);
+            telemetry.update();
+
+            TelemetryPacket packet = new TelemetryPacket();
+            packet.put("Power:", power);
+            FtcDashboard.getInstance().sendTelemetryPacket(packet);
 
             idle();
         }
