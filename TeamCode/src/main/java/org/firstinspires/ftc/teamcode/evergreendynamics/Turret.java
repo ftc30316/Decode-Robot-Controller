@@ -49,7 +49,10 @@ public class Turret {
     public volatile Gamepad gamepad1 = null;
     AprilTagProcessor myAprilTagProcessor;
     DcMotorEx turretMotor;
-    public Turret (HardwareMap hardwareMap) {
+    public Turret (HardwareMap hardwareMap, Telemetry telemetry) {
+
+        this.telemetry = telemetry;
+        this.gamepad1 = gamepad1;
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
@@ -107,18 +110,17 @@ public class Turret {
                 .build();
     }
 
-    public void aim() {
-        telemetry.addData("Current State ", turretAiming);
+    public void aim(int aimAtTagId) {
         switch (turretAiming) {
             case DECODING:
                 break;
             case AIMING:
-                adjustTurret();
+                adjustTurret(aimAtTagId);
                 break;
         }
     }
 
-    public void adjustTurret () {
+    public void adjustTurret (int aimAtTagId) {
         List<AprilTagDetection> myAprilTagDetections;  // list of all detections
         AprilTagDetection myAprilTagDetection;         // current detection in for() loop
         int myAprilTagIdCode;                           // ID code of current detection, in for() loop
@@ -137,7 +139,7 @@ public class Turret {
 
             myAprilTagIdCode = myAprilTagDetection.id;
 
-            if (myAprilTagIdCode == 20) {
+            if (myAprilTagIdCode == aimAtTagId) {
                 double currentPosition = turretMotor.getCurrentPosition();
                 double motorTicks = myAprilTagDetection.ftcPose.bearing * 5.3277777778;
                 double newPosition = currentPosition - motorTicks;

@@ -29,7 +29,7 @@ public class Slot {
 
     private Servo servo;
 
-    private String nextColorArtifact = "purple";
+    private String nextColorArtifact = "green";
 
     public volatile Gamepad gamepad1 = null;
 
