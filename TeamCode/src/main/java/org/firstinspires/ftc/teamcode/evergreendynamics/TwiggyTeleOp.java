@@ -31,8 +31,9 @@ public class TwiggyTeleOp extends LinearOpMode{
         waitForStart();
 
         while (opModeIsActive()) {
-            intake.spin();
+            //intake.spin();
             sorter.detect();
+            turret.aim();
         }
     }
 

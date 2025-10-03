@@ -21,13 +21,21 @@ public class Sorter {
     //constructor:
     public Sorter(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1) {
         this.telemetry = telemetry;
-        NormalizedColorSensor colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorsensor1");
-        Servo servo = hardwareMap.get(Servo.class, "servo1");
+        NormalizedColorSensor colorSensor1 = hardwareMap.get(NormalizedColorSensor.class, "colorsensor1");
+        NormalizedColorSensor colorSensor2 = hardwareMap.get(NormalizedColorSensor.class, "colorsensor2");
+        NormalizedColorSensor colorSensor3 = hardwareMap.get(NormalizedColorSensor.class, "colorsensor3");
+        Servo servo1 = hardwareMap.get(Servo.class, "servo1");
+        Servo servo2 = hardwareMap.get(Servo.class, "servo2");
+        Servo servo3 = hardwareMap.get(Servo.class, "servo3");
 
-        leftSlot = new Slot(telemetry, colorSensor, servo, gamepad1);
+        leftSlot = new Slot(telemetry, colorSensor1, servo1, gamepad1);
+        middleSlot = new Slot(telemetry, colorSensor2, servo2, gamepad1);
+        rightSlot = new Slot(telemetry, colorSensor3, servo3, gamepad1);
     }
 
     public void detect(){
         leftSlot.sort();
+        middleSlot.sort();
+        rightSlot.sort();
     }
 }
