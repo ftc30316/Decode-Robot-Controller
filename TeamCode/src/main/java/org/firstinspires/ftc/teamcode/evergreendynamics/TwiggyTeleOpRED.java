@@ -17,15 +17,16 @@ public class TwiggyTeleOpRED extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
         //this.mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1);
-        this.intake = new Intake(hardwareMap);
-        this.turret = new Turret(hardwareMap, telemetry);
+        this.intake = new Intake(hardwareMap, gamepad1);
+        this.turret = new Turret(hardwareMap, telemetry, gamepad1);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            //intake.spin();
+            intake.spin();
             sorter.detect();
-            turret.aim(aimAtTagId);
+            //turret.aim(aimAtTagId);
+            turret.score();
             telemetry.update();
         }
     }

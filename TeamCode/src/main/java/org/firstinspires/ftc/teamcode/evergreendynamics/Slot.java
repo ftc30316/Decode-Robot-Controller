@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.tuning.ArtifactSorterTest;
 
 
@@ -20,12 +22,14 @@ public class Slot {
     public State sorterState = State.DETECTING;
     public ElapsedTime flickTimer = new ElapsedTime();  // Timer to track time in each state
 
-    private final double FLICK_DISTANCE = 0.5;
+    private final double FLICK_DISTANCE = 0.05;
     private final double TRAVEL_TIME = 3.0;
 
     private Telemetry telemetry;
 
     private NormalizedColorSensor colorSensor;
+    private DistanceSensor distanceSensor;
+
 
     private Servo servo;
 
@@ -33,16 +37,18 @@ public class Slot {
 
     public volatile Gamepad gamepad1 = null;
 
-    public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Gamepad gamepad1) {
+    public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Gamepad gamepad1, DistanceSensor distanceSensor) {
         this.telemetry = t;
         this.colorSensor = colorSensor;
         this.servo = servo;
         this.gamepad1 = gamepad1;
+        this.distanceSensor = distanceSensor;
 
 
     }
     public void sort() {
         telemetry.addData("Current State ", sorterState);
+        telemetry.addData("slot distance", distanceSensor.getDistance(DistanceUnit.INCH));
         switch (sorterState) {
             case DETECTING:
                 String sensor1color = colorDetection(colorSensor);
@@ -57,6 +63,9 @@ public class Slot {
                 if (sensor1colorHolding != null && sensor1colorHolding.equals(nextColorArtifact) && gamepad1.right_trigger == 1.0) {
                     sorterState = State.FLICKING;
                 }
+//                if (distanceSensor.getDistance(DistanceUnit.INCH) < 5.5 && gamepad1.right_trigger == 1.0) {
+//                    sorterState = State.FLICKING;
+//                }
                 break;
             case FLICKING:
                 flickTimer.reset();

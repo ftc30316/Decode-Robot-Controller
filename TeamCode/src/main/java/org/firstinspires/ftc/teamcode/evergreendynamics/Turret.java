@@ -5,10 +5,13 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -32,7 +35,9 @@ public class Turret {
     public enum Scoring {
         SEARCHING,
         HOLDING,
-        SHOOTING
+        SHOOTING,
+        RESETTING
+
     }
 
     public Aiming turretAiming = Turret.Aiming.AIMING;
@@ -40,22 +45,39 @@ public class Turret {
 
     private Telemetry telemetry;
 
-    private NormalizedColorSensor colorSensor;
+    private DistanceSensor pistonSensor;
 
     private Servo servo;
 
     private String nextColorArtifact = "purple";
+    private final double FLYWHEEL_SPEED = 0.5;
+    private final double PISTON_TRAVEL_TIME = 5;
+    public ElapsedTime pistonTimer = new ElapsedTime();
 
     public volatile Gamepad gamepad1 = null;
     AprilTagProcessor myAprilTagProcessor;
     DcMotorEx turretMotor;
-    public Turret (HardwareMap hardwareMap, Telemetry telemetry) {
+    private DcMotor flywheel1;
+    private DcMotor flywheel2;
+    private Servo piston;
+
+    public Turret (HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1) {
 
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
+        flywheel1 = hardwareMap.get(DcMotor.class, "flywheel1");
+        flywheel2 = hardwareMap.get(DcMotor.class, "flywheel2");
+        piston = hardwareMap.get(Servo.class, "piston");
+        pistonSensor = hardwareMap.get(DistanceSensor.class, "distancesensor1");
+
+        flywheel1.setDirection(DcMotorSimple.Direction.FORWARD);
+        flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        flywheel1.setPower(FLYWHEEL_SPEED);
+        flywheel2.setPower(FLYWHEEL_SPEED);
 
         // Create the AprilTag processor and assign it to a variable.
         //myAprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
@@ -90,7 +112,8 @@ public class Turret {
             turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // Start the motor moving by setting the max velocity to ___ ticks per second
-            turretMotor.setVelocity(2781.1);
+            //turretMotor.setVelocity(2781.1);
+            turretMotor.setPower(0.5);
         }
     }
 
@@ -120,6 +143,32 @@ public class Turret {
         }
     }
 
+    public void score() {
+        telemetry.addData("piston distance", pistonSensor.getDistance(DistanceUnit.INCH));
+        switch (turretScoring) {
+            case SEARCHING:
+                if (pistonSensor.getDistance(DistanceUnit.INCH) < 5.5) {
+                    turretScoring = Scoring.HOLDING;
+                }
+                break;
+            case HOLDING:
+                if (gamepad1.cross && pistonSensor.getDistance(DistanceUnit.INCH) < 5.5) {
+                    turretScoring = Scoring.SHOOTING;
+                }
+                break;
+            case SHOOTING:
+                piston.setPosition(1);
+                pistonTimer.reset();
+                turretScoring = Scoring.RESETTING;
+                break;
+            case RESETTING:
+                if (pistonTimer.seconds() > PISTON_TRAVEL_TIME) {
+                    piston.setPosition(0);
+                    turretScoring = Scoring.SEARCHING;
+                }
+                break;
+        }
+    }
     public void adjustTurret (int aimAtTagId) {
         List<AprilTagDetection> myAprilTagDetections;  // list of all detections
         AprilTagDetection myAprilTagDetection;         // current detection in for() loop
