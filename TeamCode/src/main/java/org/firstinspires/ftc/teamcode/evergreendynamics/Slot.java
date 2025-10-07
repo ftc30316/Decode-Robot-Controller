@@ -22,7 +22,10 @@ public class Slot {
     public State sorterState = State.DETECTING;
     public ElapsedTime flickTimer = new ElapsedTime();  // Timer to track time in each state
 
-    private final double FLICK_DISTANCE = 0.05;
+    private final double FLICK_POS_REV = 0.1;
+    private final double RESET_POS_REV = 0.195;
+    private final double FLICK_POS = 0.1;
+    private final double RESET_POS = 0.005;
     private final double TRAVEL_TIME = 3.0;
 
     private Telemetry telemetry;
@@ -37,13 +40,21 @@ public class Slot {
 
     public volatile Gamepad gamepad1 = null;
 
-    public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Gamepad gamepad1, DistanceSensor distanceSensor) {
+    public volatile boolean isReversed = false;
+
+    public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Gamepad gamepad1, DistanceSensor distanceSensor, boolean isReversed) {
         this.telemetry = t;
         this.colorSensor = colorSensor;
         this.servo = servo;
         this.gamepad1 = gamepad1;
         this.distanceSensor = distanceSensor;
+        this.isReversed = isReversed;
 
+        if (isReversed) {
+            servo.setPosition(RESET_POS_REV);
+        } else {
+            servo.setPosition(RESET_POS);
+        }
 
     }
     public void sort() {
@@ -58,23 +69,32 @@ public class Slot {
                 }
                 break;
             case HOLDING:
-                String sensor1colorHolding = colorDetection(colorSensor);
-                telemetry.addLine("The holding color is "+ sensor1colorHolding);
-                if (sensor1colorHolding != null && sensor1colorHolding.equals(nextColorArtifact) && gamepad1.right_trigger == 1.0) {
-                    sorterState = State.FLICKING;
-                }
-//                if (distanceSensor.getDistance(DistanceUnit.INCH) < 5.5 && gamepad1.right_trigger == 1.0) {
+//                String sensor1colorHolding = colorDetection(colorSensor);
+//                telemetry.addLine("The holding color is "+ sensor1colorHolding);
+//                if (sensor1colorHolding != null && sensor1colorHolding.equals(nextColorArtifact) && gamepad1.right_trigger == 1.0) {
 //                    sorterState = State.FLICKING;
 //                }
+                if (distanceSensor.getDistance(DistanceUnit.INCH) < 5.5 && gamepad1.right_trigger == 1.0) {
+                    sorterState = State.FLICKING;
+                }
                 break;
             case FLICKING:
                 flickTimer.reset();
-                servo.setPosition(FLICK_DISTANCE);
+                if (isReversed) {
+                    servo.setPosition(FLICK_POS_REV);
+                } else {
+                    servo.setPosition(FLICK_POS);
+                }
+
                 sorterState = State.RESETTING;
                 break;
             case RESETTING:
                 if (flickTimer.seconds() > TRAVEL_TIME) {
-                    servo.setPosition(0.0);
+                    if (isReversed) {
+                        servo.setPosition(RESET_POS_REV);
+                    } else {
+                        servo.setPosition(RESET_POS);
+                    }
                     sorterState = State.DETECTING;
                 }
                 break;
