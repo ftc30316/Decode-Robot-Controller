@@ -23,6 +23,7 @@ public class Sorter {
     //constructor:
     public Sorter(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1) {
         this.telemetry = telemetry;
+        this.gamepad1 = gamepad1;
         NormalizedColorSensor colorSensor1 = hardwareMap.get(NormalizedColorSensor.class, "colorsensor1");
         NormalizedColorSensor colorSensor2 = hardwareMap.get(NormalizedColorSensor.class, "colorsensor2");
         NormalizedColorSensor colorSensor3 = hardwareMap.get(NormalizedColorSensor.class, "colorsensor3");
@@ -38,7 +39,37 @@ public class Sorter {
         rightSlot = new Slot(telemetry, colorSensor3, servo3, gamepad1, distanceSensor3, false);
     }
 
+
     public void detect(){
+        if (gamepad1.left_bumper) {
+            String leftColor = leftSlot.getColorDetected();
+            String middleColor = middleSlot.getColorDetected();
+            String rightColor = rightSlot.getColorDetected();
+
+            if (leftColor.equals("green")) {
+                leftSlot.switchToFlicking();
+            } else if (middleColor.equals("green")) {
+                middleSlot.switchToFlicking();
+            } else if (rightColor.equals("green")) {
+                rightSlot.switchToFlicking();
+            }
+
+        }
+
+        if (gamepad1.right_bumper) {
+            String leftColor = leftSlot.getColorDetected();
+            String middleColor = middleSlot.getColorDetected();
+            String rightColor = rightSlot.getColorDetected();
+
+            if (leftColor.equals("purple")) {
+                leftSlot.switchToFlicking();
+            } else if (middleColor.equals("purple")) {
+                middleSlot.switchToFlicking();
+            } else if (rightColor.equals("purple")) {
+                rightSlot.switchToFlicking();
+            }
+        }
+
         leftSlot.sort();
         middleSlot.sort();
         rightSlot.sort();

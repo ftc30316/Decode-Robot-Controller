@@ -41,6 +41,7 @@ public class Slot {
     public volatile Gamepad gamepad1 = null;
 
     public volatile boolean isReversed = false;
+    public String slotColor = "No Artifact";
 
     public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Gamepad gamepad1, DistanceSensor distanceSensor, boolean isReversed) {
         this.telemetry = t;
@@ -62,24 +63,28 @@ public class Slot {
         telemetry.addData("slot distance", distanceSensor.getDistance(DistanceUnit.INCH));
         switch (sorterState) {
             case DETECTING:
-                String sensor1color = colorDetection(colorSensor);
-                telemetry.addLine("The detecting color is "+ sensor1color);
-                if (sensor1color != null) {
+                slotColor = colorDetection(colorSensor);
+                telemetry.addLine("The detecting color is "+ slotColor);
+                if (slotColor.equals("green") || slotColor.equals("purple")) {
                     sorterState = State.HOLDING;
                 }
                 break;
             case HOLDING:
 //                String sensor1colorHolding = colorDetection(colorSensor);
-//                telemetry.addLine("The holding color is "+ sensor1colorHolding);
+                telemetry.addLine("The holding color is "+ slotColor);
+                if (distanceSensor.getDistance(DistanceUnit.INCH) > 3) {
+                    sorterState = State.DETECTING;
+                }
 //                if (sensor1colorHolding != null && sensor1colorHolding.equals(nextColorArtifact) && gamepad1.right_trigger == 1.0) {
 //                    sorterState = State.FLICKING;
 //                }
-                if (distanceSensor.getDistance(DistanceUnit.INCH) < 5.5 && gamepad1.right_trigger == 1.0) {
-                    sorterState = State.FLICKING;
-                }
+//                if (distanceSensor.getDistance(DistanceUnit.INCH) < 5.5 && gamepad1.right_trigger == 1.0) {
+//                    sorterState = State.FLICKING;
+//                }
                 break;
             case FLICKING:
                 flickTimer.reset();
+
                 if (isReversed) {
                     servo.setPosition(FLICK_POS_REV);
                 } else {
@@ -102,6 +107,14 @@ public class Slot {
         }
     }
 
+    public String getColorDetected() {
+            return slotColor;
+    }
+
+    public void switchToFlicking() {
+        sorterState = State.FLICKING;
+    }
+
     private String colorDetection(NormalizedColorSensor colorSensor) {
 
         //If blue is the greatest value, the color is purple. If blue is greater than red and green, the color is purple.
@@ -110,7 +123,7 @@ public class Slot {
         NormalizedRGBA color1 = colorSensor.getNormalizedColors();
         if (color1.red < 0.01 && color1.blue < 0.01 && color1.green < 0.01){
             telemetry.addLine("No color is detected.");
-            return null;
+            return "No Artifact";
         } else if (color1.green > color1.blue) {
             telemetry.addLine("The color is green!");
             return "green";
@@ -119,7 +132,7 @@ public class Slot {
             return "purple";
         } else {
             telemetry.addLine("Cannot detect color.");
-            return null;
+            return "Unknown color";
         }
 
     }
