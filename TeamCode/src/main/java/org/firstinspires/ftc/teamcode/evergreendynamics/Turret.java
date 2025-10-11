@@ -61,7 +61,7 @@ public class Turret {
     private DcMotor flywheel2;
     private Servo piston;
 
-    public Turret (HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1) {
+    public Turret(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1) {
 
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
@@ -117,8 +117,7 @@ public class Turret {
         }
     }
 
-    public static AprilTagLibrary getDecodeTagLibrary()
-    {
+    public static AprilTagLibrary getDecodeTagLibrary() {
         return new AprilTagLibrary.Builder()
                 .addTag(20, "BlueGoal",
                         6, DistanceUnit.INCH)
@@ -131,6 +130,37 @@ public class Turret {
                 .addTag(23, "PPG",
                         6, DistanceUnit.INCH)
                 .build();
+    }
+
+    public int determineMotif() {
+        List<AprilTagDetection> myAprilTagDetections;  // list of all detections
+        AprilTagDetection myAprilTagDetection;         // current detection in for() loop
+        int myAprilTagIdCode;                           // ID code of current detection, in for() loop
+
+        for (int loopCounter = 0; loopCounter < 5; loopCounter++) {
+            // Get a list of AprilTag detections.
+            myAprilTagDetections = myAprilTagProcessor.getDetections();
+
+            telemetry.addLine(String.valueOf(myAprilTagDetections.size()));
+
+            for (int i = 0; i < myAprilTagDetections.size(); i++) {
+                myAprilTagDetection = myAprilTagDetections.get(i);
+
+                if ((myAprilTagDetection.id == 21) || (myAprilTagDetection.id == 22) || (myAprilTagDetection.id == 23)) {
+//                if (myAprilTagDetection.id == 20) {
+                    return (myAprilTagDetection.id);
+                }
+
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        telemetry.addData("LAST RESORT", 21);
+        return 21;
     }
 
     public void aim(int aimAtTagId) {
