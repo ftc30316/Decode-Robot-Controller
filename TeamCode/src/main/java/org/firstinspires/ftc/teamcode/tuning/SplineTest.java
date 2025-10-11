@@ -21,19 +21,19 @@ public final class SplineTest extends LinearOpMode {
 
             waitForStart();
             Vector2d strafeVector = new Vector2d(24, 12);
-//            Actions.runBlocking(
-//                //drive.actionBuilder(beginPose).splineTo(new Vector2d(24, 24), Math.PI / 2)
-//                    drive.actionBuilder(beginPose).setTangent(0)
-//                            //.splineToConstantHeading(new Vector2d(24, 24),  Math.toRadians(180))
-//                          //  .splineToConstantHeading(new Vector2d())
-//                            .strafeTo(new Vector2d(24, 24))
-//                            .strafeTo(new Vector2d(48, 24))
-//                            .strafeTo(new Vector2d(72, 0))
-//                        .build());
+            Actions.runBlocking(
+                //drive.actionBuilder(beginPose).splineTo(new Vector2d(24, 24), Math.PI / 2)
+                    drive.actionBuilder(beginPose).setTangent(0)
+                            //.splineToConstantHeading(new Vector2d(24, 24),  Math.toRadians(180))
+                          //  .splineToConstantHeading(new Vector2d())
+                            .strafeTo(new Vector2d(24, 24))
+                            .strafeTo(new Vector2d(48, 24))
+                            .strafeTo(new Vector2d(72, 0))
+                        .build());
 
-//            servo1.setPosition(0.0);
-//            sleep(50);
-//            servo1.setPosition(1.0);
+            servo1.setPosition(0.0);
+            sleep(50);
+            servo1.setPosition(1.0);
 
             viperSlide.setPower(1.0);
 
