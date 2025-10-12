@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 @Autonomous
 public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
-    public Sorter sorter;
+    //public Sorter sorter;
     public Intake intake;
     public Turret turret;
     public MecanumDrive mecanumDrive;
@@ -22,7 +22,7 @@ public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
         telemetry.addLine("Running Op Mode");
         Pose2d beginPose = new Pose2d(0, 0, 0);
         this.mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
-        this.sorter = new Sorter(hardwareMap, telemetry, gamepad1);
+        //this.sorter = new Sorter(hardwareMap, telemetry, gamepad1);
         this.intake = new Intake(hardwareMap, gamepad1);
         this.turret = new Turret(hardwareMap, telemetry, gamepad1);
 
@@ -50,7 +50,7 @@ public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
                         .build());
 
         //Goes through detecting, sorting, flicking
-        sorter.detect();
+        //sorter.detect();
 
         //Moves to upper launch zone
         mecanumDrive.actionBuilder(beginPose).setTangent(0)
@@ -66,11 +66,11 @@ public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
         //Shoots first artifact
         turret.score();
         //Flick second artifact
-        sorter.detect();
+        //sorter.detect();
         //Shoots second artifact
         turret.score();
         //Flick third artifact
-        sorter.detect();
+        //sorter.detect();
         //Shoots third artifact
         turret.score();
 

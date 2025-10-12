@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
+import android.util.Size;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -71,7 +73,7 @@ public class Turret {
         flywheel1 = hardwareMap.get(DcMotor.class, "flywheel1");
         flywheel2 = hardwareMap.get(DcMotor.class, "flywheel2");
         piston = hardwareMap.get(Servo.class, "piston");
-        pistonSensor = hardwareMap.get(DistanceSensor.class, "distancesensor1");
+        //pistonSensor = hardwareMap.get(DistanceSensor.class, "distancesensor1");
 
         flywheel1.setDirection(DcMotorSimple.Direction.FORWARD);
         flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -90,31 +92,36 @@ public class Turret {
                 .setTagLibrary(getDecodeTagLibrary())
                 .build();
 
-        VisionPortal myVisionPortal;
+        //VisionPortal myVisionPortal;
 
         // Create a VisionPortal, with the specified camera and AprilTag processor, and assign it to a variable.
-        myVisionPortal = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, "Leafy"), myAprilTagProcessor);
+        //myVisionPortal = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, "Leafy"), myAprilTagProcessor);
+        VisionPortal myVisionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Leafy")) // Logitech
+                .setCameraResolution(new Size(800, 600)) // try 1080p for more pixels
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+                .addProcessor(myAprilTagProcessor)
+                .setAutoStopLiveView(false)
+                .build();
+
 
         // Enable or disable the AprilTag processor.
         myVisionPortal.setProcessorEnabled(myAprilTagProcessor, true);
 
-        if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
-            //MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+        // Reset the encoder during initialization
+        turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            // Reset the encoder during initialization
-            turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //Set the amount of ticks to move
+        //turretMotor.setTargetPosition((int) (90.0 * 5.3277777778));
+        turretMotor.setTargetPosition(0);
 
-            //Set the amount of ticks to move
-            //turretMotor.setTargetPosition((int) (90.0 * 5.3277777778));
-            turretMotor.setTargetPosition(0);
+        // Switch to RUN_TO_POSITION mode
+        turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            // Switch to RUN_TO_POSITION mode
-            turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // Start the motor moving by setting the max velocity to ___ ticks per second
+        //turretMotor.setVelocity(2781.1);
+        turretMotor.setPower(0.5);
 
-            // Start the motor moving by setting the max velocity to ___ ticks per second
-            //turretMotor.setVelocity(2781.1);
-            turretMotor.setPower(0.5);
-        }
     }
 
     public static AprilTagLibrary getDecodeTagLibrary() {

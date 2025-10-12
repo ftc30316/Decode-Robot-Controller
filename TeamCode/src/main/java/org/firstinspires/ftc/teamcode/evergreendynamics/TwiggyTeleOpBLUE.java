@@ -35,7 +35,7 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
             ));
 
             intake.spin();
-            sorter.detect();
+            //sorter.detect();
             //turret.aim(aimAtTagId);
             turret.score();
             telemetry.update();
