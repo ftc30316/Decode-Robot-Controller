@@ -62,14 +62,18 @@ public class Turret {
     private DcMotor flywheel1;
     private DcMotor flywheel2;
     private Servo piston;
+    public int aimAtTagId;
+    public Thread backgroundThread;
 
-    public Turret(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1) {
+    public Turret(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, int aimAtTagId) {
 
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
+        this.aimAtTagId = aimAtTagId;
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
+        //turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         flywheel1 = hardwareMap.get(DcMotor.class, "flywheel1");
         flywheel2 = hardwareMap.get(DcMotor.class, "flywheel2");
         piston = hardwareMap.get(Servo.class, "piston");
@@ -122,6 +126,14 @@ public class Turret {
         //turretMotor.setVelocity(2781.1);
         turretMotor.setPower(0.5);
 
+        this.backgroundThread = new Thread(this::constantlyAimAtAprilTag);
+
+    }
+
+    public void constantlyAimAtAprilTag() {
+        while (true) {
+            aim(aimAtTagId);
+        }
     }
 
     public static AprilTagLibrary getDecodeTagLibrary() {

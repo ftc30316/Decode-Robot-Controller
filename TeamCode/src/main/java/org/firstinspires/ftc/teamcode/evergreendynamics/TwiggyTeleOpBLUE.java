@@ -21,7 +21,7 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
         this.mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1);
         this.intake = new Intake(hardwareMap, gamepad1);
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1);
+        this.turret = new Turret(hardwareMap, telemetry, gamepad1, aimAtTagId);
 
         waitForStart();
 

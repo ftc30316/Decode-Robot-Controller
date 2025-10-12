@@ -24,7 +24,7 @@ public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
         this.mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         //this.sorter = new Sorter(hardwareMap, telemetry, gamepad1);
         this.intake = new Intake(hardwareMap, gamepad1);
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1);
+        this.turret = new Turret(hardwareMap, telemetry, gamepad1, aimAtTagId);
 
         telemetry.update();
 
@@ -35,7 +35,7 @@ public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
 
         waitForStart();
 
-
+        turret.backgroundThread.start();
 
         //Moves to get first set of three artifacts from the side of the set
         Vector2d strafeVector = new Vector2d(24, 12);
@@ -64,17 +64,19 @@ public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
         //Moves artifacts into flywheels for shooting
         turret.aim(aimAtTagId);
         //Shoots first artifact
-        turret.score();
+        //turret.score();
         //Flick second artifact
         //sorter.detect();
         //Shoots second artifact
-        turret.score();
+        //turret.score();
         //Flick third artifact
         //sorter.detect();
         //Shoots third artifact
-        turret.score();
+        //turret.score();
 
         //Repeats steps 3-7 for the next two rows of artifacts
+
+        sleep(10000);
 
     }
 }
