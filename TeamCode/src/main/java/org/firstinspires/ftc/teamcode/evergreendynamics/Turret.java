@@ -82,8 +82,7 @@ public class Turret {
         flywheel1.setDirection(DcMotorSimple.Direction.FORWARD);
         flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        flywheel1.setPower(FLYWHEEL_SPEED);
-        flywheel2.setPower(FLYWHEEL_SPEED);
+
 
         // Create the AprilTag processor and assign it to a variable.
         //myAprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
@@ -134,6 +133,11 @@ public class Turret {
         while (true) {
             aim(aimAtTagId);
         }
+    }
+
+    public void startFlywheels() {
+        flywheel1.setPower(FLYWHEEL_SPEED);
+        flywheel2.setPower(FLYWHEEL_SPEED);
     }
 
     public static AprilTagLibrary getDecodeTagLibrary() {
@@ -216,6 +220,12 @@ public class Turret {
                     turretScoring = Scoring.SEARCHING;
                 }
                 break;
+        }
+    }
+
+    public void shootArtifact() {
+        if (pistonSensor.getDistance(DistanceUnit.INCH) < 5.5) {
+            turretScoring = Scoring.SHOOTING;
         }
     }
     public void adjustTurret (int aimAtTagId) {

@@ -6,11 +6,10 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 @Autonomous
 public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
-    //public Sorter sorter;
+    public Sorter sorter;
     public Intake intake;
     public Turret turret;
     public MecanumDrive mecanumDrive;
@@ -22,20 +21,23 @@ public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
         telemetry.addLine("Running Op Mode");
         Pose2d beginPose = new Pose2d(0, 0, 0);
         this.mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
-        //this.sorter = new Sorter(hardwareMap, telemetry, gamepad1);
+        this.sorter = new Sorter(hardwareMap, telemetry, gamepad1);
         this.intake = new Intake(hardwareMap, gamepad1);
         this.turret = new Turret(hardwareMap, telemetry, gamepad1, aimAtTagId);
 
         telemetry.update();
 
         //Detect motif for artifact order (Init)
-        int tagId = turret.determineMotif();
-        telemetry.addData("Motif Id", tagId);
+        int motifTagId = turret.determineMotif();
+        telemetry.addData("Motif Id", motifTagId);
         telemetry.update();
 
         waitForStart();
 
         turret.backgroundThread.start();
+        intake.spin();
+        turret.startFlywheels();
+
 
         //Moves to get first set of three artifacts from the side of the set
         Vector2d strafeVector = new Vector2d(24, 12);
@@ -49,8 +51,9 @@ public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
                         .strafeTo(new Vector2d(72, 0))
                         .build());
 
-        //Goes through detecting, sorting, flicking
-        //sorter.detect();
+        //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
+        sleep(2000);
+        sorter.detect();
 
         //Moves to upper launch zone
         mecanumDrive.actionBuilder(beginPose).setTangent(0)
@@ -61,20 +64,56 @@ public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
                 .strafeTo(new Vector2d(72, 0))
                 .build();
 
-        //Moves artifacts into flywheels for shooting
-        turret.aim(aimAtTagId);
-        //Shoots first artifact
-        //turret.score();
-        //Flick second artifact
-        //sorter.detect();
-        //Shoots second artifact
-        //turret.score();
-        //Flick third artifact
-        //sorter.detect();
-        //Shoots third artifact
-        //turret.score();
+        //Flicks first artifact
+        if (motifTagId == 21) {
+            sorter.flickArtifactGreen();
+        } else if ((motifTagId == 22) || (motifTagId == 23)) {
+            sorter.flickArtifactPurple();
+        }
 
-        //Repeats steps 3-7 for the next two rows of artifacts
+        //keeps detecting, waits for piston to finish traveling
+        sorter.detect();
+        sleep(3000);
+        sorter.detect();
+
+        //Shoots first artifact
+        turret.shootArtifact();
+        sleep(5000);
+
+        //Flick second artifact
+        sorter.detect();
+
+        if (motifTagId == 22) {
+            sorter.flickArtifactGreen();
+        } else if ((motifTagId == 21) || (motifTagId == 23)) {
+            sorter.flickArtifactPurple();
+        }
+
+        //keeps detecting, waits for piston to finish traveling
+        sorter.detect();
+        sleep(3000);
+        sorter.detect();
+
+        //Shoots second artifact
+        turret.shootArtifact();
+
+        //Flick third artifact
+        sorter.detect();
+
+        if (motifTagId == 23) {
+            sorter.flickArtifactGreen();
+        } else if ((motifTagId == 21) || (motifTagId == 22)) {
+            sorter.flickArtifactPurple();
+        }
+
+        //Shoots third artifact
+        turret.shootArtifact();
+
+        //keeps detecting, waits for piston to finish traveling
+        sorter.detect();
+        sleep(3000);
+        sorter.detect();
+
 
         sleep(10000);
 
