@@ -23,7 +23,7 @@ public class TwiggyTeleOpRED extends LinearOpMode{
         waitForStart();
 
         while (opModeIsActive()) {
-            intake.spin();
+            intake.startSpin();
             sorter.detect();
             //turret.aim(aimAtTagId);
             turret.score();

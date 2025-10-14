@@ -35,7 +35,7 @@ public class Sorter {
         DistanceSensor distanceSensor3 = hardwareMap.get(DistanceSensor.class, "colorsensor3");
 
         leftSlot = new Slot(telemetry, colorSensor1, servo1, gamepad1, distanceSensor1, true);
-        middleSlot = new Slot(telemetry, colorSensor2, servo2, gamepad1, distanceSensor2, false);
+        middleSlot = new Slot(telemetry, colorSensor2, servo2, gamepad1, distanceSensor2, true);
         rightSlot = new Slot(telemetry, colorSensor3, servo3, gamepad1, distanceSensor3, false);
     }
 

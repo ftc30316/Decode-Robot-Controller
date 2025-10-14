@@ -52,15 +52,15 @@ public class Turret {
     private Servo servo;
 
     private String nextColorArtifact = "purple";
-    private final double FLYWHEEL_SPEED = 0.5;
+
     private final double PISTON_TRAVEL_TIME = 5;
     public ElapsedTime pistonTimer = new ElapsedTime();
 
     public volatile Gamepad gamepad1 = null;
     AprilTagProcessor myAprilTagProcessor;
     DcMotorEx turretMotor;
-    private DcMotor flywheel1;
-    private DcMotor flywheel2;
+    private DcMotorEx flywheel1;
+
     private Servo piston;
     public int aimAtTagId;
     public Thread backgroundThread;
@@ -74,13 +74,11 @@ public class Turret {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
         //turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        flywheel1 = hardwareMap.get(DcMotor.class, "flywheel1");
-        flywheel2 = hardwareMap.get(DcMotor.class, "flywheel2");
+        flywheel1 = hardwareMap.get(DcMotorEx.class, "flywheel1");
         piston = hardwareMap.get(Servo.class, "piston");
-        //pistonSensor = hardwareMap.get(DistanceSensor.class, "distancesensor1");
+        pistonSensor = hardwareMap.get(DistanceSensor.class, "distancesensor1");
 
-        flywheel1.setDirection(DcMotorSimple.Direction.FORWARD);
-        flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
+        flywheel1.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 
@@ -135,9 +133,8 @@ public class Turret {
         }
     }
 
-    public void startFlywheels() {
-        flywheel1.setPower(FLYWHEEL_SPEED);
-        flywheel2.setPower(FLYWHEEL_SPEED);
+    public void startFlywheel() {
+        flywheel1.setVelocity(InputValues.FLYWHEEL_SPEED);
     }
 
     public static AprilTagLibrary getDecodeTagLibrary() {

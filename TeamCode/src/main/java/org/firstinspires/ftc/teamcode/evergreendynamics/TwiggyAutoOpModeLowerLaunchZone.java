@@ -35,8 +35,8 @@ public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
         waitForStart();
 
         turret.backgroundThread.start();
-        intake.spin();
-        turret.startFlywheels();
+        intake.startSpin();
+        turret.startFlywheel();
 
 
         //Moves to get first set of three artifacts from the side of the set

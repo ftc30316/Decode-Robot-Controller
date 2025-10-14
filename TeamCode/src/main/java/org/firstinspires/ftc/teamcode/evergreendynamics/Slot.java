@@ -22,11 +22,7 @@ public class Slot {
     public State sorterState = State.DETECTING;
     public ElapsedTime flickTimer = new ElapsedTime();  // Timer to track time in each state
 
-    private final double FLICK_POS_REV = 0.1;
-    private final double RESET_POS_REV = 0.195;
-    private final double FLICK_POS = 0.1;
-    private final double RESET_POS = 0.005;
-    private final double TRAVEL_TIME = 3.0;
+
 
     private Telemetry telemetry;
 
@@ -52,9 +48,9 @@ public class Slot {
         this.isReversed = isReversed;
 
         if (isReversed) {
-            servo.setPosition(RESET_POS_REV);
+            servo.setPosition(InputValues.RESET_POS_REV);
         } else {
-            servo.setPosition(RESET_POS);
+            servo.setPosition(InputValues.RESET_POS);
         }
 
     }
@@ -86,19 +82,19 @@ public class Slot {
                 flickTimer.reset();
 
                 if (isReversed) {
-                    servo.setPosition(FLICK_POS_REV);
+                    servo.setPosition(InputValues.FLICK_POS_REV);
                 } else {
-                    servo.setPosition(FLICK_POS);
+                    servo.setPosition(InputValues.FLICK_POS);
                 }
 
                 sorterState = State.RESETTING;
                 break;
             case RESETTING:
-                if (flickTimer.seconds() > TRAVEL_TIME) {
+                if (flickTimer.seconds() > InputValues.TRAVEL_TIME) {
                     if (isReversed) {
-                        servo.setPosition(RESET_POS_REV);
+                        servo.setPosition(InputValues.RESET_POS_REV);
                     } else {
-                        servo.setPosition(RESET_POS);
+                        servo.setPosition(InputValues.RESET_POS);
                     }
                     sorterState = State.DETECTING;
                 }
