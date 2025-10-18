@@ -25,8 +25,10 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
 
         waitForStart();
 
-        // Flywheel and intake motor start
+        /*
+         Flywheel and intake motor start
         turret.startFlywheel();
+        */
         intake.startSpin();
 
         while (opModeIsActive()) {
@@ -40,7 +42,7 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
 
             sorter.detect();
 
-            turret.score();
+            //turret.score();
             telemetry.update();
         }
     }
