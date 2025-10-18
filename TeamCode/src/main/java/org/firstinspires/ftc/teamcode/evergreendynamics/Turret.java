@@ -29,38 +29,30 @@ import java.util.List;
 
 public class Turret {
 
+    //Setting up the state machines for the two states, aiming the turret towards the goal and shooting the artifacts to score
     public enum Aiming {
         DECODING,
         AIMING
     }
-
     public enum Scoring {
         SEARCHING,
         HOLDING,
         SHOOTING,
         RESETTING
-
     }
 
     public Aiming turretAiming = Turret.Aiming.AIMING;
     public Scoring turretScoring = Turret.Scoring.SEARCHING;
-
     private Telemetry telemetry;
-
     private DistanceSensor pistonSensor;
-
     private Servo servo;
-
     private String nextColorArtifact = "purple";
-
-    private final double PISTON_TRAVEL_TIME = 5;
     public ElapsedTime pistonTimer = new ElapsedTime();
 
     public volatile Gamepad gamepad1 = null;
     AprilTagProcessor myAprilTagProcessor;
     DcMotorEx turretMotor;
     private DcMotorEx flywheel1;
-
     private Servo piston;
     public int aimAtTagId;
     public Thread backgroundThread;
@@ -83,7 +75,6 @@ public class Turret {
 
 
         // Create the AprilTag processor and assign it to a variable.
-        //myAprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
         AprilTagProcessor.Builder myAprilTagProcessorBuilder = new AprilTagProcessor.Builder();
         myAprilTagProcessor = myAprilTagProcessorBuilder
                 .setDrawTagID(true)
@@ -93,10 +84,7 @@ public class Turret {
                 .setTagLibrary(getDecodeTagLibrary())
                 .build();
 
-        //VisionPortal myVisionPortal;
-
         // Create a VisionPortal, with the specified camera and AprilTag processor, and assign it to a variable.
-        //myVisionPortal = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, "Leafy"), myAprilTagProcessor);
         VisionPortal myVisionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Leafy")) // Logitech
                 .setCameraResolution(new Size(800, 600)) // try 1080p for more pixels
@@ -113,30 +101,32 @@ public class Turret {
         turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Set the amount of ticks to move
-        //turretMotor.setTargetPosition((int) (90.0 * 5.3277777778));
         turretMotor.setTargetPosition(0);
 
         // Switch to RUN_TO_POSITION mode
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Start the motor moving by setting the max velocity to ___ ticks per second
-        //turretMotor.setVelocity(2781.1);
-        turretMotor.setPower(0.5);
+        turretMotor.setPower(InputValues.TURRET_SPEED);
 
+        // Creates a background thread so that while the robot is driving, intaking, and sorting, the turret can always be auto-locked on the goal
         this.backgroundThread = new Thread(this::constantlyAimAtAprilTag);
 
     }
 
+    // Creates a loop that always aims at the goal
     public void constantlyAimAtAprilTag() {
         while (true) {
             aim(aimAtTagId);
         }
     }
 
+    // Starts the flywheel
     public void startFlywheel() {
         flywheel1.setVelocity(InputValues.FLYWHEEL_SPEED);
     }
 
+    // Pulls all of the possible aprilTag values
     public static AprilTagLibrary getDecodeTagLibrary() {
         return new AprilTagLibrary.Builder()
                 .addTag(20, "BlueGoal",
@@ -152,6 +142,7 @@ public class Turret {
                 .build();
     }
 
+    // Uses the camera to look at the obelisk and determine if the motif pattern is GPP, PGP, or PPG - last resort is GPP (21)
     public int determineMotif() {
         List<AprilTagDetection> myAprilTagDetections;  // list of all detections
         AprilTagDetection myAprilTagDetection;         // current detection in for() loop
@@ -173,7 +164,7 @@ public class Turret {
 
             }
             try {
-                Thread.sleep(500);
+                Thread.sleep(InputValues.MOTIF_LOOP_WAIT);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -183,6 +174,7 @@ public class Turret {
         return 21;
     }
 
+    // A state machine that auto-locks on goal
     public void aim(int aimAtTagId) {
         switch (turretAiming) {
             case DECODING:
@@ -193,6 +185,7 @@ public class Turret {
         }
     }
 
+    // A state machine that checks if there is an artifact in the piston slot, and moves artifact into flywheel when x is pressed
     public void score() {
         telemetry.addData("piston distance", pistonSensor.getDistance(DistanceUnit.INCH));
         switch (turretScoring) {
@@ -212,7 +205,7 @@ public class Turret {
                 turretScoring = Scoring.RESETTING;
                 break;
             case RESETTING:
-                if (pistonTimer.seconds() > PISTON_TRAVEL_TIME) {
+                if (pistonTimer.seconds() > InputValues.PISTON_TRAVEL_TIME) {
                     piston.setPosition(0);
                     turretScoring = Scoring.SEARCHING;
                 }
@@ -220,11 +213,14 @@ public class Turret {
         }
     }
 
+    // Switches the turret state to shooting, where the artifact will move into the flywheel
     public void shootArtifact() {
         if (pistonSensor.getDistance(DistanceUnit.INCH) < 5.5) {
             turretScoring = Scoring.SHOOTING;
         }
     }
+
+    // Uses the position of the aprilTag to adjust the turret motor and center the aprilTag in the camera view
     public void adjustTurret (int aimAtTagId) {
         List<AprilTagDetection> myAprilTagDetections;  // list of all detections
         AprilTagDetection myAprilTagDetection;         // current detection in for() loop

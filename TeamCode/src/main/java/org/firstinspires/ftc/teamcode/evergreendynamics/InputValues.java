@@ -8,5 +8,8 @@ public class InputValues {
     public final static double FLICK_POS = 0.285; //prev 0.1,
     public final static double RESET_POS = 0.2; //prev 0.005, small number = closer to artifact
     public final static double TRAVEL_TIME = 1.1;
+    public final static double TURRET_SPEED = 0.5;
+    public final static double PISTON_TRAVEL_TIME = 5;
+    public final static long MOTIF_LOOP_WAIT = 500;
 
 }

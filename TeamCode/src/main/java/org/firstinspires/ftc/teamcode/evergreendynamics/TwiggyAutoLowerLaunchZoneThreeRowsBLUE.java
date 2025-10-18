@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 @Autonomous
-public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
+public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
     public Sorter sorter;
     public Intake intake;
     public Turret turret;
@@ -34,6 +34,7 @@ public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
 
         waitForStart();
 
+        // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
         turret.backgroundThread.start();
         intake.startSpin();
         turret.startFlywheel();
@@ -42,10 +43,7 @@ public class TwiggyAutoOpModeLowerLaunchZone extends LinearOpMode {
         //Moves to get first set of three artifacts from the side of the set
         Vector2d strafeVector = new Vector2d(24, 12);
         Actions.runBlocking(
-                //drive.actionBuilder(beginPose).splineTo(new Vector2d(24, 24), Math.PI / 2)
                 mecanumDrive.actionBuilder(beginPose).setTangent(0)
-                        //.splineToConstantHeading(new Vector2d(24, 24),  Math.toRadians(180))
-                        //  .splineToConstantHeading(new Vector2d())
                         .strafeTo(new Vector2d(24, 24))
                         .strafeTo(new Vector2d(48, 24))
                         .strafeTo(new Vector2d(72, 0))

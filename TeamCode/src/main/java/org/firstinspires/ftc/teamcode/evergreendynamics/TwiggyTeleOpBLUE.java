@@ -24,6 +24,8 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
         this.turret = new Turret(hardwareMap, telemetry, gamepad1, aimAtTagId);
 
         waitForStart();
+
+        // Flywheel and intake motor start
         turret.startFlywheel();
         intake.startSpin();
 
@@ -37,7 +39,6 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
             ));
 
             sorter.detect();
-            //turret.aim(aimAtTagId);
 
             turret.score();
             telemetry.update();

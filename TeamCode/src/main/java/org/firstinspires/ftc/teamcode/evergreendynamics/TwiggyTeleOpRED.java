@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -15,17 +18,28 @@ public class TwiggyTeleOpRED extends LinearOpMode{
 
     @Override
     public void runOpMode() throws InterruptedException {
-        //this.mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+        this.mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1);
         this.intake = new Intake(hardwareMap, gamepad1);
         this.turret = new Turret(hardwareMap, telemetry, gamepad1, aimAtTagId);
 
         waitForStart();
 
+        // Flywheel and intake motor start
+        turret.startFlywheel();
+        intake.startSpin();
+
         while (opModeIsActive()) {
-            intake.startSpin();
+            mecanumDrive.setDrivePowers(new PoseVelocity2d(
+                    new Vector2d(
+                            -gamepad1.left_stick_y,
+                            -gamepad1.left_stick_x
+                    ),
+                    -gamepad1.right_stick_x
+            ));
+
             sorter.detect();
-            //turret.aim(aimAtTagId);
+
             turret.score();
             telemetry.update();
         }

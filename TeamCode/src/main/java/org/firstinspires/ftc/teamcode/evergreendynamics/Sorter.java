@@ -19,8 +19,7 @@ public class Sorter {
     public volatile Gamepad gamepad1 = null;
     private DistanceSensor distanceSensor;
 
-
-    //constructor:
+    //Sets up the three different slots, each with their own servo, orientation, and color/distance sensor
     public Sorter(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1) {
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
@@ -39,12 +38,11 @@ public class Sorter {
         rightSlot = new Slot(telemetry, colorSensor3, servo3, gamepad1, distanceSensor3, false);
     }
 
-
+    //Based on gamepad trigger, asks slots for a certain colored artifact
     public void detect() {
         if (gamepad1.left_bumper) {
             flickArtifactGreen();
         }
-
         if (gamepad1.right_bumper) {
             flickArtifactPurple();
         }
@@ -54,6 +52,7 @@ public class Sorter {
         rightSlot.sort();
     }
 
+    //Determines which slots have a green artifact, and moves whichever servo has the first green artifact
     public void flickArtifactGreen () {
         String leftColor = leftSlot.getColorDetected();
         String middleColor = middleSlot.getColorDetected();
@@ -68,6 +67,7 @@ public class Sorter {
         }
     }
 
+    //Determines which slots have a purple artifact, and moves whichever servo has the first purple artifact
     public void flickArtifactPurple () {
         String leftColor = leftSlot.getColorDetected();
         String middleColor = middleSlot.getColorDetected();
