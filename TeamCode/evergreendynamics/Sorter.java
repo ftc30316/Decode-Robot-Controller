@@ -24,15 +24,15 @@ public class Sorter {
     public Sorter(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1) {
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
-        NormalizedColorSensor colorSensor1 = hardwareMap.get(NormalizedColorSensor.class, "leftColorSensor");
-        NormalizedColorSensor colorSensor2 = hardwareMap.get(NormalizedColorSensor.class, "middleColorSensor");
-        NormalizedColorSensor colorSensor3 = hardwareMap.get(NormalizedColorSensor.class, "rightColorSensor");
-        Servo servo1 = hardwareMap.get(Servo.class, "leftServo");
-        Servo servo2 = hardwareMap.get(Servo.class, "middleServo");
-        Servo servo3 = hardwareMap.get(Servo.class, "rightServo");
-        DistanceSensor distanceSensor1 = hardwareMap.get(DistanceSensor.class, "leftColorSensor");
-        DistanceSensor distanceSensor2 = hardwareMap.get(DistanceSensor.class, "middleColorSensor");
-        DistanceSensor distanceSensor3 = hardwareMap.get(DistanceSensor.class, "rightColorSensor");
+        NormalizedColorSensor colorSensor1 = hardwareMap.get(NormalizedColorSensor.class, "colorsensor1");
+        NormalizedColorSensor colorSensor2 = hardwareMap.get(NormalizedColorSensor.class, "colorsensor2");
+        NormalizedColorSensor colorSensor3 = hardwareMap.get(NormalizedColorSensor.class, "colorsensor3");
+        Servo servo1 = hardwareMap.get(Servo.class, "servo1");
+        Servo servo2 = hardwareMap.get(Servo.class, "servo2");
+        Servo servo3 = hardwareMap.get(Servo.class, "servo3");
+        DistanceSensor distanceSensor1 = hardwareMap.get(DistanceSensor.class, "colorsensor1");
+        DistanceSensor distanceSensor2 = hardwareMap.get(DistanceSensor.class, "colorsensor2");
+        DistanceSensor distanceSensor3 = hardwareMap.get(DistanceSensor.class, "colorsensor3");
 
         leftSlot = new Slot(telemetry, colorSensor1, servo1, gamepad1, distanceSensor1, true);
         middleSlot = new Slot(telemetry, colorSensor2, servo2, gamepad1, distanceSensor2, true);
