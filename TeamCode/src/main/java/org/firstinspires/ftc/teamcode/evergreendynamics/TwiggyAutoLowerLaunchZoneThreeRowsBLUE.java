@@ -75,7 +75,7 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
         sorter.detect();
 
         //Shoots first artifact
-        turret.shootArtifact();
+        //turret.shootArtifact();
         sleep(5000);
 
         //Flick second artifact
@@ -93,7 +93,7 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
         sorter.detect();
 
         //Shoots second artifact
-        turret.shootArtifact();
+        //turret.shootArtifact();
 
         //Flick third artifact
         sorter.detect();
@@ -105,7 +105,7 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
         }
 
         //Shoots third artifact
-        turret.shootArtifact();
+        //turret.shootArtifact();
 
         //keeps detecting, waits for piston to finish traveling
         sorter.detect();

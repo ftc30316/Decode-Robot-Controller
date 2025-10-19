@@ -12,7 +12,7 @@ public class Intake {
 
     public Intake(HardwareMap hardwareMap, Gamepad gamepad1){
         intake1 = hardwareMap.get(DcMotorEx.class, "intakeMotor");
-        intake1.setDirection(DcMotorSimple.Direction.FORWARD);
+        intake1.setDirection(DcMotorSimple.Direction.REVERSE);
         this.gamepad1 = gamepad1;
 
 

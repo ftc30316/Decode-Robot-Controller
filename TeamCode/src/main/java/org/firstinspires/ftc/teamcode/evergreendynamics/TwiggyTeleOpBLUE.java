@@ -14,7 +14,7 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
     public Intake intake;
     public Turret turret;
     public MecanumDrive mecanumDrive;
-    public int aimAtTagId = 20; //Aim at blue goal
+    public int aimAtTagId = 20; //Aim at BLUE goal
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -25,12 +25,14 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
 
         waitForStart();
 
-        /*
-         Flywheel and intake motor start
-        turret.startFlywheel();
-        */
-        intake.startSpin();
+        // Starts the auto-lock on the BLUE aprilTag
+        //turret.backgroundThread.start();
 
+        // Flywheel and intake motor start
+//        turret.startFlywheel();
+//        intake.startSpin();
+
+        // Sets up the driving system
         while (opModeIsActive()) {
             mecanumDrive.setDrivePowers(new PoseVelocity2d(
                     new Vector2d(
@@ -41,9 +43,9 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
             ));
 
             sorter.detect();
+            turret.score();
 
-            //turret.score();
-            telemetry.update();
+            //telemetry.update();
         }
     }
 

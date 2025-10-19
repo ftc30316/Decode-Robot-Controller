@@ -29,7 +29,7 @@ import java.util.List;
 
 public class Turret {
 
-    //Setting up the state machines for the two states, aiming the turret towards the goal and shooting the artifacts to score
+    // Setting up the state machines for the two states, aiming the turret towards the goal and shooting the artifacts to score
     public enum Aiming {
         DECODING,
         AIMING
@@ -44,16 +44,16 @@ public class Turret {
     public Aiming turretAiming = Turret.Aiming.AIMING;
     public Scoring turretScoring = Turret.Scoring.SEARCHING;
     private Telemetry telemetry;
-    private DistanceSensor pistonSensor;
+    private DistanceSensor liftSensor;
     private Servo servo;
     private String nextColorArtifact = "purple";
-    public ElapsedTime pistonTimer = new ElapsedTime();
+    public ElapsedTime liftTimer = new ElapsedTime();
 
     public volatile Gamepad gamepad1 = null;
     AprilTagProcessor myAprilTagProcessor;
     DcMotorEx turretMotor;
     private DcMotorEx flywheel1;
-    private Servo piston;
+    private Servo lift;
     public int aimAtTagId;
     public Thread backgroundThread;
 
@@ -67,8 +67,8 @@ public class Turret {
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
         //turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         flywheel1 = hardwareMap.get(DcMotorEx.class, "flywheel1");
-        piston = hardwareMap.get(Servo.class, "piston");
-        pistonSensor = hardwareMap.get(DistanceSensor.class, "distancesensor1");
+        lift = hardwareMap.get(Servo.class, "lift");
+        //liftSensor = hardwareMap.get(DistanceSensor.class, "distancesensor1");
 
         flywheel1.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -100,7 +100,7 @@ public class Turret {
         // Reset the encoder during initialization
         turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        //Set the amount of ticks to move
+        // Set the amount of ticks to move
         turretMotor.setTargetPosition(0);
 
         // Switch to RUN_TO_POSITION mode
@@ -108,6 +108,8 @@ public class Turret {
 
         // Start the motor moving by setting the max velocity to ___ ticks per second
         turretMotor.setPower(InputValues.TURRET_SPEED);
+
+        lift.setPosition(InputValues.LIFT_START_POS);
 
         // Creates a background thread so that while the robot is driving, intaking, and sorting, the turret can always be auto-locked on the goal
         this.backgroundThread = new Thread(this::constantlyAimAtAprilTag);
@@ -185,28 +187,31 @@ public class Turret {
         }
     }
 
-    // A state machine that checks if there is an artifact in the piston slot, and moves artifact into flywheel when x is pressed
+    // A state machine that checks if there is an artifact in the lift slot, and moves artifact into flywheel when x is pressed
     public void score() {
-        telemetry.addData("piston distance", pistonSensor.getDistance(DistanceUnit.INCH));
+        //telemetry.addData("lift distance", liftSensor.getDistance(DistanceUnit.INCH));
+        telemetry.addData("VELOCITY IS ", flywheel1.getVelocity());
+        telemetry.update();
         switch (turretScoring) {
             case SEARCHING:
-                if (pistonSensor.getDistance(DistanceUnit.INCH) < 5.5) {
+                //if (liftSensor.getDistance(DistanceUnit.INCH) < 5.5) {
                     turretScoring = Scoring.HOLDING;
-                }
+                //}
                 break;
             case HOLDING:
-                if (gamepad1.cross && pistonSensor.getDistance(DistanceUnit.INCH) < 5.5) {
+                // && liftSensor.getDistance(DistanceUnit.INCH) < 5.5
+                if (gamepad1.cross) {
                     turretScoring = Scoring.SHOOTING;
                 }
                 break;
             case SHOOTING:
-                piston.setPosition(1);
-                pistonTimer.reset();
+                lift.setPosition(InputValues.LIFT_END_POS);
+                liftTimer.reset();
                 turretScoring = Scoring.RESETTING;
                 break;
             case RESETTING:
-                if (pistonTimer.seconds() > InputValues.PISTON_TRAVEL_TIME) {
-                    piston.setPosition(0);
+                if (liftTimer.seconds() > InputValues.LIFT_TRAVEL_TIME) {
+                    lift.setPosition(0);
                     turretScoring = Scoring.SEARCHING;
                 }
                 break;
@@ -214,11 +219,11 @@ public class Turret {
     }
 
     // Switches the turret state to shooting, where the artifact will move into the flywheel
-    public void shootArtifact() {
-        if (pistonSensor.getDistance(DistanceUnit.INCH) < 5.5) {
-            turretScoring = Scoring.SHOOTING;
-        }
-    }
+//    public void shootArtifact() {
+//        if (liftSensor.getDistance(DistanceUnit.INCH) < 5.5) {
+//            turretScoring = Scoring.SHOOTING;
+//        }
+//    }
 
     // Uses the position of the aprilTag to adjust the turret motor and center the aprilTag in the camera view
     public void adjustTurret (int aimAtTagId) {

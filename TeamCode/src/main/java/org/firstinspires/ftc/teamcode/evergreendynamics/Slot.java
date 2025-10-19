@@ -46,7 +46,7 @@ public class Slot {
         }
     }
 
-    //Creates a state machine that determines if there is an artifact, what color it is, and whether or not the driver has pressed the trigger to shoot
+    // Creates a state machine that determines if there is an artifact, what color it is, and whether or not the driver has pressed the trigger to shoot
     public void sort() {
         telemetry.addData("Current State ", sorterState);
         //telemetry.addData("slot distance", distanceSensor.getDistance(DistanceUnit.INCH));
@@ -93,17 +93,17 @@ public class Slot {
         }
     }
 
-    //Asks the color sensor what color artifact is in the slot, if there is an artifact
+    // Asks the color sensor what color artifact is in the slot, if there is an artifact
     public String getColorDetected() {
             return slotColor;
     }
 
-    //Switches slot state to flicking, where the servos will move to different positions based on their orientation
+    // Switches slot state to flicking, where the servos will move to different positions based on their orientation
     public void switchToFlicking() {
         sorterState = State.FLICKING;
     }
 
-    //Uses the data from the color sensors to determine the artifact color
+    // Uses the data from the color sensors to determine the artifact color
     private String colorDetection(NormalizedColorSensor colorSensor) {
 
         //If blue is the greatest value, the color is purple. If blue is greater than red and green, the color is purple.

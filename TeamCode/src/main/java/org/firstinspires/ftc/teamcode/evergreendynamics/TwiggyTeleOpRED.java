@@ -14,7 +14,7 @@ public class TwiggyTeleOpRED extends LinearOpMode{
     public Intake intake;
     public Turret turret;
     public MecanumDrive mecanumDrive;
-    public int aimAtTagId = 24; //Aim at red goal
+    public int aimAtTagId = 24; //Aim at RED goal
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -25,10 +25,14 @@ public class TwiggyTeleOpRED extends LinearOpMode{
 
         waitForStart();
 
+        // Starts the auto-lock on the RED aprilTag
+        turret.backgroundThread.start();
+
         // Flywheel and intake motor start
         turret.startFlywheel();
         intake.startSpin();
 
+        // Sets up the driving system
         while (opModeIsActive()) {
             mecanumDrive.setDrivePowers(new PoseVelocity2d(
                     new Vector2d(
@@ -39,7 +43,6 @@ public class TwiggyTeleOpRED extends LinearOpMode{
             ));
 
             sorter.detect();
-
             turret.score();
             telemetry.update();
         }
