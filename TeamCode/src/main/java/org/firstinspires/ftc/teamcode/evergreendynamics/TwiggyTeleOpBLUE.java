@@ -29,8 +29,8 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
         //turret.backgroundThread.start();
 
         // Flywheel and intake motor start
-//        turret.startFlywheel();
-//        intake.startSpin();
+        turret.triggerFlywheel();
+        intake.triggerIntake();
 
         // Sets up the driving system
         while (opModeIsActive()) {
@@ -42,9 +42,8 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
                     -gamepad1.right_stick_x
             ));
 
-            sorter.detect();
+            //sorter.detect();
             turret.score();
-
             //telemetry.update();
         }
     }

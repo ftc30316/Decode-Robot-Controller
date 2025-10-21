@@ -41,6 +41,14 @@ public class Turret {
         RESETTING
     }
 
+    public enum FlywheelState {
+        ON,
+        OFF,
+        REVERSE
+    }
+
+    FlywheelState flywheelState = FlywheelState.ON;
+
     public Aiming turretAiming = Turret.Aiming.AIMING;
     public Scoring turretScoring = Turret.Scoring.SEARCHING;
     private Telemetry telemetry;
@@ -53,6 +61,7 @@ public class Turret {
     AprilTagProcessor myAprilTagProcessor;
     DcMotorEx turretMotor;
     private DcMotorEx flywheel1;
+    private DcMotorEx flywheel2;
     private Servo lift;
     public int aimAtTagId;
     public Thread backgroundThread;
@@ -66,11 +75,13 @@ public class Turret {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
         //turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        flywheel1 = hardwareMap.get(DcMotorEx.class, "flywheel1");
+        flywheel1 = hardwareMap.get(DcMotorEx.class, "leftFlywheel");
+        flywheel2 = hardwareMap.get(DcMotorEx.class, "rightFlywheel");
         lift = hardwareMap.get(Servo.class, "lift");
         //liftSensor = hardwareMap.get(DistanceSensor.class, "distancesensor1");
 
-        flywheel1.setDirection(DcMotorSimple.Direction.REVERSE);
+        flywheel1.setDirection(DcMotorSimple.Direction.FORWARD);
+        flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 
@@ -126,6 +137,37 @@ public class Turret {
     // Starts the flywheel
     public void startFlywheel() {
         flywheel1.setVelocity(InputValues.FLYWHEEL_SPEED);
+        flywheel2.setVelocity(InputValues.FLYWHEEL_SPEED);
+    }
+
+    public void triggerFlywheel() {
+        switch (flywheelState) {
+            case ON:
+                flywheel1.setVelocity(InputValues.FLYWHEEL_SPEED);
+                flywheel2.setVelocity(InputValues.FLYWHEEL_SPEED);
+                if (gamepad1.circle) {
+                    flywheelState = FlywheelState.REVERSE;
+
+                }
+                break;
+            case OFF:
+                flywheel1.setVelocity(0);
+                flywheel2.setVelocity(0);
+                if (gamepad1.circle) {
+                    flywheelState = FlywheelState.ON;
+                }
+                break;
+            case REVERSE:
+                flywheel1.setDirection(DcMotorSimple.Direction.REVERSE);
+                flywheel2.setDirection(DcMotorSimple.Direction.FORWARD);
+
+                flywheel1.setVelocity(InputValues.FLYWHEEL_SPEED);
+                flywheel2.setVelocity(InputValues.FLYWHEEL_SPEED);
+                if (gamepad1.circle) {
+                    flywheelState = FlywheelState.OFF;
+                }
+                break;
+        }
     }
 
     // Pulls all of the possible aprilTag values
@@ -233,17 +275,18 @@ public class Turret {
 
         // Get a list of AprilTag detections.
         myAprilTagDetections = myAprilTagProcessor.getDetections();
-
-
-        telemetry.addLine(String.valueOf(myAprilTagDetections.size()));
+        telemetry.addLine("adjustTurret running");
+        telemetry.update();
 
         for (int i = 0; i < myAprilTagDetections.size(); i++) {
             myAprilTagDetection = myAprilTagDetections.get(i);
-            double myTagPoseRange = myAprilTagDetection.ftcPose.range;
-            double myTagPoseBearing = myAprilTagDetection.ftcPose.bearing;
-            double myTagPoseElevation = myAprilTagDetection.ftcPose.elevation;
 
             myAprilTagIdCode = myAprilTagDetection.id;
+
+            TelemetryPacket aprilTagData = new TelemetryPacket();
+            aprilTagData.put("number of tags seen", String.valueOf(myAprilTagDetections.size()));
+            aprilTagData.put("which tags seen", String.valueOf(myAprilTagIdCode));
+            FtcDashboard.getInstance().sendTelemetryPacket(aprilTagData);
 
             if (myAprilTagIdCode == aimAtTagId) {
                 double currentPosition = turretMotor.getCurrentPosition();
@@ -253,6 +296,8 @@ public class Turret {
                 turretMotor.setTargetPosition((int) newPosition);
 
                 telemetry.addLine(String.valueOf(myAprilTagIdCode));
+                telemetry.addData("bearing", myAprilTagDetection.ftcPose.bearing); // angle the camera must turn (left/right) to face target)
+
                 TelemetryPacket packet = new TelemetryPacket();
                 packet.put("range", myAprilTagDetection.ftcPose.range); // distance from camera to target
                 packet.put("bearing", myAprilTagDetection.ftcPose.bearing); // angle the camera must turn (left/right) to face target
@@ -269,6 +314,7 @@ public class Turret {
                     throw new RuntimeException(e);
                 }
             }
+            telemetry.update();
         }
     }
 }
