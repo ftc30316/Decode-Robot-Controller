@@ -69,7 +69,7 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
             sorter.flickArtifactPurple();
         }
 
-        //keeps detecting, waits for piston to finish traveling
+        //keeps detecting, waits for lift to finish traveling
         sorter.detect();
         sleep(3000);
         sorter.detect();
