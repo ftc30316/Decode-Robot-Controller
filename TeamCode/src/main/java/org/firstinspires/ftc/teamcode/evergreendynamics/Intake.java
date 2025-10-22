@@ -31,17 +31,17 @@ public class Intake {
     }
     public void triggerIntake() {
         switch (intakeState) {
-            case ON:
-                intake1.setVelocity(InputValues.INTAKE_SPEED);
-                if (gamepad1.square) {
-                    intakeState = IntakeState.REVERSE;
-
-                }
-                break;
             case OFF:
                 intake1.setVelocity(0);
                 if (gamepad1.square) {
                     intakeState = IntakeState.ON;
+                }
+                break;
+            case ON:
+                intake1.setDirection(DcMotorSimple.Direction.REVERSE);
+                intake1.setVelocity(InputValues.INTAKE_SPEED);
+                if (gamepad1.square) {
+                    intakeState = IntakeState.REVERSE;
                 }
                 break;
             case REVERSE:

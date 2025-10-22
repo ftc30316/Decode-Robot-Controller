@@ -11,17 +11,16 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.CameraControl;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.tuning.TuningOpModes;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
@@ -47,21 +46,19 @@ public class Turret {
         REVERSE
     }
 
-    FlywheelState flywheelState = FlywheelState.ON;
+    FlywheelState flywheelState = FlywheelState.OFF;
 
     public Aiming turretAiming = Turret.Aiming.AIMING;
     public Scoring turretScoring = Turret.Scoring.SEARCHING;
     private Telemetry telemetry;
     private DistanceSensor liftSensor;
-    private Servo servo;
-    private String nextColorArtifact = "purple";
     public ElapsedTime liftTimer = new ElapsedTime();
 
     public volatile Gamepad gamepad1 = null;
     AprilTagProcessor myAprilTagProcessor;
     DcMotorEx turretMotor;
-    private DcMotorEx flywheel1;
-    private DcMotorEx flywheel2;
+    private DcMotorEx leftFlywheel;
+    private DcMotorEx rightFlywheel;
     private Servo lift;
     public int aimAtTagId;
     public Thread backgroundThread;
@@ -72,16 +69,16 @@ public class Turret {
         this.gamepad1 = gamepad1;
         this.aimAtTagId = aimAtTagId;
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
         //turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        flywheel1 = hardwareMap.get(DcMotorEx.class, "leftFlywheel");
-        flywheel2 = hardwareMap.get(DcMotorEx.class, "rightFlywheel");
+        leftFlywheel = hardwareMap.get(DcMotorEx.class, "leftFlywheel");
+        rightFlywheel = hardwareMap.get(DcMotorEx.class, "rightFlywheel");
         lift = hardwareMap.get(Servo.class, "lift");
         //liftSensor = hardwareMap.get(DistanceSensor.class, "distancesensor1");
 
-        flywheel1.setDirection(DcMotorSimple.Direction.FORWARD);
-        flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 
@@ -92,7 +89,7 @@ public class Turret {
                 .setDrawTagOutline(true)
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
-                .setTagLibrary(getDecodeTagLibrary())
+                .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
                 .build();
 
         // Create a VisionPortal, with the specified camera and AprilTag processor, and assign it to a variable.
@@ -104,6 +101,17 @@ public class Turret {
                 .setAutoStopLiveView(false)
                 .build();
 
+        CameraControl cameraControl = myVisionPortal.getCameraControl();
+
+// --- Auto Focus ---
+        cameraControl.setAutoFocusEnabled(true);  // Enable auto focus
+// OR
+        cameraControl.setAutoFocusEnabled(false); // Disable auto focus (manual mode)
+
+// --- Exposure Control ---
+        cameraControl.setAutoExposureEnabled(false); // Disable auto exposure (manual mode)
+// Optional: Set manual exposure time (in milliseconds)
+        cameraControl.setExposure(30);
 
         // Enable or disable the AprilTag processor.
         myVisionPortal.setProcessorEnabled(myAprilTagProcessor, true);
@@ -136,54 +144,40 @@ public class Turret {
 
     // Starts the flywheel
     public void startFlywheel() {
-        flywheel1.setVelocity(InputValues.FLYWHEEL_SPEED);
-        flywheel2.setVelocity(InputValues.FLYWHEEL_SPEED);
+        leftFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
+        rightFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
     }
 
     public void triggerFlywheel() {
         switch (flywheelState) {
-            case ON:
-                flywheel1.setVelocity(InputValues.FLYWHEEL_SPEED);
-                flywheel2.setVelocity(InputValues.FLYWHEEL_SPEED);
-                if (gamepad1.circle) {
-                    flywheelState = FlywheelState.REVERSE;
-
-                }
-                break;
             case OFF:
-                flywheel1.setVelocity(0);
-                flywheel2.setVelocity(0);
-                if (gamepad1.circle) {
+                leftFlywheel.setVelocity(0);
+                rightFlywheel.setVelocity(0);
+                if (gamepad1.circleWasPressed()) {
                     flywheelState = FlywheelState.ON;
                 }
                 break;
-            case REVERSE:
-                flywheel1.setDirection(DcMotorSimple.Direction.REVERSE);
-                flywheel2.setDirection(DcMotorSimple.Direction.FORWARD);
+            case ON:
+                leftFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
+                rightFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
 
-                flywheel1.setVelocity(InputValues.FLYWHEEL_SPEED);
-                flywheel2.setVelocity(InputValues.FLYWHEEL_SPEED);
-                if (gamepad1.circle) {
+                leftFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
+                rightFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
+                if (gamepad1.circleWasPressed()) {
+                    flywheelState = FlywheelState.REVERSE;
+                }
+                break;
+            case REVERSE:
+                leftFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+                rightFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
+
+                leftFlywheel.setVelocity(InputValues.SLOW_FLYWHEEL_SPEED);
+                rightFlywheel.setVelocity(InputValues.SLOW_FLYWHEEL_SPEED);
+                if (gamepad1.circleWasPressed()) {
                     flywheelState = FlywheelState.OFF;
                 }
                 break;
         }
-    }
-
-    // Pulls all of the possible aprilTag values
-    public static AprilTagLibrary getDecodeTagLibrary() {
-        return new AprilTagLibrary.Builder()
-                .addTag(20, "BlueGoal",
-                        6, DistanceUnit.INCH)
-                .addTag(24, "RedGoal",
-                        6, DistanceUnit.INCH)
-                .addTag(21, "GPP",
-                        6, DistanceUnit.INCH)
-                .addTag(22, "PGP",
-                        6, DistanceUnit.INCH)
-                .addTag(23, "PPG",
-                        6, DistanceUnit.INCH)
-                .build();
     }
 
     // Uses the camera to look at the obelisk and determine if the motif pattern is GPP, PGP, or PPG - last resort is GPP (21)
@@ -232,8 +226,6 @@ public class Turret {
     // A state machine that checks if there is an artifact in the lift slot, and moves artifact into flywheel when x is pressed
     public void score() {
         //telemetry.addData("lift distance", liftSensor.getDistance(DistanceUnit.INCH));
-        telemetry.addData("VELOCITY IS ", flywheel1.getVelocity());
-        telemetry.update();
         switch (turretScoring) {
             case SEARCHING:
                 //if (liftSensor.getDistance(DistanceUnit.INCH) < 5.5) {
@@ -275,8 +267,6 @@ public class Turret {
 
         // Get a list of AprilTag detections.
         myAprilTagDetections = myAprilTagProcessor.getDetections();
-        telemetry.addLine("adjustTurret running");
-        telemetry.update();
 
         for (int i = 0; i < myAprilTagDetections.size(); i++) {
             myAprilTagDetection = myAprilTagDetections.get(i);
@@ -309,12 +299,11 @@ public class Turret {
                 packet.put("is at target", !turretMotor.isBusy());
                 FtcDashboard.getInstance().sendTelemetryPacket(packet);
                 try {
-                    Thread.sleep(25);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
-            telemetry.update();
         }
     }
 }

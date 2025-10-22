@@ -28,12 +28,9 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
         // Starts the auto-lock on the BLUE aprilTag
         //turret.backgroundThread.start();
 
-        // Flywheel and intake motor start
-        turret.triggerFlywheel();
-        intake.triggerIntake();
-
         // Sets up the driving system
         while (opModeIsActive()) {
+            telemetry.addLine("This is running!");
             mecanumDrive.setDrivePowers(new PoseVelocity2d(
                     new Vector2d(
                             -gamepad1.left_stick_y,
@@ -44,7 +41,12 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
 
             //sorter.detect();
             turret.score();
-            //telemetry.update();
+
+            // Flywheel and intake motor start
+            turret.triggerFlywheel();
+            intake.triggerIntake();
+            turret.adjustTurret(aimAtTagId);
+            telemetry.update();
         }
     }
 
