@@ -17,6 +17,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.CameraControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.FocusControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -25,6 +29,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Turret {
 
@@ -62,6 +67,7 @@ public class Turret {
     private Servo lift;
     public int aimAtTagId;
     public Thread backgroundThread;
+    VisionPortal myVisionPortal;
 
     public Turret(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, int aimAtTagId) {
 
@@ -93,25 +99,43 @@ public class Turret {
                 .build();
 
         // Create a VisionPortal, with the specified camera and AprilTag processor, and assign it to a variable.
-        VisionPortal myVisionPortal = new VisionPortal.Builder()
+        myVisionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Leafy")) // Logitech
                 .setCameraResolution(new Size(800, 600)) // try 1080p for more pixels
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .addProcessor(myAprilTagProcessor)
                 .setAutoStopLiveView(false)
+
                 .build();
 
-        CameraControl cameraControl = myVisionPortal.getCameraControl();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
-// --- Auto Focus ---
-        cameraControl.setAutoFocusEnabled(true);  // Enable auto focus
-// OR
-        cameraControl.setAutoFocusEnabled(false); // Disable auto focus (manual mode)
+        ExposureControl exp = myVisionPortal.getCameraControl(ExposureControl.class);
+        if (exp != null && exp.getMode() != ExposureControl.Mode.Manual) {
+            exp.setMode(ExposureControl.Mode.Manual);
+            exp.setExposure(10, TimeUnit.MILLISECONDS);
+        }
 
-// --- Exposure Control ---
-        cameraControl.setAutoExposureEnabled(false); // Disable auto exposure (manual mode)
-// Optional: Set manual exposure time (in milliseconds)
-        cameraControl.setExposure(30);
+        GainControl gain = myVisionPortal.getCameraControl(GainControl.class);
+        if (gain != null) gain.setGain(48);
+
+        WhiteBalanceControl wb = myVisionPortal.getCameraControl(WhiteBalanceControl.class);
+        if (wb != null) {
+            wb.setMode(WhiteBalanceControl.Mode.MANUAL);
+            wb.setWhiteBalanceTemperature(4800);
+        }
+
+        CameraControl cameraControl = myVisionPortal.getCameraControl(CameraControl.class);
+
+        FocusControl focusControl = myVisionPortal.getCameraControl(FocusControl.class);
+        if (focusControl != null) {
+            focusControl.setMode(FocusControl.Mode.Infinity);
+            focusControl.setFocusLength(0);
+        }
 
         // Enable or disable the AprilTag processor.
         myVisionPortal.setProcessorEnabled(myAprilTagProcessor, true);
@@ -267,6 +291,13 @@ public class Turret {
 
         // Get a list of AprilTag detections.
         myAprilTagDetections = myAprilTagProcessor.getDetections();
+
+        double fps = myVisionPortal.getFps();
+        TelemetryPacket cameraData = new TelemetryPacket();
+        cameraData.put("Vision FPS", fps);
+        FtcDashboard.getInstance().sendTelemetryPacket(cameraData);
+
+        telemetry.addData("Vision FPS", fps);
 
         for (int i = 0; i < myAprilTagDetections.size(); i++) {
             myAprilTagDetection = myAprilTagDetections.get(i);
