@@ -19,7 +19,14 @@ public class Slot {
         FLICKING,
         RESETTING
     }
+
+    public enum Orientation {
+        LEFT,
+        MIDDLE,
+        RIGHT
+    }
     public State sorterState = State.DETECTING;
+    public Orientation slotOrientation = Orientation.LEFT;
     public ElapsedTime flickTimer = new ElapsedTime();  // Timer to track time in each state
     private Telemetry telemetry;
     private NormalizedColorSensor colorSensor;
@@ -27,22 +34,25 @@ public class Slot {
     private Servo servo;
 
     public volatile Gamepad gamepad1 = null;
-    public volatile boolean isReversed = false;
     public String slotColor = "No Artifact";
 
-    public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Gamepad gamepad1, DistanceSensor distanceSensor, boolean isReversed) {
+    public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Gamepad gamepad1, DistanceSensor distanceSensor, Orientation slotOrientation) {
         this.telemetry = t;
         this.colorSensor = colorSensor;
         this.servo = servo;
         this.gamepad1 = gamepad1;
         this.distanceSensor = distanceSensor;
-        this.isReversed = isReversed;
+        this.slotOrientation = slotOrientation;
 
         // Based on orientation of servo, moves to zero
-        if (isReversed) {
-            servo.setPosition(InputValues.RESET_POS_REV);
-        } else {
-            servo.setPosition(InputValues.RESET_POS);
+        if (slotOrientation == Orientation.LEFT) {
+            servo.setPosition(InputValues.RESET_POS_RIGHT);
+        }
+        else if (slotOrientation == Orientation.MIDDLE) {
+            servo.setPosition((InputValues.RESET_POS_MIDDLE));
+        }
+        else if (slotOrientation == Orientation.RIGHT) {
+            servo.setPosition(InputValues.RESET_POS_LEFT);
         }
     }
 
@@ -70,21 +80,28 @@ public class Slot {
             case FLICKING:
                 flickTimer.reset();
 
-                if (isReversed) {
-                    servo.setPosition(InputValues.FLICK_POS_REV);
-                } else {
-                    servo.setPosition(InputValues.FLICK_POS);
+                if (slotOrientation == Orientation.LEFT) {
+                    servo.setPosition(InputValues.FLICK_POS_RIGHT);
                 }
-
+                else if (slotOrientation == Orientation.MIDDLE) {
+                    servo.setPosition(InputValues.FLICK_POS_MIDDLE);
+                }
+                else if (slotOrientation == Orientation.RIGHT) {
+                    servo.setPosition(InputValues.FLICK_POS_LEFT);
+                }
                 sorterState = State.RESETTING;
                 break;
             case RESETTING:
                 // Once the time elapsed is greater than the required time for the servo to move, it will reset the servo
                 if (flickTimer.seconds() > InputValues.TRAVEL_TIME) {
-                    if (isReversed) {
-                        servo.setPosition(InputValues.RESET_POS_REV);
-                    } else {
-                        servo.setPosition(InputValues.RESET_POS);
+                    if (slotOrientation == Orientation.LEFT) {
+                        servo.setPosition(InputValues.RESET_POS_RIGHT);
+                    }
+                    else if (slotOrientation == Orientation.MIDDLE) {
+                        servo.setPosition((InputValues.RESET_POS_MIDDLE));
+                    }
+                    else if (slotOrientation == Orientation.RIGHT) {
+                        servo.setPosition(InputValues.RESET_POS_LEFT);
                     }
                     sorterState = State.DETECTING;
                 }

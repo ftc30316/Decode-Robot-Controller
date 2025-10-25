@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.evergreendynamics;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,6 +22,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.Exposur
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.FocusControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -96,7 +98,10 @@ public class Turret {
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
                 .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
+                .setOutputUnits(DistanceUnit.INCH, AngleUnit.RADIANS)
                 .build();
+
+        myAprilTagProcessor.setDecimation(2); // Set dynamically later
 
         // Create a VisionPortal, with the specified camera and AprilTag processor, and assign it to a variable.
         myVisionPortal = new VisionPortal.Builder()
@@ -117,16 +122,16 @@ public class Turret {
         ExposureControl exp = myVisionPortal.getCameraControl(ExposureControl.class);
         if (exp != null && exp.getMode() != ExposureControl.Mode.Manual) {
             exp.setMode(ExposureControl.Mode.Manual);
-            exp.setExposure(10, TimeUnit.MILLISECONDS);
+            exp.setExposure(InputValues.EXPOSURE, TimeUnit.MILLISECONDS);
         }
 
         GainControl gain = myVisionPortal.getCameraControl(GainControl.class);
-        if (gain != null) gain.setGain(48);
+        if (gain != null) gain.setGain(InputValues.GAIN);
 
         WhiteBalanceControl wb = myVisionPortal.getCameraControl(WhiteBalanceControl.class);
         if (wb != null) {
             wb.setMode(WhiteBalanceControl.Mode.MANUAL);
-            wb.setWhiteBalanceTemperature(4800);
+            wb.setWhiteBalanceTemperature(InputValues.WHITE_BALANCE);
         }
 
         CameraControl cameraControl = myVisionPortal.getCameraControl(CameraControl.class);
@@ -134,8 +139,12 @@ public class Turret {
         FocusControl focusControl = myVisionPortal.getCameraControl(FocusControl.class);
         if (focusControl != null) {
             focusControl.setMode(FocusControl.Mode.Infinity);
-            focusControl.setFocusLength(0);
+            focusControl.setFocusLength(InputValues.FOCUS);
         }
+
+        telemetry.addData("Exposure(ms)", exp != null ? exp.getExposure(TimeUnit.MILLISECONDS) : -1);
+        telemetry.addData("Gain", gain != null ? gain.getGain() : -1);
+        telemetry.addData("WB(K)", wb != null ? wb.getWhiteBalanceTemperature() : -1);
 
         // Enable or disable the AprilTag processor.
         myVisionPortal.setProcessorEnabled(myAprilTagProcessor, true);
@@ -157,6 +166,39 @@ public class Turret {
         // Creates a background thread so that while the robot is driving, intaking, and sorting, the turret can always be auto-locked on the goal
         this.backgroundThread = new Thread(this::constantlyAimAtAprilTag);
 
+    }
+
+    int framesSinceSeen = 0;
+    int decimation = 2;
+    long fpsStart = System.nanoTime();
+    int  fpsFrames = 0; double fps = 0;
+
+    void sendFpsToDashboard(FtcDashboard dash) {
+        ++fpsFrames;
+        if (System.nanoTime() - fpsStart >= 1_000_000_000L) {
+            fps = fpsFrames / ((System.nanoTime() - fpsStart) / 1e9);
+            fpsFrames = 0; fpsStart = System.nanoTime();
+        }
+        TelemetryPacket p = new TelemetryPacket();
+        p.put("Vision FPS", fps);
+        dash.sendTelemetryPacket(p);
+    }
+
+    void updateDecimation(List<AprilTagDetection> dets) {
+        if (dets.isEmpty()) {
+            if (++framesSinceSeen > 15 && decimation != 1) {
+                decimation = 1;
+                myAprilTagProcessor.setDecimation(1);
+            }
+            return;
+        }
+        framesSinceSeen = 0;
+        double rangeIn = dets.get(0).ftcPose != null ? dets.get(0).ftcPose.range : 9999;
+        int newDec = (rangeIn < 36) ? 3 : 2;
+        if (newDec != decimation) {
+            decimation = newDec;
+            myAprilTagProcessor.setDecimation(newDec);
+        }
     }
 
     // Creates a loop that always aims at the goal
