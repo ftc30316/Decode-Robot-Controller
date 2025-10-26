@@ -6,13 +6,13 @@ import com.acmerobotics.dashboard.config.Config;
 public class InputValues {
     public static double FLYWHEEL_SPEED = 2500;
     public static double SLOW_FLYWHEEL_SPEED = 250;
-    public  static double INTAKE_SPEED = 2500;
+    public static double INTAKE_SPEED = 2500;
     public final static double FLICK_POS_RIGHT = 0.115; //previously 0.1, increasing value reduces how far it goes
     public final static double RESET_POS_RIGHT = 0.2;
     public final static double FLICK_POS_LEFT = 0.285; //prev 0.1,
     public final static double RESET_POS_LEFT = 0.2; //prev 0.005, small number = closer to artifact
-    public final static double FLICK_POS_MIDDLE = 1; // TODO: Figure out middle value
-    public final static double RESET_POS_MIDDLE = 1; // TODO: Figure out middle value
+    public final static double FLICK_POS_MIDDLE = 0.285; // TODO: Figure out middle value
+    public final static double RESET_POS_MIDDLE = 0.2; // TODO: Figure out middle value
     public final static double TRAVEL_TIME = 1.1;
     public static double TURRET_SPEED = 0.5;
     public final static double LIFT_TRAVEL_TIME = 0.7;

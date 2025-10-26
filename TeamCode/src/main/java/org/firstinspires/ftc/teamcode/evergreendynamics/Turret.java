@@ -85,8 +85,8 @@ public class Turret {
         lift = hardwareMap.get(Servo.class, "lift");
         //liftSensor = hardwareMap.get(DistanceSensor.class, "distancesensor1");
 
-        leftFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
 
@@ -224,8 +224,8 @@ public class Turret {
                 }
                 break;
             case ON:
-                leftFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
-                rightFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+                leftFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+                rightFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
 
                 leftFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
                 rightFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
@@ -234,8 +234,8 @@ public class Turret {
                 }
                 break;
             case REVERSE:
-                leftFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
-                rightFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
+                leftFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
+                rightFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
 
                 leftFlywheel.setVelocity(InputValues.SLOW_FLYWHEEL_SPEED);
                 rightFlywheel.setVelocity(InputValues.SLOW_FLYWHEEL_SPEED);
