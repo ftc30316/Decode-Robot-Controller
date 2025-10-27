@@ -17,12 +17,14 @@ public class Sorter {
     private Telemetry telemetry;
 
     public volatile Gamepad gamepad1 = null;
+    public volatile Gamepad gamepad2 = null;
     private DistanceSensor distanceSensor;
 
     // Sets up the three different slots, each with their own servo, orientation, and color/distance sensor
-    public Sorter(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1) {
+    public Sorter(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2) {
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
         NormalizedColorSensor colorSensor1 = hardwareMap.get(NormalizedColorSensor.class, "leftColorSensor");
         NormalizedColorSensor colorSensor2 = hardwareMap.get(NormalizedColorSensor.class, "middleColorSensor");
         NormalizedColorSensor colorSensor3 = hardwareMap.get(NormalizedColorSensor.class, "rightColorSensor");
@@ -33,18 +35,29 @@ public class Sorter {
         DistanceSensor distanceSensor2 = hardwareMap.get(DistanceSensor.class, "middleColorSensor");
         DistanceSensor distanceSensor3 = hardwareMap.get(DistanceSensor.class, "rightColorSensor");
 
-        leftSlot = new Slot(telemetry, colorSensor1, servo1, gamepad1, distanceSensor1, Slot.Orientation.LEFT);
-        middleSlot = new Slot(telemetry, colorSensor2, servo2, gamepad1, distanceSensor2, Slot.Orientation.MIDDLE);
-        rightSlot = new Slot(telemetry, colorSensor3, servo3, gamepad1, distanceSensor3, Slot.Orientation.RIGHT);
+        leftSlot = new Slot(telemetry, colorSensor1, servo1, gamepad1, gamepad2, distanceSensor1, Slot.Orientation.LEFT);
+        middleSlot = new Slot(telemetry, colorSensor2, servo2, gamepad1, gamepad2, distanceSensor2, Slot.Orientation.MIDDLE);
+        rightSlot = new Slot(telemetry, colorSensor3, servo3, gamepad1, gamepad2, distanceSensor3, Slot.Orientation.RIGHT);
     }
 
     // Based on gamepad trigger, asks slots for a certain colored artifact
     public void detect() {
-        if (gamepad1.left_bumper) {
-            flickArtifactGreen();
+// This code goes based off of the color sensor data. We found this unreliable, so we switched to gamepad two determining whether we should flick the left, middle, or right slot.
+//        if (gamepad1.left_bumper) {
+//            flickArtifactGreen();
+//        }
+//        if (gamepad1.right_bumper) {
+//            flickArtifactPurple();
+//        }
+
+        if (gamepad2.square) {
+            leftSlot.switchToFlicking();
         }
-        if (gamepad1.right_bumper) {
-            flickArtifactPurple();
+        else if (gamepad2.cross) {
+            middleSlot.switchToFlicking();
+        }
+        else if (gamepad2.circle) {
+            rightSlot.switchToFlicking();
         }
 
         leftSlot.sort();

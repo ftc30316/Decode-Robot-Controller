@@ -46,14 +46,17 @@ public class Turret {
         SHOOTING,
         RESETTING
     }
-
     public enum FlywheelState {
         ON,
         OFF,
         REVERSE
     }
-
+    public enum TurretLockingState {
+        AUTO,
+        MANUAL
+    }
     FlywheelState flywheelState = FlywheelState.OFF;
+    TurretLockingState turretLockingState = TurretLockingState.AUTO;
 
     public Aiming turretAiming = Turret.Aiming.AIMING;
     public Scoring turretScoring = Turret.Scoring.SEARCHING;
@@ -62,6 +65,7 @@ public class Turret {
     public ElapsedTime liftTimer = new ElapsedTime();
 
     public volatile Gamepad gamepad1 = null;
+    public volatile Gamepad gamepad2 = null;
     AprilTagProcessor myAprilTagProcessor;
     DcMotorEx turretMotor;
     private DcMotorEx leftFlywheel;
@@ -71,10 +75,11 @@ public class Turret {
     public Thread backgroundThread;
     VisionPortal myVisionPortal;
 
-    public Turret(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, int aimAtTagId) {
+    public Turret(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2, int aimAtTagId) {
 
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
         this.aimAtTagId = aimAtTagId;
 
         //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -114,7 +119,7 @@ public class Turret {
                 .build();
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -208,6 +213,44 @@ public class Turret {
         }
     }
 
+    public void turretControl() {
+        telemetry.addData("Turret locking state: ", turretLockingState);
+        telemetry.addData("LEFT TRIGGER: ", gamepad2.left_bumper);
+        telemetry.addData("RIGHT TRIGGER: ", gamepad2.right_bumper);
+        switch (turretLockingState) {
+            case AUTO:
+                turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                adjustTurret(aimAtTagId);
+                if (gamepad1.triangle) {
+                    turretLockingState = TurretLockingState.MANUAL;
+                }
+                break;
+            case MANUAL:
+                turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                if (gamepad2.left_bumper) {
+                    turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+                    turretMotor.setPower(InputValues.TURRET_SPEED);
+                }
+                else if (gamepad2.right_bumper) {
+                    turretMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+                    turretMotor.setPower(InputValues.TURRET_SPEED);
+                }
+                else if (gamepad2.left_stick_x != 0) {
+                    double turretJoystickPower = gamepad2.left_stick_x;
+                    turretMotor.setPower(turretJoystickPower);
+                }
+                else {
+                    turretMotor.setPower(0);
+                }
+
+                if (gamepad2.triangle) {
+                    turretLockingState = TurretLockingState.AUTO;
+                }
+                break;
+        }
+    }
+
     // Starts the flywheel
     public void startFlywheel() {
         leftFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
@@ -215,6 +258,7 @@ public class Turret {
     }
 
     public void triggerFlywheel() {
+        telemetry.addData("Flywheel state is: ", flywheelState);
         switch (flywheelState) {
             case OFF:
                 leftFlywheel.setVelocity(0);

@@ -34,13 +34,15 @@ public class Slot {
     private Servo servo;
 
     public volatile Gamepad gamepad1 = null;
+    public volatile Gamepad gamepad2 = null;
     public String slotColor = "No Artifact";
 
-    public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Gamepad gamepad1, DistanceSensor distanceSensor, Orientation slotOrientation) {
+    public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Gamepad gamepad1, Gamepad gamepad2, DistanceSensor distanceSensor, Orientation slotOrientation) {
         this.telemetry = t;
         this.colorSensor = colorSensor;
         this.servo = servo;
         this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
         this.distanceSensor = distanceSensor;
         this.slotOrientation = slotOrientation;
 
@@ -58,18 +60,18 @@ public class Slot {
 
     // Creates a state machine that determines if there is an artifact, what color it is, and whether or not the driver has pressed the trigger to shoot
     public void sort() {
-        telemetry.addData("Current State ", sorterState);
-        //telemetry.addData("slot distance", distanceSensor.getDistance(DistanceUnit.INCH));
+        telemetry.addData(slotOrientation.name() + " current state: ", sorterState);
+        telemetry.addData(slotOrientation.name() + " distance: ", distanceSensor.getDistance(DistanceUnit.INCH));
         switch (sorterState) {
             case DETECTING:
                 slotColor = colorDetection(colorSensor);
-                telemetry.addLine("The detecting color is "+ slotColor);
+                telemetry.addLine(slotOrientation.name() + " detecting color is: "+ slotColor);
                 if (slotColor.equals("green") || slotColor.equals("purple")) {
                     sorterState = State.HOLDING;
                 }
                 break;
             case HOLDING:
-                telemetry.addLine("The holding color is "+ slotColor);
+                telemetry.addLine(slotOrientation.name() + " the holding color is: "+ slotColor);
                 if (distanceSensor.getDistance(DistanceUnit.INCH) > 3) {
                     sorterState = State.DETECTING;
                 }

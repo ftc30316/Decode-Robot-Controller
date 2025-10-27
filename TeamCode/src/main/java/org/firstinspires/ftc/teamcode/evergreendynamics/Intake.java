@@ -1,14 +1,19 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class Intake {
     private DcMotorEx intake1;
     private Gamepad gamepad1;
+    private Telemetry telemetry;
 
     public enum IntakeState {
         ON,
@@ -18,10 +23,11 @@ public class Intake {
 
     IntakeState intakeState = IntakeState.OFF;
 
-    public Intake(HardwareMap hardwareMap, Gamepad gamepad1) {
+    public Intake(HardwareMap hardwareMap, Gamepad gamepad1, Telemetry telemetry) {
         intake1 = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         intake1.setDirection(DcMotorSimple.Direction.REVERSE);
         this.gamepad1 = gamepad1;
+        this.telemetry = telemetry;
 
 
     }
@@ -30,6 +36,7 @@ public class Intake {
         intake1.setVelocity(InputValues.INTAKE_SPEED);
     }
     public void triggerIntake() {
+        telemetry.addData("Intake state is: ", intakeState);
         switch (intakeState) {
             case OFF:
                 intake1.setVelocity(0);
@@ -46,7 +53,7 @@ public class Intake {
                 break;
             case REVERSE:
                 intake1.setDirection(DcMotorSimple.Direction.FORWARD);
-                intake1.setVelocity(InputValues.INTAKE_SPEED);
+                intake1.setVelocity(InputValues.SLOW_INTAKE_SPEED);
                 if (gamepad1.square) {
                     intakeState = IntakeState.OFF;
                 }
