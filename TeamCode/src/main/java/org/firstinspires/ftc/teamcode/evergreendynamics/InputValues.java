@@ -24,4 +24,5 @@ public class InputValues {
     public static int GAIN = 48;
     public static int WHITE_BALANCE = 4800;
     public static int FOCUS = 0;
+    public final static long SLEEP_PER_AUTO_FRAMES = 25;
 }

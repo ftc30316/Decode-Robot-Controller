@@ -98,12 +98,12 @@ public class Turret {
         // Create the AprilTag processor and assign it to a variable.
         AprilTagProcessor.Builder myAprilTagProcessorBuilder = new AprilTagProcessor.Builder();
         myAprilTagProcessor = myAprilTagProcessorBuilder
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
+                .setDrawTagID(false)
+                .setDrawTagOutline(false)
+                .setDrawAxes(false)
+                .setDrawCubeProjection(false)
                 .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
-                .setOutputUnits(DistanceUnit.INCH, AngleUnit.RADIANS)
+                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
                 .build();
 
         myAprilTagProcessor.setDecimation(2); // Set dynamically later
@@ -416,7 +416,7 @@ public class Turret {
                 packet.put("is at target", !turretMotor.isBusy());
                 FtcDashboard.getInstance().sendTelemetryPacket(packet);
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(InputValues.SLEEP_PER_AUTO_FRAMES);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
