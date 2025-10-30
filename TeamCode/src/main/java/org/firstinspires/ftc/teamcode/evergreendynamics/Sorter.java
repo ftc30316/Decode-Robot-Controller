@@ -94,4 +94,10 @@ public class Sorter {
             rightSlot.switchToFlicking();
         }
     }
+
+    public void flickAll() { // last resort flicking
+        leftSlot.switchToFlicking();
+        middleSlot.switchToFlicking();
+        rightSlot.switchToFlicking();
+    }
 }

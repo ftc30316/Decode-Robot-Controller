@@ -363,11 +363,10 @@ public class Turret {
     }
 
     // Switches the turret state to shooting, where the artifact will move into the flywheel
-//    public void shootArtifact() {
-//        if (liftSensor.getDistance(DistanceUnit.INCH) < 5.5) {
-//            turretScoring = Scoring.SHOOTING;
-//        }
-//    }
+    public void shootArtifact() {
+            turretScoring = Scoring.SHOOTING;
+            score();
+    }
 
     // Uses the position of the aprilTag to adjust the turret motor and center the aprilTag in the camera view
     public void adjustTurret (int aimAtTagId) {
