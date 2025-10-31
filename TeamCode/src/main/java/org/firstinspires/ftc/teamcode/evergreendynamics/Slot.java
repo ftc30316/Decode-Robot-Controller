@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.tuning.ArtifactSorterTest;
 
 
 public class Slot {
@@ -95,7 +94,7 @@ public class Slot {
                 break;
             case RESETTING:
                 // Once the time elapsed is greater than the required time for the servo to move, it will reset the servo
-                if (flickTimer.seconds() > InputValues.TRAVEL_TIME) {
+                if (flickTimer.seconds() > InputValues.FLICK_TRAVEL_TIME) {
                     if (slotOrientation == Orientation.LEFT) {
                         servo.setPosition(InputValues.RESET_POS_RIGHT);
                     }

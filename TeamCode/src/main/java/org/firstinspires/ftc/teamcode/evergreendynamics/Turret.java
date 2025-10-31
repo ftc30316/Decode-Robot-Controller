@@ -296,7 +296,7 @@ public class Turret {
         AprilTagDetection myAprilTagDetection;         // current detection in for() loop
         int myAprilTagIdCode;                           // ID code of current detection, in for() loop
 
-        for (int loopCounter = 0; loopCounter < 5; loopCounter++) {
+        for (int loopCounter = 0; loopCounter < 3; loopCounter++) {
             // Get a list of AprilTag detections.
             myAprilTagDetections = myAprilTagProcessor.getDetections();
 

@@ -19,7 +19,7 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("Running Op Mode");
-        Pose2d beginPose = new Pose2d(-60, 12, 90);
+        Pose2d beginPose = new Pose2d(-60, 12, 45);
         this.mecanumDrive = new MecanumDrive(hardwareMap, beginPose);
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
         this.intake = new Intake(hardwareMap, gamepad1, telemetry);
@@ -44,10 +44,15 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
         Actions.runBlocking(
                 mecanumDrive.actionBuilder(beginPose).setTangent(0)
 //                        .strafeToConstantHeading(new Vector2d(-48, 24))
-                        .strafeTo(new Vector2d(-36,12))
-                        .strafeTo(new Vector2d(-36, 60))
-                        .strafeTo(new Vector2d(-36, 12))
-                        .strafeTo(new Vector2d(24,12))
+//                        // Moves away from wall
+//                        .strafeTo(new Vector2d(-42,12))
+//                        // Moves towards artifacts in row 1
+//                        .strafeTo(new Vector2d(-42, 72))
+//                        // Moves away from artifacts in row 1
+//                        .strafeTo(new Vector2d(-42, 12))
+                        // Moves to launch zone
+                        .strafeTo(new Vector2d(-6,54))
+                        //.turn(Math.toRadians(15))
                         .build());
 
         //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
@@ -71,8 +76,9 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
         }
 
         sorter.detect(); // triggers flick
-        sleep(3000);
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
         sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
 
         turret.shootArtifact(); // lifts lift servo
         sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
@@ -88,8 +94,9 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
         }
 
         sorter.detect(); // triggers flick
-        sleep(3000);
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
         sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
 
         turret.shootArtifact(); // lifts lift servo
         sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
@@ -106,14 +113,25 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
         }
 
         sorter.detect(); // triggers flick
-        sleep(3000);
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
         sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
 
         turret.shootArtifact(); // lifts lift servo
         sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
         turret.score(); // resets lift servo
 
+        sleep(1000);
+        // Safety net, flicks all just in case
         sorter.flickAll();
+        sorter.detect(); // triggers flick
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
+
+        turret.shootArtifact(); // lifts lift servo
+        sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        turret.score(); // resets lift servo
 
         sleep(10000);
 
