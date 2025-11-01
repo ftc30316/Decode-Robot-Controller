@@ -55,7 +55,7 @@ public class Turret {
         AUTO,
         MANUAL
     }
-    FlywheelState flywheelState = FlywheelState.OFF;
+    FlywheelState flywheelState = FlywheelState.ON;
     TurretLockingState turretLockingState = TurretLockingState.AUTO;
 
     public Aiming turretAiming = Turret.Aiming.AIMING;
@@ -93,6 +93,8 @@ public class Turret {
         leftFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        leftFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         // Create the AprilTag processor and assign it to a variable.

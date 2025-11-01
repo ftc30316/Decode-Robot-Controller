@@ -4,10 +4,10 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class InputValues {
-    public static double FLYWHEEL_SPEED = 2500;
+    public static double FLYWHEEL_SPEED = 2300;
     public static double SLOW_FLYWHEEL_SPEED = 250;
     public static double INTAKE_SPEED = 2500;
-    public static double SLOW_INTAKE_SPEED = 1000;
+    public static double SLOW_INTAKE_SPEED = 1700;
     public final static double FLICK_POS_RIGHT = 0; //previously 0.115, increasing value reduces how far it goes
     public final static double RESET_POS_RIGHT = 0.2;
     public final static double FLICK_POS_LEFT = 0.285; //prev 0.1,

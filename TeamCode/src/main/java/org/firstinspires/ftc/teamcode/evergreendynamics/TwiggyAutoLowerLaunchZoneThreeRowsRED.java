@@ -7,19 +7,20 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+
 @Autonomous
-public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
+public class TwiggyAutoLowerLaunchZoneThreeRowsRED extends LinearOpMode {
     public Sorter sorter;
     public Intake intake;
     public Turret turret;
     public MecanumDrive mecanumDrive;
-    public int aimAtTagId = 20; //Aim at blue goal
+    public int aimAtTagId = 24; //Aim at blue goal
 
     @Override
 
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("Running Op Mode");
-        Pose2d beginPose = new Pose2d(-60, 12, 90);
+        Pose2d beginPose = new Pose2d(-60, -12, -90);
         this.mecanumDrive = new MecanumDrive(hardwareMap, beginPose);
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
         this.intake = new Intake(hardwareMap, gamepad1, telemetry);
@@ -52,7 +53,7 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
 //                        .strafeTo(new Vector2d(-42, 12))
                         // Moves to launch zone
                         //.strafeTo(new Vector2d(0,0))
-                        .strafeTo(new Vector2d(24,54))
+                        .strafeTo(new Vector2d(24,-54))
                         //.turn(Math.toRadians(15))
                         .build());
 

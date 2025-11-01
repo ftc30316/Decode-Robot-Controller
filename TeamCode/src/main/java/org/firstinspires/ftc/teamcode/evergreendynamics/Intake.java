@@ -21,7 +21,7 @@ public class Intake {
         REVERSE
     }
 
-    IntakeState intakeState = IntakeState.OFF;
+    IntakeState intakeState = IntakeState.ON;
 
     public Intake(HardwareMap hardwareMap, Gamepad gamepad1, Telemetry telemetry) {
         intake1 = hardwareMap.get(DcMotorEx.class, "intakeMotor");
