@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class InputValues {
-    public static double FLYWHEEL_SPEED = 2300;
+    public static double FLYWHEEL_SPEED = 3000;
     public static double SLOW_FLYWHEEL_SPEED = 250;
     public static double INTAKE_SPEED = 2500;
     public static double SLOW_INTAKE_SPEED = 1700;

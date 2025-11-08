@@ -19,7 +19,8 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("Running Op Mode");
-        Pose2d beginPose = new Pose2d(-60, 12, 90);
+        Pose2d beginPose = new Pose2d(62, -12, Math.toRadians(270));
+        Pose2d goalPose = new Pose2d(-12, -12, Math.toRadians(270));
         this.mecanumDrive = new MecanumDrive(hardwareMap, beginPose);
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
         this.intake = new Intake(hardwareMap, gamepad1, telemetry);
@@ -35,14 +36,14 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
         waitForStart();
 
         // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
-        turret.backgroundThread.start();
+        //turret.backgroundThread.start();
         intake.startSpin();
         turret.startFlywheel();
 
 
         //Moves to get first set of three artifacts from the side of the set
-        Actions.runBlocking(
-                mecanumDrive.actionBuilder(beginPose).setTangent(0)
+//        Actions.runBlocking(
+//                mecanumDrive.actionBuilder(beginPose).setTangent(0)
 //                        .strafeToConstantHeading(new Vector2d(-48, 24))
 //                        // Moves away from wall
 //                        .strafeTo(new Vector2d(-42,12))
@@ -51,23 +52,19 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
 //                        // Moves away from artifacts in row 1
 //                        .strafeTo(new Vector2d(-42, 12))
                         // Moves to launch zone
-                        //.strafeTo(new Vector2d(0,0))
-                        .strafeTo(new Vector2d(24,54))
+//                        .strafeTo(new Vector2d(-6,54))
                         //.turn(Math.toRadians(15))
-                        .build());
+//                        .build());
 
         //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
         sleep(2000);
         sorter.detect();
 
 //        //Moves to upper launch zone
-//        mecanumDrive.actionBuilder(beginPose).setTangent(0)
-//                //.splineToConstantHeading(new Vector2d(24, 24),  Math.toRadians(180))
-//                //  .splineToConstantHeading(new Vector2d())
-//                .strafeTo(new Vector2d(24, 24))
-//                .strafeTo(new Vector2d(48, 24))
-//                .strafeTo(new Vector2d(72, 0))
-//                .build();
+        Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
+                .strafeTo(new Vector2d(-12, -12))
+                .build());
+
 //
         // changes state to flicking
         if (motifTagId == 21) {
@@ -134,7 +131,219 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
         sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
         turret.score(); // resets lift servo
 
-        sleep(10000);
+        Actions.runBlocking(mecanumDrive.actionBuilder(goalPose).setTangent(0)
+                .strafeTo(new Vector2d(-12,-50))
+                .strafeTo(new Vector2d(-12,-12))
+                .build());
+
+        // changes state to flicking
+        if (motifTagId == 21) {
+            sorter.flickArtifactGreen();
+        } else if ((motifTagId == 22) || (motifTagId == 23)) {
+            sorter.flickArtifactPurple();
+        }
+
+        sorter.detect(); // triggers flick
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
+
+        turret.shootArtifact(); // lifts lift servo
+        sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        turret.score(); // resets lift servo
+
+        //Flick second artifact
+        sorter.detect();
+
+        if (motifTagId == 22) {
+            sorter.flickArtifactGreen();
+        } else if ((motifTagId == 21) || (motifTagId == 23)) {
+            sorter.flickArtifactPurple();
+        }
+
+        sorter.detect(); // triggers flick
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
+
+        turret.shootArtifact(); // lifts lift servo
+        sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        turret.score(); // resets lift servo
+
+
+        //Flick third artifact
+        sorter.detect();
+
+        if (motifTagId == 23) {
+            sorter.flickArtifactGreen();
+        } else if ((motifTagId == 21) || (motifTagId == 22)) {
+            sorter.flickArtifactPurple();
+        }
+
+        sorter.detect(); // triggers flick
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
+
+        turret.shootArtifact(); // lifts lift servo
+        sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        turret.score(); // resets lift servo
+
+        sleep(1000);
+        // Safety net, flicks all just in case
+        sorter.flickAll();
+        sorter.detect(); // triggers flick
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
+
+        turret.shootArtifact(); // lifts lift servo
+        sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        turret.score(); // resets lift servo
+
+        Actions.runBlocking(mecanumDrive.actionBuilder(goalPose).setTangent(0)
+                .strafeTo(new Vector2d(12,-12))
+                .strafeTo(new Vector2d(12,-50))
+                .strafeTo(new Vector2d(-12,-12))
+                .build());
+
+        // changes state to flicking
+        if (motifTagId == 21) {
+            sorter.flickArtifactGreen();
+        } else if ((motifTagId == 22) || (motifTagId == 23)) {
+            sorter.flickArtifactPurple();
+        }
+
+        sorter.detect(); // triggers flick
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
+
+        turret.shootArtifact(); // lifts lift servo
+        sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        turret.score(); // resets lift servo
+
+        //Flick second artifact
+        sorter.detect();
+
+        if (motifTagId == 22) {
+            sorter.flickArtifactGreen();
+        } else if ((motifTagId == 21) || (motifTagId == 23)) {
+            sorter.flickArtifactPurple();
+        }
+
+        sorter.detect(); // triggers flick
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
+
+        turret.shootArtifact(); // lifts lift servo
+        sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        turret.score(); // resets lift servo
+
+
+        //Flick third artifact
+        sorter.detect();
+
+        if (motifTagId == 23) {
+            sorter.flickArtifactGreen();
+        } else if ((motifTagId == 21) || (motifTagId == 22)) {
+            sorter.flickArtifactPurple();
+        }
+
+        sorter.detect(); // triggers flick
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
+
+        turret.shootArtifact(); // lifts lift servo
+        sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        turret.score(); // resets lift servo
+
+        sleep(1000);
+        // Safety net, flicks all just in case
+        sorter.flickAll();
+        sorter.detect(); // triggers flick
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
+
+        turret.shootArtifact(); // lifts lift servo
+        sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        turret.score(); // resets lift servo
+
+        Actions.runBlocking(mecanumDrive.actionBuilder(goalPose).setTangent(0)
+                .strafeTo(new Vector2d(36,-12))
+                .strafeTo(new Vector2d(36,-50))
+                .strafeTo(new Vector2d(-12,-12))
+                .build());
+
+        // changes state to flicking
+        if (motifTagId == 21) {
+            sorter.flickArtifactGreen();
+        } else if ((motifTagId == 22) || (motifTagId == 23)) {
+            sorter.flickArtifactPurple();
+        }
+
+        sorter.detect(); // triggers flick
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
+
+        turret.shootArtifact(); // lifts lift servo
+        sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        turret.score(); // resets lift servo
+
+        //Flick second artifact
+        sorter.detect();
+
+        if (motifTagId == 22) {
+            sorter.flickArtifactGreen();
+        } else if ((motifTagId == 21) || (motifTagId == 23)) {
+            sorter.flickArtifactPurple();
+        }
+
+        sorter.detect(); // triggers flick
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
+
+        turret.shootArtifact(); // lifts lift servo
+        sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        turret.score(); // resets lift servo
+
+
+        //Flick third artifact
+        sorter.detect();
+
+        if (motifTagId == 23) {
+            sorter.flickArtifactGreen();
+        } else if ((motifTagId == 21) || (motifTagId == 22)) {
+            sorter.flickArtifactPurple();
+        }
+
+        sorter.detect(); // triggers flick
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
+
+        turret.shootArtifact(); // lifts lift servo
+        sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        turret.score(); // resets lift servo
+
+        sleep(1000);
+        // Safety net, flicks all just in case
+        sorter.flickAll();
+        sorter.detect(); // triggers flick
+        sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        sorter.detect(); // triggers reset
+        sleep((long) (InputValues.SETTLE_TIME * 1000));
+
+        turret.shootArtifact(); // lifts lift servo
+        sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        turret.score(); // resets lift servo
+
+        sleep(30000);
 
     }
 }

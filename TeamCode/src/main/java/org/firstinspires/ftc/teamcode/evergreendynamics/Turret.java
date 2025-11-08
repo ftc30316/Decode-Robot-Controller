@@ -126,32 +126,32 @@ public class Turret {
             throw new RuntimeException(e);
         }
 
-        ExposureControl exp = myVisionPortal.getCameraControl(ExposureControl.class);
-        if (exp != null && exp.getMode() != ExposureControl.Mode.Manual) {
-            exp.setMode(ExposureControl.Mode.Manual);
-            exp.setExposure(InputValues.EXPOSURE, TimeUnit.MILLISECONDS);
-        }
-
-        GainControl gain = myVisionPortal.getCameraControl(GainControl.class);
-        if (gain != null) gain.setGain(InputValues.GAIN);
-
-        WhiteBalanceControl wb = myVisionPortal.getCameraControl(WhiteBalanceControl.class);
-        if (wb != null) {
-            wb.setMode(WhiteBalanceControl.Mode.MANUAL);
-            wb.setWhiteBalanceTemperature(InputValues.WHITE_BALANCE);
-        }
-
-        CameraControl cameraControl = myVisionPortal.getCameraControl(CameraControl.class);
-
-        FocusControl focusControl = myVisionPortal.getCameraControl(FocusControl.class);
-        if (focusControl != null) {
-            focusControl.setMode(FocusControl.Mode.Infinity);
-            focusControl.setFocusLength(InputValues.FOCUS);
-        }
-
-        telemetry.addData("Exposure(ms)", exp != null ? exp.getExposure(TimeUnit.MILLISECONDS) : -1);
-        telemetry.addData("Gain", gain != null ? gain.getGain() : -1);
-        telemetry.addData("WB(K)", wb != null ? wb.getWhiteBalanceTemperature() : -1);
+//        ExposureControl exp = myVisionPortal.getCameraControl(ExposureControl.class);
+//        if (exp != null && exp.getMode() != ExposureControl.Mode.Manual) {
+//            exp.setMode(ExposureControl.Mode.Manual);
+//            exp.setExposure(InputValues.EXPOSURE, TimeUnit.MILLISECONDS);
+//        }
+//
+//        GainControl gain = myVisionPortal.getCameraControl(GainControl.class);
+//        if (gain != null) gain.setGain(InputValues.GAIN);
+//
+//        WhiteBalanceControl wb = myVisionPortal.getCameraControl(WhiteBalanceControl.class);
+//        if (wb != null) {
+//            wb.setMode(WhiteBalanceControl.Mode.MANUAL);
+//            wb.setWhiteBalanceTemperature(InputValues.WHITE_BALANCE);
+//        }
+//
+//        CameraControl cameraControl = myVisionPortal.getCameraControl(CameraControl.class);
+//
+//        FocusControl focusControl = myVisionPortal.getCameraControl(FocusControl.class);
+//        if (focusControl != null) {
+//            focusControl.setMode(FocusControl.Mode.Infinity);
+//            focusControl.setFocusLength(InputValues.FOCUS);
+//        }
+//
+//        telemetry.addData("Exposure(ms)", exp != null ? exp.getExposure(TimeUnit.MILLISECONDS) : -1);
+//        telemetry.addData("Gain", gain != null ? gain.getGain() : -1);
+//        telemetry.addData("WB(K)", wb != null ? wb.getWhiteBalanceTemperature() : -1);
 
         // Enable or disable the AprilTag processor.
         myVisionPortal.setProcessorEnabled(myAprilTagProcessor, true);
