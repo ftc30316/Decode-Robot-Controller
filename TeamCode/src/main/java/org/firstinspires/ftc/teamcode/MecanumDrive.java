@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
@@ -41,6 +43,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.evergreendynamics.Turret;
 import org.firstinspires.ftc.teamcode.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumLocalizerInputsMessage;
@@ -91,7 +94,11 @@ public final class MecanumDrive {
         public double lateralVelGain = 0.0;
         public double headingVelGain = 0.0; // shared with turn
     }
-
+    public enum DrivePowers {
+        NORMAL,
+        SLOW
+    }
+    public DrivePowers drivePowers = DrivePowers.NORMAL;
     public static Params PARAMS = new Params();
 
     public final MecanumKinematics kinematics = new MecanumKinematics(
@@ -254,6 +261,24 @@ public final class MecanumDrive {
         localizer = new PinpointLocalizer(hardwareMap, PARAMS.inPerTick, pose);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
+    }
+
+    public void loop() {
+        switch(drivePowers) {
+            case NORMAL:
+
+                if (gamepad1.circleWasPressed()) {
+                    drivePowers = MecanumDrive.DrivePowers.SLOW;
+                }
+                break;
+
+            case SLOW:
+
+                if (gamepad1.circleWasPressed()) {
+                    drivePowers = MecanumDrive.DrivePowers.NORMAL;
+                }
+
+        }
     }
 
     public void setDrivePowers(PoseVelocity2d powers) {

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -25,8 +26,9 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
         this.intake = new Intake(hardwareMap, gamepad1, telemetry);
         this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, aimAtTagId);
-
         telemetry.update();
+        Pose2d currentPose = mecanumDrive.localizer.getPose();
+        // currentPose.heading.
 
         //Detect motif for artifact order (Init)
         int motifTagId = turret.determineMotif();

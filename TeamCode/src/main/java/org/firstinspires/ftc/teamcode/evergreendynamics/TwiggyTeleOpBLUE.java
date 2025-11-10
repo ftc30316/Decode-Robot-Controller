@@ -33,13 +33,24 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
 
         // Sets up the driving system
         while (opModeIsActive()) {
-            mecanumDrive.setDrivePowers(new PoseVelocity2d(
-                    new Vector2d(
-                            -gamepad1.left_stick_y,
-                            -gamepad1.left_stick_x
-                    ),
-                    -gamepad1.right_stick_x
-            ));
+            if (mecanumDrive.drivePowers == MecanumDrive.DrivePowers.SLOW) {
+                mecanumDrive.setDrivePowers(new PoseVelocity2d(
+                        new Vector2d(
+                                -gamepad1.left_stick_y * 0.5,
+                                -gamepad1.left_stick_x * 0.5
+                        ),
+                        -gamepad1.right_stick_x * 0.5
+                ));
+
+            } else {
+                mecanumDrive.setDrivePowers(new PoseVelocity2d(
+                        new Vector2d(
+                                -gamepad1.left_stick_y,
+                                -gamepad1.left_stick_x
+                        ),
+                        -gamepad1.right_stick_x
+                ));
+            }
 
 //            // Toggle between field-centric and robot-centric with X
 //            if (gamepad1.triangle && !triangleWasDown) fieldCentric = !fieldCentric;

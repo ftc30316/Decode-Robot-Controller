@@ -262,20 +262,21 @@ public class Turret {
     public void triggerFlywheel() {
         telemetry.addData("Flywheel state is: ", flywheelState);
         switch (flywheelState) {
-            case OFF:
-                leftFlywheel.setVelocity(0);
-                rightFlywheel.setVelocity(0);
-                if (gamepad1.circleWasPressed()) {
-                    flywheelState = FlywheelState.ON;
-                }
-                break;
+//            case OFF:
+//                leftFlywheel.setVelocity(0);
+//                rightFlywheel.setVelocity(0);
+//                if (gamepad1.x) {
+//                    flywheelState = FlywheelState.ON;
+//
+//                }
+//                break;
             case ON:
                 leftFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
                 rightFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
 
                 leftFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
                 rightFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
-                if (gamepad1.circleWasPressed()) {
+                if (gamepad2.right_bumper) {
                     flywheelState = FlywheelState.REVERSE;
                 }
                 break;
@@ -285,9 +286,12 @@ public class Turret {
 
                 leftFlywheel.setVelocity(InputValues.SLOW_FLYWHEEL_SPEED);
                 rightFlywheel.setVelocity(InputValues.SLOW_FLYWHEEL_SPEED);
-                if (gamepad1.circleWasPressed()) {
-                    flywheelState = FlywheelState.OFF;
+                if (gamepad2.left_bumper) {
+                    flywheelState = FlywheelState.ON;
                 }
+//                if (gamepad1.circleWasPressed()) {
+//                    flywheelState = FlywheelState.OFF;
+//                }
                 break;
         }
     }
@@ -346,7 +350,7 @@ public class Turret {
                 break;
             case HOLDING:
                 // && liftSensor.getDistance(DistanceUnit.INCH) < 5.5
-                if (gamepad1.cross) {
+                if (gamepad1.right_trigger == 1) {
                     turretScoring = Scoring.SHOOTING;
                 }
                 break;

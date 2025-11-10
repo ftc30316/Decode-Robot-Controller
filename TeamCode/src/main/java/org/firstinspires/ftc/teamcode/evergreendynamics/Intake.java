@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -46,12 +47,12 @@ public class Intake {
     public void triggerIntake() {
         telemetry.addData("Intake state is: ", intakeState);
         switch (intakeState) {
-            case OFF:
-                intake1.setVelocity(0);
-                if (gamepad1.square) {
-                    intakeState = IntakeState.ON;
-                }
-                break;
+//            case OFF:
+//                intake1.setVelocity(0);
+//                if (gamepad1.square) {
+//                    intakeState = IntakeState.ON;
+//                }
+//                break;
             case ON:
                 intake1.setDirection(DcMotorSimple.Direction.REVERSE);
                 intake1.setVelocity(InputValues.INTAKE_SPEED);
@@ -59,17 +60,19 @@ public class Intake {
                 rightIntakeServo.setPower(1.0);
                 leftIntakeServo.setPower(1.0);
 
-                if (gamepad1.square) {
+                if (gamepad2.right_bumper) {
                     intakeState = IntakeState.REVERSE;
                 }
-
                 break;
             case REVERSE:
                 intake1.setDirection(DcMotorSimple.Direction.FORWARD);
                 intake1.setVelocity(InputValues.SLOW_INTAKE_SPEED);
-                if (gamepad1.square) {
-                    intakeState = IntakeState.OFF;
+                if (gamepad2.left_bumper) {
+                    intakeState = IntakeState.ON;
                 }
+//                if (gamepad1.square) {
+//                    intakeState = IntakeState.OFF;
+//                }
                 break;
         }
     }
