@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.evergreendynamics;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -17,21 +15,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.CameraControl;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.FocusControl;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
-import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Turret {
 
@@ -72,7 +63,7 @@ public class Turret {
     private DcMotorEx rightFlywheel;
     private Servo lift;
     public int aimAtTagId;
-    public Thread backgroundThread;
+    public Thread turretBackgroundThread;
     VisionPortal myVisionPortal;
 
     public Turret(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2, int aimAtTagId) {
@@ -171,7 +162,7 @@ public class Turret {
         lift.setPosition(InputValues.LIFT_START_POS);
 
         // Creates a background thread so that while the robot is driving, intaking, and sorting, the turret can always be auto-locked on the goal
-        this.backgroundThread = new Thread(this::constantlyAimAtAprilTag);
+        this.turretBackgroundThread = new Thread(this::constantlyAimAtAprilTag);
 
     }
 
@@ -276,7 +267,7 @@ public class Turret {
 
                 leftFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
                 rightFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
-                if (gamepad2.right_bumper) {
+                if (gamepad2.right_trigger == 1) {
                     flywheelState = FlywheelState.REVERSE;
                 }
                 break;
@@ -286,7 +277,7 @@ public class Turret {
 
                 leftFlywheel.setVelocity(InputValues.SLOW_FLYWHEEL_SPEED);
                 rightFlywheel.setVelocity(InputValues.SLOW_FLYWHEEL_SPEED);
-                if (gamepad2.left_bumper) {
+                if (gamepad2.left_trigger == 1) {
                     flywheelState = FlywheelState.ON;
                 }
 //                if (gamepad1.circleWasPressed()) {
@@ -395,25 +386,25 @@ public class Turret {
 
             myAprilTagIdCode = myAprilTagDetection.id;
 
-            TelemetryPacket aprilTagData = new TelemetryPacket();
-            aprilTagData.put("number of tags seen", String.valueOf(myAprilTagDetections.size()));
-            aprilTagData.put("which tags seen", String.valueOf(myAprilTagIdCode));
-            FtcDashboard.getInstance().sendTelemetryPacket(aprilTagData);
+//            TelemetryPacket aprilTagData = new TelemetryPacket();
+//            aprilTagData.put("number of tags seen", String.valueOf(myAprilTagDetections.size()));
+//            aprilTagData.put("which tags seen", String.valueOf(myAprilTagIdCode));
+//            FtcDashboard.getInstance().sendTelemetryPacket(aprilTagData);
 
             if (myAprilTagIdCode == aimAtTagId) {
-                double currentPosition = turretMotor.getCurrentPosition();
-                double motorTicks = myAprilTagDetection.ftcPose.bearing * 5.3277777778;
-                double newPosition = currentPosition - motorTicks;
-
-                turretMotor.setTargetPosition((int) newPosition);
+//                double currentPosition = turretMotor.getCurrentPosition();
+//                double motorTicks = myAprilTagDetection.ftcPose.bearing * 5.3277777778;
+//                double newPosition = currentPosition - motorTicks;
+//
+//                turretMotor.setTargetPosition((int) newPosition);
 
                 telemetry.addLine(String.valueOf(myAprilTagIdCode));
                 telemetry.addData("bearing", myAprilTagDetection.ftcPose.bearing); // angle the camera must turn (left/right) to face target)
 
                 TelemetryPacket packet = new TelemetryPacket();
-                packet.put("range", myAprilTagDetection.ftcPose.range); // distance from camera to target
+//                packet.put("range", myAprilTagDetection.ftcPose.range); // distance from camera to target
                 packet.put("bearing", myAprilTagDetection.ftcPose.bearing); // angle the camera must turn (left/right) to face target
-                packet.put("elevation", myAprilTagDetection.ftcPose.elevation); // angle the camera must tilt (up/down) to face target
+//                packet.put("elevation", myAprilTagDetection.ftcPose.elevation); // angle the camera must tilt (up/down) to face target
                 FtcDashboard.getInstance().sendTelemetryPacket(packet);
                 packet = new TelemetryPacket();
                 packet.put("velocity", turretMotor.getVelocity());

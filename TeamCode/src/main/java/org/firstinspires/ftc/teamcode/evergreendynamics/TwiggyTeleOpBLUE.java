@@ -29,7 +29,7 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
         waitForStart();
 
         // Starts the auto-lock on the BLUE aprilTag
-        //turret.backgroundThread.start();
+        //turret.turretBackgroundThread.start();
 
         // Sets up the driving system
         while (opModeIsActive()) {

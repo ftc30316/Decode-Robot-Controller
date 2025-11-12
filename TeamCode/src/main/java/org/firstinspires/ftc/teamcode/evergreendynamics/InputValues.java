@@ -14,6 +14,10 @@ public class InputValues {
     public final static double RESET_POS_LEFT = 0.2; //prev 0.005, small number = closer to artifact
     public final static double FLICK_POS_MIDDLE = 0.115;
     public final static double RESET_POS_MIDDLE = 0.2;
+    public final static double FLIPPER_POS_LEFT = 0; //TODO Determine values
+    public final static double FLIPPER_POS_RIGHT = 0; //TODO Determine values
+    public final static double RESET_FLIPPER_POS_LEFT = 0; //TODO Determine values
+    public final static double RESET_FLIPPER_POS_RIGHT = 0; //TODO Determine values
     public final static double FLICK_TRAVEL_TIME = 1.1;
     public static double TURRET_SPEED = 0.5;
     public static double SETTLE_TIME= 1.0;

@@ -36,7 +36,7 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsRED extends LinearOpMode {
         waitForStart();
 
         // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
-        turret.backgroundThread.start();
+//        turret.turretBackgroundThread.start();
         intake.startSpin();
         turret.startFlywheel();
 

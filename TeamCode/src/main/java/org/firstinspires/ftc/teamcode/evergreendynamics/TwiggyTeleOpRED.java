@@ -26,7 +26,7 @@ public class TwiggyTeleOpRED extends LinearOpMode{
         waitForStart();
 
         // Starts the auto-lock on the RED aprilTag
-        turret.backgroundThread.start();
+        turret.turretBackgroundThread.start();
 
         // Flywheel and intake motor start
         turret.startFlywheel();

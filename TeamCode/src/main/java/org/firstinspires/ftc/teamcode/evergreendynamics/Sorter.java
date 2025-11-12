@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,15 +10,20 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Sorter {
+    public enum FlipperState {
+        FLIPPING
+    }
+
+    public FlipperState sorterFlipperState = Sorter.FlipperState.FLIPPING;
     Slot leftSlot;
     Slot middleSlot;
     Slot rightSlot;
+    public Thread sorterBackgroundThread;
 
     private Telemetry telemetry;
 
     public volatile Gamepad gamepad1 = null;
     public volatile Gamepad gamepad2 = null;
-    private DistanceSensor distanceSensor;
 
     // Sets up the three different slots, each with their own servo, orientation, and color/distance sensor
     public Sorter(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2) {
@@ -31,13 +36,24 @@ public class Sorter {
         Servo servo1 = hardwareMap.get(Servo.class, "leftServo");
         Servo servo2 = hardwareMap.get(Servo.class, "middleServo");
         Servo servo3 = hardwareMap.get(Servo.class, "rightServo");
-        DistanceSensor distanceSensor1 = hardwareMap.get(DistanceSensor.class, "leftColorSensor");
-        DistanceSensor distanceSensor2 = hardwareMap.get(DistanceSensor.class, "middleColorSensor");
-        DistanceSensor distanceSensor3 = hardwareMap.get(DistanceSensor.class, "rightColorSensor");
+        Servo leftFlipperServo = hardwareMap.get(Servo.class, "leftFlipperServo");
+        Servo rightFlipperServo = hardwareMap.get(Servo.class, "rightFlipperServo");
 
-        leftSlot = new Slot(telemetry, colorSensor1, servo1, gamepad1, gamepad2, distanceSensor1, Slot.Orientation.LEFT);
-        middleSlot = new Slot(telemetry, colorSensor2, servo2, gamepad1, gamepad2, distanceSensor2, Slot.Orientation.MIDDLE);
-        rightSlot = new Slot(telemetry, colorSensor3, servo3, gamepad1, gamepad2, distanceSensor3, Slot.Orientation.RIGHT);
+        leftSlot = new Slot(telemetry, colorSensor1, servo1, leftFlipperServo, gamepad2, Slot.Orientation.LEFT);
+        middleSlot = new Slot(telemetry, colorSensor2, servo2, gamepad1, gamepad2, Slot.Orientation.MIDDLE);
+        rightSlot = new Slot(telemetry, colorSensor3, servo3, rightFlipperServo, gamepad2, Slot.Orientation.RIGHT);
+
+        // Creates a background thread so that the flippers can flip and the flickers can flick at the same time
+        this.sorterBackgroundThread = new Thread(this:://TODO fill this in);
+    }
+
+    public void flip() {
+        switch (sorterFlipperState) {
+            case FLIPPING:
+                if (gamepad2.square) {
+                    leftFlipperServo
+                }
+                break;
     }
 
     // Based on gamepad trigger, asks slots for a certain colored artifact

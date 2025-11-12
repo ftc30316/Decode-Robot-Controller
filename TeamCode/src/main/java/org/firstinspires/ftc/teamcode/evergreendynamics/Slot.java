@@ -36,7 +36,7 @@ public class Slot {
     public volatile Gamepad gamepad2 = null;
     public String slotColor = "No Artifact";
 
-    public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Gamepad gamepad1, Gamepad gamepad2, DistanceSensor distanceSensor, Orientation slotOrientation) {
+    public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Gamepad gamepad1, Gamepad gamepad2, Orientation slotOrientation) {
         this.telemetry = t;
         this.colorSensor = colorSensor;
         this.servo = servo;
