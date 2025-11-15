@@ -29,20 +29,22 @@ public class Slot {
     public ElapsedTime flickTimer = new ElapsedTime();  // Timer to track time in each state
     private Telemetry telemetry;
     private NormalizedColorSensor colorSensor;
-    private DistanceSensor distanceSensor;
     private Servo servo;
+    private Servo leftFlipServo;
+    private Servo rightFlipServo;
 
     public volatile Gamepad gamepad1 = null;
     public volatile Gamepad gamepad2 = null;
     public String slotColor = "No Artifact";
 
-    public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Gamepad gamepad1, Gamepad gamepad2, Orientation slotOrientation) {
+    public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Servo leftFlipServo, Servo rightFlipServo, Gamepad gamepad1, Gamepad gamepad2, Orientation slotOrientation) {
         this.telemetry = t;
         this.colorSensor = colorSensor;
         this.servo = servo;
+        this.leftFlipServo = leftFlipServo;
+        this.rightFlipServo = rightFlipServo;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
-        this.distanceSensor = distanceSensor;
         this.slotOrientation = slotOrientation;
 
         // Based on orientation of servo, moves to zero
@@ -60,7 +62,7 @@ public class Slot {
     // Creates a state machine that determines if there is an artifact, what color it is, and whether or not the driver has pressed the trigger to shoot
     public void sort() {
         telemetry.addData(slotOrientation.name() + " current state: ", sorterState);
-        telemetry.addData(slotOrientation.name() + " distance: ", distanceSensor.getDistance(DistanceUnit.INCH));
+        //telemetry.addData(slotOrientation.name() + " distance: ", distanceSensor.getDistance(DistanceUnit.INCH));
         switch (sorterState) {
             case DETECTING:
                 slotColor = colorDetection(colorSensor);
@@ -71,10 +73,7 @@ public class Slot {
                 break;
             case HOLDING:
                 telemetry.addLine(slotOrientation.name() + " the holding color is: "+ slotColor);
-                if (distanceSensor.getDistance(DistanceUnit.INCH) > 3) {
-                    sorterState = State.DETECTING;
-                }
-                if (distanceSensor.getDistance(DistanceUnit.INCH) < 5.5 && gamepad1.right_trigger == 1.0) {
+                if (gamepad1.right_trigger == 1.0) {
                     sorterState = State.FLICKING;
                 }
                 break;
@@ -83,12 +82,16 @@ public class Slot {
 
                 if (slotOrientation == Orientation.LEFT) {
                     servo.setPosition(InputValues.FLICK_POS_RIGHT);
+                    leftFlipServo.setPosition(InputValues.FLIPPER_POS_LEFT);
                 }
                 else if (slotOrientation == Orientation.MIDDLE) {
                     servo.setPosition(InputValues.FLICK_POS_MIDDLE);
+                    leftFlipServo.setPosition(InputValues.FLIPPER_POS_LEFT);
+                    rightFlipServo.setPosition(InputValues.FLIPPER_POS_RIGHT);
                 }
                 else if (slotOrientation == Orientation.RIGHT) {
                     servo.setPosition(InputValues.FLICK_POS_LEFT);
+                    rightFlipServo.setPosition(InputValues.FLIPPER_POS_RIGHT);
                 }
                 sorterState = State.RESETTING;
                 break;
@@ -97,12 +100,16 @@ public class Slot {
                 if (flickTimer.seconds() > InputValues.FLICK_TRAVEL_TIME) {
                     if (slotOrientation == Orientation.LEFT) {
                         servo.setPosition(InputValues.RESET_POS_RIGHT);
+                        leftFlipServo.setPosition(InputValues.RESET_FLIPPER_POS_LEFT);
                     }
                     else if (slotOrientation == Orientation.MIDDLE) {
                         servo.setPosition((InputValues.RESET_POS_MIDDLE));
+                        leftFlipServo.setPosition(InputValues.RESET_FLIPPER_POS_LEFT);
+                        rightFlipServo.setPosition(InputValues.RESET_FLIPPER_POS_RIGHT);
                     }
                     else if (slotOrientation == Orientation.RIGHT) {
                         servo.setPosition(InputValues.RESET_POS_LEFT);
+                        rightFlipServo.setPosition(InputValues.RESET_FLIPPER_POS_RIGHT);
                     }
                     sorterState = State.DETECTING;
                 }

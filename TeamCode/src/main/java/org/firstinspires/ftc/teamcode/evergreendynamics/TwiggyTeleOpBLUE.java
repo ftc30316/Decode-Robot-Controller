@@ -23,8 +23,8 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
         this.mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
-        this.intake = new Intake(hardwareMap, gamepad1, telemetry);
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, aimAtTagId);
+        this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
+        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, aimAtTagId, mecanumDrive);
 
         waitForStart();
 
@@ -79,14 +79,14 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
 //            mecanumDrive.setDrivePowers(driveInput);
 
 
-            sorter.detect();
-            turret.score();
-            turret.turretControl();
+//            sorter.detect();
+//            turret.score();
+//            turret.turretControl();
 
             // Flywheel and intake motor start
-            turret.triggerFlywheel();
-            intake.triggerIntake();
-            turret.adjustTurret(aimAtTagId);
+//            turret.triggerFlywheel();
+//            intake.triggerIntake();
+            turret.adjustTurret();
             telemetry.update();
         }
     }

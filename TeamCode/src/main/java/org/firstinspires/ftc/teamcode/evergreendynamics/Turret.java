@@ -4,6 +4,7 @@ import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
@@ -61,21 +63,23 @@ public class Turret {
     DcMotorEx turretMotor;
     private DcMotorEx leftFlywheel;
     private DcMotorEx rightFlywheel;
+    private MecanumDrive mecanumDrive;
     private Servo lift;
     public int aimAtTagId;
     public Thread turretBackgroundThread;
     VisionPortal myVisionPortal;
 
-    public Turret(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2, int aimAtTagId) {
+    public Turret(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2, int aimAtTagId, MecanumDrive mecanumDrive) {
 
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.aimAtTagId = aimAtTagId;
+        this.mecanumDrive = mecanumDrive;
 
         //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
-        //turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFlywheel = hardwareMap.get(DcMotorEx.class, "leftFlywheel");
         rightFlywheel = hardwareMap.get(DcMotorEx.class, "rightFlywheel");
         lift = hardwareMap.get(Servo.class, "lift");
@@ -89,33 +93,33 @@ public class Turret {
 
 
         // Create the AprilTag processor and assign it to a variable.
-        AprilTagProcessor.Builder myAprilTagProcessorBuilder = new AprilTagProcessor.Builder();
-        myAprilTagProcessor = myAprilTagProcessorBuilder
-                .setDrawTagID(false)
-                .setDrawTagOutline(false)
-                .setDrawAxes(false)
-                .setDrawCubeProjection(false)
-                .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
-                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
-                .build();
-
-        myAprilTagProcessor.setDecimation(2); // Set dynamically later
-
-        // Create a VisionPortal, with the specified camera and AprilTag processor, and assign it to a variable.
-        myVisionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "Leafy")) // Logitech
-                .setCameraResolution(new Size(800, 600)) // try 1080p for more pixels
-                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
-                .addProcessor(myAprilTagProcessor)
-                .setAutoStopLiveView(false)
-
-                .build();
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        AprilTagProcessor.Builder myAprilTagProcessorBuilder = new AprilTagProcessor.Builder();
+//        myAprilTagProcessor = myAprilTagProcessorBuilder
+//                .setDrawTagID(false)
+//                .setDrawTagOutline(false)
+//                .setDrawAxes(false)
+//                .setDrawCubeProjection(false)
+//                .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
+//                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
+//                .build();
+//
+//        myAprilTagProcessor.setDecimation(2); // Set dynamically later
+//
+//        // Create a VisionPortal, with the specified camera and AprilTag processor, and assign it to a variable.
+//        myVisionPortal = new VisionPortal.Builder()
+//                .setCamera(hardwareMap.get(WebcamName.class, "Leafy")) // Logitech
+//                .setCameraResolution(new Size(800, 600)) // try 1080p for more pixels
+//                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+//                .addProcessor(myAprilTagProcessor)
+//                .setAutoStopLiveView(false)
+//
+//                .build();
+//
+//        try {
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
 
 //        ExposureControl exp = myVisionPortal.getCameraControl(ExposureControl.class);
 //        if (exp != null && exp.getMode() != ExposureControl.Mode.Manual) {
@@ -145,7 +149,7 @@ public class Turret {
 //        telemetry.addData("WB(K)", wb != null ? wb.getWhiteBalanceTemperature() : -1);
 
         // Enable or disable the AprilTag processor.
-        myVisionPortal.setProcessorEnabled(myAprilTagProcessor, true);
+        //myVisionPortal.setProcessorEnabled(myAprilTagProcessor, true);
 
         // Reset the encoder during initialization
         turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -166,37 +170,37 @@ public class Turret {
 
     }
 
-    int framesSinceSeen = 0;
-    int decimation = 2;
-    long fpsStart = System.nanoTime();
-    int  fpsFrames = 0; double fps = 0;
+//    int framesSinceSeen = 0;
+//    int decimation = 2;
+//    long fpsStart = System.nanoTime();
+//    int  fpsFrames = 0; double fps = 0;
 
     void sendFpsToDashboard(FtcDashboard dash) {
-        ++fpsFrames;
-        if (System.nanoTime() - fpsStart >= 1_000_000_000L) {
-            fps = fpsFrames / ((System.nanoTime() - fpsStart) / 1e9);
-            fpsFrames = 0; fpsStart = System.nanoTime();
-        }
-        TelemetryPacket p = new TelemetryPacket();
-        p.put("Vision FPS", fps);
-        dash.sendTelemetryPacket(p);
+//        ++fpsFrames;
+//        if (System.nanoTime() - fpsStart >= 1_000_000_000L) {
+//            fps = fpsFrames / ((System.nanoTime() - fpsStart) / 1e9);
+//            fpsFrames = 0; fpsStart = System.nanoTime();
+//        }
+//        TelemetryPacket p = new TelemetryPacket();
+//        p.put("Vision FPS", fps);
+//        dash.sendTelemetryPacket(p);
     }
 
     void updateDecimation(List<AprilTagDetection> dets) {
-        if (dets.isEmpty()) {
-            if (++framesSinceSeen > 15 && decimation != 1) {
-                decimation = 1;
-                myAprilTagProcessor.setDecimation(1);
-            }
-            return;
-        }
-        framesSinceSeen = 0;
-        double rangeIn = dets.get(0).ftcPose != null ? dets.get(0).ftcPose.range : 9999;
-        int newDec = (rangeIn < 36) ? 3 : 2;
-        if (newDec != decimation) {
-            decimation = newDec;
-            myAprilTagProcessor.setDecimation(newDec);
-        }
+//        if (dets.isEmpty()) {
+//            if (++framesSinceSeen > 15 && decimation != 1) {
+//                decimation = 1;
+//                myAprilTagProcessor.setDecimation(1);
+//            }
+//            return;
+//        }
+//        framesSinceSeen = 0;
+//        double rangeIn = dets.get(0).ftcPose != null ? dets.get(0).ftcPose.range : 9999;
+//        int newDec = (rangeIn < 36) ? 3 : 2;
+//        if (newDec != decimation) {
+//            decimation = newDec;
+//            myAprilTagProcessor.setDecimation(newDec);
+//        }
     }
 
     // Creates a loop that always aims at the goal
@@ -213,7 +217,7 @@ public class Turret {
         switch (turretLockingState) {
             case AUTO:
                 turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                adjustTurret(aimAtTagId);
+                adjustTurret();
                 if (gamepad1.triangle) {
                     turretLockingState = TurretLockingState.MANUAL;
                 }
@@ -289,31 +293,31 @@ public class Turret {
 
     // Uses the camera to look at the obelisk and determine if the motif pattern is GPP, PGP, or PPG - last resort is GPP (21)
     public int determineMotif() {
-        List<AprilTagDetection> myAprilTagDetections;  // list of all detections
-        AprilTagDetection myAprilTagDetection;         // current detection in for() loop
-        int myAprilTagIdCode;                           // ID code of current detection, in for() loop
-
-        for (int loopCounter = 0; loopCounter < 3; loopCounter++) {
-            // Get a list of AprilTag detections.
-            myAprilTagDetections = myAprilTagProcessor.getDetections();
-
-            telemetry.addLine(String.valueOf(myAprilTagDetections.size()));
-
-            for (int i = 0; i < myAprilTagDetections.size(); i++) {
-                myAprilTagDetection = myAprilTagDetections.get(i);
-
-                if ((myAprilTagDetection.id == 21) || (myAprilTagDetection.id == 22) || (myAprilTagDetection.id == 23)) {
-//                if (myAprilTagDetection.id == 20) {
-                    return (myAprilTagDetection.id);
-                }
-
-            }
-            try {
-                Thread.sleep(InputValues.MOTIF_LOOP_WAIT);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+//        List<AprilTagDetection> myAprilTagDetections;  // list of all detections
+//        AprilTagDetection myAprilTagDetection;         // current detection in for() loop
+//        int myAprilTagIdCode;                           // ID code of current detection, in for() loop
+//
+//        for (int loopCounter = 0; loopCounter < 3; loopCounter++) {
+//            // Get a list of AprilTag detections.
+//            myAprilTagDetections = myAprilTagProcessor.getDetections();
+//
+//            telemetry.addLine(String.valueOf(myAprilTagDetections.size()));
+//
+//            for (int i = 0; i < myAprilTagDetections.size(); i++) {
+//                myAprilTagDetection = myAprilTagDetections.get(i);
+//
+//                if ((myAprilTagDetection.id == 21) || (myAprilTagDetection.id == 22) || (myAprilTagDetection.id == 23)) {
+////                if (myAprilTagDetection.id == 20) {
+//                    return (myAprilTagDetection.id);
+//                }
+//
+//            }
+//            try {
+//                Thread.sleep(InputValues.MOTIF_LOOP_WAIT);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
 
         telemetry.addData("LAST RESORT", 21);
         return 21;
@@ -325,7 +329,7 @@ public class Turret {
             case DECODING:
                 break;
             case AIMING:
-                adjustTurret(aimAtTagId);
+                adjustTurret();
                 break;
         }
     }
@@ -366,58 +370,56 @@ public class Turret {
     }
 
     // Uses the position of the aprilTag to adjust the turret motor and center the aprilTag in the camera view
-    public void adjustTurret (int aimAtTagId) {
-        List<AprilTagDetection> myAprilTagDetections;  // list of all detections
-        AprilTagDetection myAprilTagDetection;         // current detection in for() loop
-        int myAprilTagIdCode;                           // ID code of current detection, in for() loop
+    public void adjustTurret () {
+        mecanumDrive.updatePoseEstimate();
+        // get heading, x pos, and y pos
+        Pose2d robotPose = mecanumDrive.localizer.getPose();
+        double robotX = robotPose.position.x;
+        double robotY = robotPose.position.y;
+        double robotHeading = Math.toDegrees(robotPose.heading.toDouble());
 
-        // Get a list of AprilTag detections.
-        myAprilTagDetections = myAprilTagProcessor.getDetections();
+        // get goal position; blue: -66, -66, red: -66, 66
+        double goalX = -66;
+        double goalY = -66;
 
-        double fps = myVisionPortal.getFps();
-        TelemetryPacket cameraData = new TelemetryPacket();
-        cameraData.put("Vision FPS", fps);
-        FtcDashboard.getInstance().sendTelemetryPacket(cameraData);
+        // find A: (Yr - Yb)
+        double A = robotY - goalY;
 
-        telemetry.addData("Vision FPS", fps);
+        // find C: (Xr - Xb)
+        double C = robotX - goalX;
 
-        for (int i = 0; i < myAprilTagDetections.size(); i++) {
-            myAprilTagDetection = myAprilTagDetections.get(i);
+        // find distance (D): sqrt(A^2 + C^2)
+        double D = Math.sqrt(Math.pow(A, 2) + Math.pow(C, 2));
 
-            myAprilTagIdCode = myAprilTagDetection.id;
+        // solve for angle: c = acos(A/D)
+        double theta = Math.toDegrees(Math.acos(A/D));
 
-//            TelemetryPacket aprilTagData = new TelemetryPacket();
-//            aprilTagData.put("number of tags seen", String.valueOf(myAprilTagDetections.size()));
-//            aprilTagData.put("which tags seen", String.valueOf(myAprilTagIdCode));
-//            FtcDashboard.getInstance().sendTelemetryPacket(aprilTagData);
+        // aiming degrees = -90 - theta
+        double aimingDegrees = -90 - theta;
 
-            if (myAprilTagIdCode == aimAtTagId) {
-//                double currentPosition = turretMotor.getCurrentPosition();
-//                double motorTicks = myAprilTagDetection.ftcPose.bearing * 5.3277777778;
-//                double newPosition = currentPosition - motorTicks;
-//
-//                turretMotor.setTargetPosition((int) newPosition);
+        // turret starting heading: 0
+        // move turret to new heading
+        turretMotor.setTargetPosition((int) ((aimingDegrees) * InputValues.TICKS_PER_DEGREE));
 
-                telemetry.addLine(String.valueOf(myAprilTagIdCode));
-                telemetry.addData("bearing", myAprilTagDetection.ftcPose.bearing); // angle the camera must turn (left/right) to face target)
+        // alter flywheel velocity based on distance computed
 
-                TelemetryPacket packet = new TelemetryPacket();
-//                packet.put("range", myAprilTagDetection.ftcPose.range); // distance from camera to target
-                packet.put("bearing", myAprilTagDetection.ftcPose.bearing); // angle the camera must turn (left/right) to face target
-//                packet.put("elevation", myAprilTagDetection.ftcPose.elevation); // angle the camera must tilt (up/down) to face target
-                FtcDashboard.getInstance().sendTelemetryPacket(packet);
-                packet = new TelemetryPacket();
-                packet.put("velocity", turretMotor.getVelocity());
-                packet.put("position", turretMotor.getCurrentPosition());
-                packet.put("is at target", !turretMotor.isBusy());
-                FtcDashboard.getInstance().sendTelemetryPacket(packet);
-                try {
-                    Thread.sleep(InputValues.SLEEP_PER_AUTO_FRAMES);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+        // telemetry
+        TelemetryPacket turretValues = new TelemetryPacket();
+        turretValues.put("robot heading", robotHeading);
+        turretValues.put("robot X", robotX);
+        turretValues.put("robot Y", robotY);
+
+        turretValues.put("goal X", goalX);
+        turretValues.put("goal Y", goalY);
+
+        turretValues.put("A", A);
+        turretValues.put("C", C);
+        turretValues.put("Distance", D);
+        turretValues.put("angle calculated", theta);
+
+        turretValues.put("aiming degrees", aimingDegrees);
+        FtcDashboard.getInstance().sendTelemetryPacket(turretValues);
+
     }
 }
 

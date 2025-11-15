@@ -24,8 +24,8 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
         Pose2d goalPose = new Pose2d(-12, -12, Math.toRadians(270));
         this.mecanumDrive = new MecanumDrive(hardwareMap, beginPose);
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
-        this.intake = new Intake(hardwareMap, gamepad1, telemetry);
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, aimAtTagId);
+        this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
+        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, aimAtTagId, mecanumDrive);
         telemetry.update();
         Pose2d currentPose = mecanumDrive.localizer.getPose();
         // currentPose.heading.
@@ -38,9 +38,9 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsBLUE extends LinearOpMode {
         waitForStart();
 
         // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
-        //turret.turretBackgroundThread.start();
-        intake.startSpin();
-        turret.startFlywheel();
+        turret.turretBackgroundThread.start();
+        //intake.startSpin();
+        //turret.startFlywheel();
 
 
         //Moves to get first set of three artifacts from the side of the set

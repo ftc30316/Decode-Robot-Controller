@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Intake {
     private DcMotorEx intake1;
     private Gamepad gamepad1;
+    private Gamepad gamepad2;
     private Telemetry telemetry;
 
     private CRServo rightIntakeServo;
@@ -30,10 +31,11 @@ public class Intake {
 
     IntakeState intakeState = IntakeState.ON;
 
-    public Intake(HardwareMap hardwareMap, Gamepad gamepad1, Telemetry telemetry) {
+    public Intake(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
         intake1 = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         intake1.setDirection(DcMotorSimple.Direction.REVERSE);
         this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
         this.telemetry = telemetry;
         rightIntakeServo = hardwareMap.get(CRServo.class, "rightIntakeServo");
         leftIntakeServo = hardwareMap.get(CRServo.class, "leftIntakeServo");

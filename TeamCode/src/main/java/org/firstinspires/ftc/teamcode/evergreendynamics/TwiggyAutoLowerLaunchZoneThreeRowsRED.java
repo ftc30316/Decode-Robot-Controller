@@ -23,8 +23,8 @@ public class TwiggyAutoLowerLaunchZoneThreeRowsRED extends LinearOpMode {
         Pose2d beginPose = new Pose2d(-60, -12, -90);
         this.mecanumDrive = new MecanumDrive(hardwareMap, beginPose);
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
-        this.intake = new Intake(hardwareMap, gamepad1, telemetry);
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, aimAtTagId);
+        this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
+        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, aimAtTagId, mecanumDrive);
 
         telemetry.update();
 

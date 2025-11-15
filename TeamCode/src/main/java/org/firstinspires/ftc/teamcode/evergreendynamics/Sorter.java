@@ -10,11 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Sorter {
-    public enum FlipperState {
-        FLIPPING
-    }
 
-    public FlipperState sorterFlipperState = Sorter.FlipperState.FLIPPING;
     Slot leftSlot;
     Slot middleSlot;
     Slot rightSlot;
@@ -36,28 +32,19 @@ public class Sorter {
         Servo servo1 = hardwareMap.get(Servo.class, "leftServo");
         Servo servo2 = hardwareMap.get(Servo.class, "middleServo");
         Servo servo3 = hardwareMap.get(Servo.class, "rightServo");
-        Servo leftFlipperServo = hardwareMap.get(Servo.class, "leftFlipperServo");
-        Servo rightFlipperServo = hardwareMap.get(Servo.class, "rightFlipperServo");
+        Servo leftFlipServo = hardwareMap.get(Servo.class, "leftFlipServo");
+        Servo rightFlipServo = hardwareMap.get(Servo.class, "rightFlipServo");
 
-        leftSlot = new Slot(telemetry, colorSensor1, servo1, leftFlipperServo, gamepad2, Slot.Orientation.LEFT);
-        middleSlot = new Slot(telemetry, colorSensor2, servo2, gamepad1, gamepad2, Slot.Orientation.MIDDLE);
-        rightSlot = new Slot(telemetry, colorSensor3, servo3, rightFlipperServo, gamepad2, Slot.Orientation.RIGHT);
+        leftSlot = new Slot(telemetry, colorSensor1, servo1, leftFlipServo, rightFlipServo, gamepad1, gamepad2, Slot.Orientation.LEFT);
+        middleSlot = new Slot(telemetry, colorSensor2, servo2, leftFlipServo, rightFlipServo, gamepad1, gamepad2, Slot.Orientation.MIDDLE);
+        rightSlot = new Slot(telemetry, colorSensor3, servo3, leftFlipServo, rightFlipServo, gamepad1, gamepad2, Slot.Orientation.RIGHT);
 
         // Creates a background thread so that the flippers can flip and the flickers can flick at the same time
-        this.sorterBackgroundThread = new Thread(this:://TODO fill this in);
-    }
-
-    public void flip() {
-        switch (sorterFlipperState) {
-            case FLIPPING:
-                if (gamepad2.square) {
-                    leftFlipperServo
-                }
-                break;
+        // this.sorterBackgroundThread = new Thread(this:://TODO fill this in);
     }
 
     // Based on gamepad trigger, asks slots for a certain colored artifact
-    public void detect() {
+    public void detect () {
 // This code goes based off of the color sensor data. We found this unreliable, so we switched to gamepad two determining whether we should flick the left, middle, or right slot.
 //        if (gamepad1.left_bumper) {
 //            flickArtifactGreen();
@@ -65,7 +52,6 @@ public class Sorter {
 //        if (gamepad1.right_bumper) {
 //            flickArtifactPurple();
 //        }
-
         if (gamepad2.square) {
             leftSlot.switchToFlicking();
         }
@@ -111,7 +97,7 @@ public class Sorter {
         }
     }
 
-    public void flickAll() { // last resort flicking
+    public void flickAll () { // last resort flicking
         leftSlot.switchToFlicking();
         middleSlot.switchToFlicking();
         rightSlot.switchToFlicking();

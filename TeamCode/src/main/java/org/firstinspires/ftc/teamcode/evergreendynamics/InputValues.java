@@ -25,6 +25,7 @@ public class InputValues {
     public final static long MOTIF_LOOP_WAIT = 250;
     public final static double LIFT_START_POS = 0.0;
     public final static double LIFT_END_POS = 0.19;
+    public final static double TICKS_PER_DEGREE = 5.3277777778;
     public static int EXPOSURE = 10;
     public static int GAIN = 48;
     public static int WHITE_BALANCE = 4800;
