@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
-import android.util.Size;
+import static java.lang.Thread.sleep;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,13 +16,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
@@ -65,16 +62,16 @@ public class Turret {
     private DcMotorEx rightFlywheel;
     private MecanumDrive mecanumDrive;
     private Servo lift;
-    public int aimAtTagId;
+    public Vector2d goalPosition;
     public Thread turretBackgroundThread;
     VisionPortal myVisionPortal;
 
-    public Turret(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2, int aimAtTagId, MecanumDrive mecanumDrive) {
+    public Turret(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2, Vector2d goalPosition, MecanumDrive mecanumDrive) {
 
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
-        this.aimAtTagId = aimAtTagId;
+        this.goalPosition = goalPosition;
         this.mecanumDrive = mecanumDrive;
 
         //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -166,8 +163,13 @@ public class Turret {
         lift.setPosition(InputValues.LIFT_START_POS);
 
         // Creates a background thread so that while the robot is driving, intaking, and sorting, the turret can always be auto-locked on the goal
-        this.turretBackgroundThread = new Thread(this::constantlyAimAtAprilTag);
+        this.turretBackgroundThread = new Thread(this::constantlyAdjustTurret);
+    }
 
+    public void constantlyAdjustTurret() {
+        while (true) {
+            adjustTurret();
+        }
     }
 
 //    int framesSinceSeen = 0;
@@ -201,13 +203,6 @@ public class Turret {
 //            decimation = newDec;
 //            myAprilTagProcessor.setDecimation(newDec);
 //        }
-    }
-
-    // Creates a loop that always aims at the goal
-    public void constantlyAimAtAprilTag() {
-        while (true) {
-            aim(aimAtTagId);
-        }
     }
 
     public void turretControl() {
@@ -363,13 +358,23 @@ public class Turret {
     }
 
     // Switches the turret state to shooting, where the artifact will move into the flywheel
-    public void shootArtifact() {
+    public void switchTurretStateShooting() {
             turretScoring = Scoring.SHOOTING;
             score();
     }
 
+    public void shootArtifact() {
+        shootArtifact(); // lifts lift servo
+        try {
+            sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        score(); // resets lift servo
+    }
+
     // Uses the position of the aprilTag to adjust the turret motor and center the aprilTag in the camera view
-    public void adjustTurret () {
+    public void adjustTurret() {
         mecanumDrive.updatePoseEstimate();
         turretMotor.setPower(InputValues.TURRET_SPEED);
         // get heading, x pos, and y pos
@@ -379,8 +384,8 @@ public class Turret {
         double robotHeading = Math.toDegrees(robotPose.heading.toDouble());
 
         // get goal position; blue: -66, -66, red: -66, 66
-        double goalX = -66;
-        double goalY = -66;
+        double goalX = goalPosition.x;
+        double goalY = goalPosition.y;
         double turretStartingDegrees = -90;
 
         // find A: (Yr - Yb)

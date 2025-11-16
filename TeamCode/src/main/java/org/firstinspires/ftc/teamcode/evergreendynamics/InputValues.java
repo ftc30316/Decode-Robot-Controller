@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Vector2d;
 
 @Config
 public class InputValues {
@@ -31,4 +32,6 @@ public class InputValues {
     public static int WHITE_BALANCE = 4800;
     public static int FOCUS = 0;
     public static long SLEEP_PER_AUTO_FRAMES = 25;
+    public static Vector2d BLUE_GOAL_POSITION = new Vector2d(-66,-66);
+    public static Vector2d RED_GOAL_POSITION = new Vector2d(-66,66);
 }
