@@ -325,6 +325,7 @@ public class Turret {
 
     // A state machine that auto-locks on goal
     public void aim(int aimAtTagId) {
+
         switch (turretAiming) {
             case DECODING:
                 break;
@@ -336,16 +337,14 @@ public class Turret {
 
     // A state machine that checks if there is an artifact in the lift slot, and moves artifact into flywheel when x is pressed
     public void score() {
-        //telemetry.addData("lift distance", liftSensor.getDistance(DistanceUnit.INCH));
+        telemetry.addData("score state", turretScoring);
         switch (turretScoring) {
             case SEARCHING:
-                //if (liftSensor.getDistance(DistanceUnit.INCH) < 5.5) {
-                    turretScoring = Scoring.HOLDING;
-                //}
+                turretScoring = Scoring.HOLDING;
                 break;
             case HOLDING:
                 // && liftSensor.getDistance(DistanceUnit.INCH) < 5.5
-                if (gamepad1.right_trigger == 1) {
+                if (gamepad1.cross) {
                     turretScoring = Scoring.SHOOTING;
                 }
                 break;
@@ -372,6 +371,7 @@ public class Turret {
     // Uses the position of the aprilTag to adjust the turret motor and center the aprilTag in the camera view
     public void adjustTurret () {
         mecanumDrive.updatePoseEstimate();
+        turretMotor.setPower(InputValues.TURRET_SPEED);
         // get heading, x pos, and y pos
         Pose2d robotPose = mecanumDrive.localizer.getPose();
         double robotX = robotPose.position.x;
@@ -381,6 +381,7 @@ public class Turret {
         // get goal position; blue: -66, -66, red: -66, 66
         double goalX = -66;
         double goalY = -66;
+        double turretStartingDegrees = -90;
 
         // find A: (Yr - Yb)
         double A = robotY - goalY;
@@ -391,13 +392,13 @@ public class Turret {
         // find distance (D): sqrt(A^2 + C^2)
         double D = Math.sqrt(Math.pow(A, 2) + Math.pow(C, 2));
 
-        // solve for angle: c = acos(A/D)
+        // solve for angle: c = acos(A/D); in field coordinates
         double theta = Math.toDegrees(Math.acos(A/D));
 
-        // aiming degrees = -90 - theta
-        double aimingDegrees = -90 - theta;
+        // aiming degrees = -90 - theta; in field coordinates
+        double aimingDegrees = turretStartingDegrees - theta - robotHeading;
 
-        // turret starting heading: 0
+        // turret starting heading: 0, heading is always relative to robot
         // move turret to new heading
         turretMotor.setTargetPosition((int) ((aimingDegrees) * InputValues.TICKS_PER_DEGREE));
 

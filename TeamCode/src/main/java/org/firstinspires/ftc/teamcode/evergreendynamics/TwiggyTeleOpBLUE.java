@@ -79,12 +79,12 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
 //            mecanumDrive.setDrivePowers(driveInput);
 
 
-//            sorter.detect();
-//            turret.score();
-//            turret.turretControl();
+            sorter.detect();
+            turret.score();
+            turret.turretControl();
 
             // Flywheel and intake motor start
-//            turret.triggerFlywheel();
+            turret.triggerFlywheel();
 //            intake.triggerIntake();
             turret.adjustTurret();
             telemetry.update();

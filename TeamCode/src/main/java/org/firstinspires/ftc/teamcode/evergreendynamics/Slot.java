@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -8,7 +7,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 public class Slot {
@@ -30,32 +28,34 @@ public class Slot {
     private Telemetry telemetry;
     private NormalizedColorSensor colorSensor;
     private Servo servo;
-    private Servo leftFlipServo;
-    private Servo rightFlipServo;
+    private Servo leftGateServo;
+    private Servo rightGateServo;
 
     public volatile Gamepad gamepad1 = null;
     public volatile Gamepad gamepad2 = null;
     public String slotColor = "No Artifact";
 
-    public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Servo leftFlipServo, Servo rightFlipServo, Gamepad gamepad1, Gamepad gamepad2, Orientation slotOrientation) {
+    public Slot(Telemetry t, NormalizedColorSensor colorSensor, Servo servo, Servo leftGateServo, Servo rightGateServo, Gamepad gamepad1, Gamepad gamepad2, Orientation slotOrientation) {
         this.telemetry = t;
         this.colorSensor = colorSensor;
         this.servo = servo;
-        this.leftFlipServo = leftFlipServo;
-        this.rightFlipServo = rightFlipServo;
+        this.leftGateServo = leftGateServo;
+        this.rightGateServo = rightGateServo;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.slotOrientation = slotOrientation;
 
         // Based on orientation of servo, moves to zero
         if (slotOrientation == Orientation.LEFT) {
-            servo.setPosition(InputValues.RESET_POS_RIGHT);
+            servo.setPosition(InputValues.RESET_POS_LEFT);
+            leftGateServo.setPosition(InputValues.CLOSED_GATE_POS_LEFT);
         }
         else if (slotOrientation == Orientation.MIDDLE) {
             servo.setPosition((InputValues.RESET_POS_MIDDLE));
         }
         else if (slotOrientation == Orientation.RIGHT) {
-            servo.setPosition(InputValues.RESET_POS_LEFT);
+            servo.setPosition(InputValues.RESET_POS_RIGHT);
+            rightGateServo.setPosition(InputValues.CLOSED_GATE_POS_RIGHT);
         }
     }
 
@@ -81,17 +81,17 @@ public class Slot {
                 flickTimer.reset();
 
                 if (slotOrientation == Orientation.LEFT) {
-                    servo.setPosition(InputValues.FLICK_POS_RIGHT);
-                    leftFlipServo.setPosition(InputValues.FLIPPER_POS_LEFT);
+                    servo.setPosition(InputValues.FLICK_POS_LEFT);
+                    leftGateServo.setPosition(InputValues.OPEN_GATE_POS_LEFT);
                 }
                 else if (slotOrientation == Orientation.MIDDLE) {
                     servo.setPosition(InputValues.FLICK_POS_MIDDLE);
-                    leftFlipServo.setPosition(InputValues.FLIPPER_POS_LEFT);
-                    rightFlipServo.setPosition(InputValues.FLIPPER_POS_RIGHT);
+                    leftGateServo.setPosition(InputValues.OPEN_GATE_POS_LEFT);
+                    rightGateServo.setPosition(InputValues.OPEN_GATE_POS_RIGHT);
                 }
                 else if (slotOrientation == Orientation.RIGHT) {
-                    servo.setPosition(InputValues.FLICK_POS_LEFT);
-                    rightFlipServo.setPosition(InputValues.FLIPPER_POS_RIGHT);
+                    servo.setPosition(InputValues.FLICK_POS_RIGHT);
+                    rightGateServo.setPosition(InputValues.OPEN_GATE_POS_RIGHT);
                 }
                 sorterState = State.RESETTING;
                 break;
@@ -99,17 +99,17 @@ public class Slot {
                 // Once the time elapsed is greater than the required time for the servo to move, it will reset the servo
                 if (flickTimer.seconds() > InputValues.FLICK_TRAVEL_TIME) {
                     if (slotOrientation == Orientation.LEFT) {
-                        servo.setPosition(InputValues.RESET_POS_RIGHT);
-                        leftFlipServo.setPosition(InputValues.RESET_FLIPPER_POS_LEFT);
+                        servo.setPosition(InputValues.RESET_POS_LEFT);
+                        leftGateServo.setPosition(InputValues.CLOSED_GATE_POS_LEFT);
                     }
                     else if (slotOrientation == Orientation.MIDDLE) {
                         servo.setPosition((InputValues.RESET_POS_MIDDLE));
-                        leftFlipServo.setPosition(InputValues.RESET_FLIPPER_POS_LEFT);
-                        rightFlipServo.setPosition(InputValues.RESET_FLIPPER_POS_RIGHT);
+                        leftGateServo.setPosition(InputValues.CLOSED_GATE_POS_LEFT);
+                        rightGateServo.setPosition(InputValues.CLOSED_GATE_POS_RIGHT);
                     }
                     else if (slotOrientation == Orientation.RIGHT) {
-                        servo.setPosition(InputValues.RESET_POS_LEFT);
-                        rightFlipServo.setPosition(InputValues.RESET_FLIPPER_POS_RIGHT);
+                        servo.setPosition(InputValues.RESET_POS_RIGHT);
+                        rightGateServo.setPosition(InputValues.CLOSED_GATE_POS_RIGHT);
                     }
                     sorterState = State.DETECTING;
                 }
