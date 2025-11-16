@@ -158,7 +158,7 @@ public class Turret {
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Start the motor moving by setting the max velocity to ___ ticks per second
-        turretMotor.setPower(InputValues.TURRET_SPEED);
+        turretMotor.setPower(InputValues.FLYWHEEL_SLOPE);
 
         lift.setPosition(InputValues.LIFT_START_POS);
 
@@ -213,7 +213,7 @@ public class Turret {
             case AUTO:
                 turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 adjustTurret();
-                if (gamepad1.triangle) {
+                if (gamepad1.dpad_up) {
                     turretLockingState = TurretLockingState.MANUAL;
                 }
                 break;
@@ -222,11 +222,11 @@ public class Turret {
                 turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 if (gamepad2.left_bumper) {
                     turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-                    turretMotor.setPower(InputValues.TURRET_SPEED);
+                    turretMotor.setPower(InputValues.FLYWHEEL_SLOPE);
                 }
                 else if (gamepad2.right_bumper) {
                     turretMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-                    turretMotor.setPower(InputValues.TURRET_SPEED);
+                    turretMotor.setPower(InputValues.FLYWHEEL_SLOPE);
                 }
                 else if (gamepad2.left_stick_x != 0) {
                     double turretJoystickPower = gamepad2.left_stick_x;
@@ -236,7 +236,7 @@ public class Turret {
                     turretMotor.setPower(0);
                 }
 
-                if (gamepad2.triangle) {
+                if (gamepad2.dpad_up) {
                     turretLockingState = TurretLockingState.AUTO;
                 }
                 break;
@@ -266,7 +266,7 @@ public class Turret {
 
                 leftFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
                 rightFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
-                if (gamepad2.right_trigger == 1) {
+                if (gamepad2.right_trigger > 0.5) {
                     flywheelState = FlywheelState.REVERSE;
                 }
                 break;
@@ -276,7 +276,7 @@ public class Turret {
 
                 leftFlywheel.setVelocity(InputValues.SLOW_FLYWHEEL_SPEED);
                 rightFlywheel.setVelocity(InputValues.SLOW_FLYWHEEL_SPEED);
-                if (gamepad2.left_trigger == 1) {
+                if (gamepad2.left_trigger > 0.5) {
                     flywheelState = FlywheelState.ON;
                 }
 //                if (gamepad1.circleWasPressed()) {
@@ -376,7 +376,7 @@ public class Turret {
     // Uses the position of the aprilTag to adjust the turret motor and center the aprilTag in the camera view
     public void adjustTurret() {
         mecanumDrive.updatePoseEstimate();
-        turretMotor.setPower(InputValues.TURRET_SPEED);
+        turretMotor.setPower(InputValues.TURRET_MOTOR_POWER);
         // get heading, x pos, and y pos
         Pose2d robotPose = mecanumDrive.localizer.getPose();
         double robotX = robotPose.position.x;
@@ -408,7 +408,9 @@ public class Turret {
         turretMotor.setTargetPosition((int) ((aimingDegrees) * InputValues.TICKS_PER_DEGREE));
 
         // alter flywheel velocity based on distance computed
-        double turretAdjustingSpeed = D * InputValues.TURRET_SPEED;
+        double flywheelAdjustingSpeed = InputValues.FLYWHEEL_SLOPE * D + InputValues.FLYWHEEL_Y_INTERCEPT;
+        leftFlywheel.setVelocity(flywheelAdjustingSpeed);
+        rightFlywheel.setVelocity(flywheelAdjustingSpeed);
 
         // telemetry
         TelemetryPacket turretValues = new TelemetryPacket();
