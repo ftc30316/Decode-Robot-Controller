@@ -43,14 +43,14 @@ public class RedUpper3Row extends LinearOpMode {
 
         //Moves to upper launch zone
         Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
-                .strafeToLinearHeading(new Vector2d(-12, 12), Math.toRadians(90))
+                .strafeTo(new Vector2d(-12, 12))//, Math.toRadians(90))
                 .build());
 
         // Flicks and shoots the preset artifacts and does backup flicks
         shootThreeArtifacts(motifTagId);
 
         mecanumDrive.updatePoseEstimate();
-        Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
+        Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose())
                 .strafeTo(new Vector2d(-12,50))
                 .strafeTo(new Vector2d(-12,12))
                 .build());
