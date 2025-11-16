@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -45,10 +45,10 @@ public class Sorter {
     public void detect () {
 // This code goes based off of the color sensor data. We found this unreliable, so we switched to gamepad two determining whether we should flick the left, middle, or right slot.
         if (gamepad1.left_bumper) {
-            flickArtifactGreen();
+            switchGreenSlotState();
         }
         if (gamepad1.right_bumper) {
-            flickArtifactPurple();
+            switchPurpleSlotState();
         }
         if (gamepad2.square) {
             leftSlot.switchToFlicking();
@@ -66,7 +66,7 @@ public class Sorter {
     }
 
     // Determines which slots have a green artifact, and moves whichever servo has the first green artifact
-    public void flickArtifactGreen () {
+    public void switchGreenSlotState() {
         String leftColor = leftSlot.getColorDetected();
         String middleColor = middleSlot.getColorDetected();
         String rightColor = rightSlot.getColorDetected();
@@ -81,7 +81,7 @@ public class Sorter {
     }
 
     // Determines which slots have a purple artifact, and moves whichever servo has the first purple artifact
-    public void flickArtifactPurple () {
+    public void switchPurpleSlotState() {
         String leftColor = leftSlot.getColorDetected();
         String middleColor = middleSlot.getColorDetected();
         String rightColor = rightSlot.getColorDetected();
@@ -95,9 +95,79 @@ public class Sorter {
         }
     }
 
-    public void flickAll () { // last resort flicking
+    public void flickAll() { // last resort flicking
         leftSlot.switchToFlicking();
         middleSlot.switchToFlicking();
         rightSlot.switchToFlicking();
+    }
+
+    public void flickGreenSlot() {
+        // triggers flick
+        switchGreenSlotState();
+        flickSlot();
+    }
+
+    public void flickPurpleSlot() {
+        // triggers flick
+        switchPurpleSlotState();
+        flickSlot();
+    }
+
+    public void flickSlot() {
+        detect();
+        try {
+            sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        // triggers reset
+        detect();
+        try {
+            sleep((long) (InputValues.SETTLE_TIME * 1000));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void flickForMotif(int motifTagId, int shotNumber) {
+        // changes state to flicking
+        if (shotNumber == 1) {
+            if (motifTagId == 21) {
+                flickGreenSlot();
+            } else if ((motifTagId == 22) || (motifTagId == 23)) {
+                flickPurpleSlot();
+            }
+        }
+        else if (shotNumber == 2) {
+            if (motifTagId == 22) {
+                switchGreenSlotState();
+            } else if ((motifTagId == 21) || (motifTagId == 23)) {
+                switchPurpleSlotState();
+            }
+        }
+        else if (shotNumber == 3) {
+            if (motifTagId == 23) {
+                switchGreenSlotState();
+            } else if ((motifTagId == 21) || (motifTagId == 22)) {
+                switchPurpleSlotState();
+            }
+        }
+    }
+
+    public void backupFlickAll() {
+        // Safety net, flicks all just in case
+        flickAll();
+        detect(); // triggers flick
+        try {
+            sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        detect(); // triggers reset
+        try {
+            sleep((long) (InputValues.SETTLE_TIME * 1000));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

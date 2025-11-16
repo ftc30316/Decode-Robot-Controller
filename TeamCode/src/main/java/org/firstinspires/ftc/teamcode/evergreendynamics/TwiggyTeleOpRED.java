@@ -14,18 +14,17 @@ public class TwiggyTeleOpRED extends LinearOpMode{
     public Intake intake;
     public Turret turret;
     public MecanumDrive mecanumDrive;
-    public int aimAtTagId = 24; //Aim at RED goal
 
     @Override
     public void runOpMode() throws InterruptedException {
         this.mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, aimAtTagId, mecanumDrive);
+        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, mecanumDrive);
 
         waitForStart();
 
-        // Starts the auto-lock on the RED aprilTag
+        // Starts the auto-lock on the RED goal
         turret.turretBackgroundThread.start();
 
         // Flywheel and intake motor start

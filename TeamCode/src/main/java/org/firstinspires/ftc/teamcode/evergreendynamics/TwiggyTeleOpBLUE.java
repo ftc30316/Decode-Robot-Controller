@@ -15,7 +15,6 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
     public Intake intake;
     public Turret turret;
     public MecanumDrive mecanumDrive;
-    public int aimAtTagId = 20; //Aim at BLUE goal
     public boolean triangleWasDown;
     public boolean fieldCentric;
 
@@ -24,11 +23,11 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
         this.mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, aimAtTagId, mecanumDrive);
+        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, mecanumDrive);
 
         waitForStart();
 
-        // Starts the auto-lock on the BLUE aprilTag
+        // Starts the auto-lock on the BLUE goal
         //turret.turretBackgroundThread.start();
 
         // Sets up the driving system
@@ -83,9 +82,9 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
             turret.score();
             turret.turretControl();
 
-            // Flywheel and intake motor start
+            //Flywheel and intake motor start
             turret.triggerFlywheel();
-//            intake.triggerIntake();
+            intake.triggerIntake();
             turret.adjustTurret();
             telemetry.update();
         }
