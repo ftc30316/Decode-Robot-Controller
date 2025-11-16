@@ -11,7 +11,7 @@ public class InputValues {
     public static double SLOW_INTAKE_SPEED = 1700;
     public static double FLICK_POS_RIGHT = 0.285; //previously 0.115, increasing value reduces how far it goes
     public static double RESET_POS_RIGHT = 0.2;
-    public static double FLICK_POS_LEFT = 0; //prev 0.1,
+    public static double FLICK_POS_LEFT = 0.13; //prev 0.1,
     public static double RESET_POS_LEFT = 0.2; //prev 0.005, small number = closer to artifact
     public static double FLICK_POS_MIDDLE = 0.115;
     public static double RESET_POS_MIDDLE = 0.2;
