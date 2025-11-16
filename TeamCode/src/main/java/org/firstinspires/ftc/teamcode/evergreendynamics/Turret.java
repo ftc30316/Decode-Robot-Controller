@@ -403,6 +403,7 @@ public class Turret {
         turretMotor.setTargetPosition((int) ((aimingDegrees) * InputValues.TICKS_PER_DEGREE));
 
         // alter flywheel velocity based on distance computed
+        double turretAdjustingSpeed = D * InputValues.TURRET_SPEED;
 
         // telemetry
         TelemetryPacket turretValues = new TelemetryPacket();
