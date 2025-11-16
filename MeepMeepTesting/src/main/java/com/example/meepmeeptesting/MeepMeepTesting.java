@@ -16,50 +16,50 @@ public class MeepMeepTesting {
                 .build();
 
         // blue lower launch zone auto
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(62, -12, Math.toRadians(270)))
-                .strafeTo(new Vector2d(-12, -12))
-                // shoots preloaded set of artifacts
-                .waitSeconds(10)
-                // grabs first set of artifacts
-                .strafeTo(new Vector2d(-12,-50))
-                // goes to shooting position
-                .strafeTo(new Vector2d(-12,-12))
-                // shoots first set
-                .waitSeconds(10)
-                .strafeTo(new Vector2d(12,-12))
-                // grabs second set of artifacts
-                .strafeTo(new Vector2d(12,-50))
-                // goes to shooting position
-                .strafeTo(new Vector2d(-12,-12))
-                // shoots second set of artifacts
-                .waitSeconds(10)
-                .strafeTo(new Vector2d(36,-12))
-                // grabs third set
-                .strafeTo(new Vector2d(36,-50))
-                // goes to shooting position
-                .strafeTo(new Vector2d(-12,-12))
-                // shoots third set
-                .waitSeconds(10)
-
-                .build());
+//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(62, -12, Math.toRadians(270)))
+//                .strafeTo(new Vector2d(-12, -12))
+//                // shoots preloaded set of artifacts
+//                .waitSeconds(10)
+//                // grabs first set of artifacts
+//                .strafeTo(new Vector2d(-12,-50))
+//                // goes to shooting position
+//                .strafeTo(new Vector2d(-12,-12))
+//                // shoots first set
+//                .waitSeconds(10)
+//                .strafeTo(new Vector2d(12,-12))
+//                // grabs second set of artifacts
+//                .strafeTo(new Vector2d(12,-50))
+//                // goes to shooting position
+//                .strafeTo(new Vector2d(-12,-12))
+//                // shoots second set of artifacts
+//                .waitSeconds(10)
+//                .strafeTo(new Vector2d(36,-12))
+//                // grabs third set
+//                .strafeTo(new Vector2d(36,-50))
+//                // goes to shooting position
+//                .strafeTo(new Vector2d(-12,-12))
+//                // shoots third set
+//                .waitSeconds(10)
+//
+//                .build());
 
         // blue upper launch zone auto
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(-12, -12), Math.toRadians(-90))
-                .waitSeconds(10)
-                .strafeTo(new Vector2d(-12,-50))
-                .strafeTo(new Vector2d(-12,-12))
-                .waitSeconds(10)
-                .strafeTo(new Vector2d(12,-12))
-                .strafeTo(new Vector2d(12,-50))
-                .strafeTo(new Vector2d(-12,-12))
-                .waitSeconds(10)
-                .strafeTo(new Vector2d(36,-12))
-                .strafeTo(new Vector2d(36,-50))
-                .strafeTo(new Vector2d(-12,-12))
-                .waitSeconds(10)
-
-                .build());
+//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
+//                .strafeToLinearHeading(new Vector2d(-12, -12), Math.toRadians(-90))
+//                .waitSeconds(10)
+//                .strafeTo(new Vector2d(-12,-50))
+//                .strafeTo(new Vector2d(-12,-12))
+//                .waitSeconds(10)
+//                .strafeTo(new Vector2d(12,-12))
+//                .strafeTo(new Vector2d(12,-50))
+//                .strafeTo(new Vector2d(-12,-12))
+//                .waitSeconds(10)
+//                .strafeTo(new Vector2d(36,-12))
+//                .strafeTo(new Vector2d(36,-50))
+//                .strafeTo(new Vector2d(-12,-12))
+//                .waitSeconds(10)
+//
+//                .build());
 
         // red upper launch zone auto
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-52, 52, Math.toRadians(45)))

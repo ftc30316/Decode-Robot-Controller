@@ -7,8 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+
 @Autonomous
-public class RedLower3Row extends LinearOpMode {
+public class BlueUpper3Row extends LinearOpMode {
     public Sorter sorter;
     public Intake intake;
     public Turret turret;
@@ -18,11 +19,11 @@ public class RedLower3Row extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("Running Op Mode");
-        Pose2d beginPose = new Pose2d(62, 12, Math.toRadians(90));
+        Pose2d beginPose = new Pose2d(-52, -52, Math.toRadians(45));
         this.mecanumDrive = new MecanumDrive(hardwareMap, beginPose);
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, mecanumDrive);
+        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, mecanumDrive);
         telemetry.update();
 
         //Detect motif for artifact order (Init)
@@ -42,7 +43,7 @@ public class RedLower3Row extends LinearOpMode {
 
         //Moves to upper launch zone
         Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
-                .strafeTo(new Vector2d(-12, 12))
+                .strafeToLinearHeading(new Vector2d(-12, -12), Math.toRadians(-90))
                 .build());
 
         // Flicks and shoots the preset artifacts and does backup flicks
@@ -50,8 +51,8 @@ public class RedLower3Row extends LinearOpMode {
 
         mecanumDrive.updatePoseEstimate();
         Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
-                .strafeTo(new Vector2d(-12,50))
-                .strafeTo(new Vector2d(-12,12))
+                .strafeTo(new Vector2d(-12,-50))
+                .strafeTo(new Vector2d(-12,-12))
                 .build());
 
         // Flicks and shoots the first row artifacts and does backup flicks
@@ -59,9 +60,9 @@ public class RedLower3Row extends LinearOpMode {
 
         mecanumDrive.updatePoseEstimate();
         Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
-                .strafeTo(new Vector2d(12,12))
-                .strafeTo(new Vector2d(12,50))
-                .strafeTo(new Vector2d(-12,12))
+                .strafeTo(new Vector2d(12,-12))
+                .strafeTo(new Vector2d(12,-50))
+                .strafeTo(new Vector2d(-12,-12))
                 .build());
 
         // Flicks and shoots the second row artifacts and does backup flicks
@@ -69,9 +70,9 @@ public class RedLower3Row extends LinearOpMode {
 
         mecanumDrive.updatePoseEstimate();
         Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
-                .strafeTo(new Vector2d(36,12))
-                .strafeTo(new Vector2d(36,50))
-                .strafeTo(new Vector2d(-12,12))
+                .strafeTo(new Vector2d(36,-12))
+                .strafeTo(new Vector2d(36,-50))
+                .strafeTo(new Vector2d(-12,-12))
                 .build());
 
         // Flicks and shoots the third row artifacts and does backup flicks
