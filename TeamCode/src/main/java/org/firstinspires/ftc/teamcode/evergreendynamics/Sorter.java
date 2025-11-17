@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
-import static java.lang.Thread.sleep;
-
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -116,14 +114,14 @@ public class Sorter {
     public void flickSlot() {
         detect();
         try {
-            sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+            Thread.sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         // triggers reset
         detect();
         try {
-            sleep((long) (InputValues.SETTLE_TIME * 1000));
+            Thread.sleep((long) (InputValues.SETTLE_TIME * 1000));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -140,16 +138,16 @@ public class Sorter {
         }
         else if (shotNumber == 2) {
             if (motifTagId == 22) {
-                switchGreenSlotState();
+                flickGreenSlot();
             } else if ((motifTagId == 21) || (motifTagId == 23)) {
-                switchPurpleSlotState();
+                flickPurpleSlot();
             }
         }
         else if (shotNumber == 3) {
             if (motifTagId == 23) {
-                switchGreenSlotState();
+                flickGreenSlot();
             } else if ((motifTagId == 21) || (motifTagId == 22)) {
-                switchPurpleSlotState();
+                flickPurpleSlot();
             }
         }
     }
@@ -159,13 +157,13 @@ public class Sorter {
         flickAll();
         detect(); // triggers flick
         try {
-            sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
+            Thread.sleep((long) (InputValues.FLICK_TRAVEL_TIME * 1000));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         detect(); // triggers reset
         try {
-            sleep((long) (InputValues.SETTLE_TIME * 1000));
+            Thread.sleep((long) (InputValues.SETTLE_TIME * 1000));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
