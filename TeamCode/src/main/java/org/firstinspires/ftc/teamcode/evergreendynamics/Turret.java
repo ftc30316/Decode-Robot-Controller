@@ -371,6 +371,11 @@ public class Turret {
             throw new RuntimeException(e);
         }
         score(); // resets lift servo
+        try {
+            sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Uses the position of the aprilTag to adjust the turret motor and center the aprilTag in the camera view
