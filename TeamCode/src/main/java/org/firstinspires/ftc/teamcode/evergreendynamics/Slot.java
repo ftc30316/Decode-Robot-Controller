@@ -93,6 +93,7 @@ public class Slot {
                     servo.setPosition(InputValues.FLICK_POS_RIGHT);
                     rightGateServo.setPosition(InputValues.OPEN_GATE_POS_RIGHT);
                 }
+                slotColor = "No Artifact";
                 sorterState = State.RESETTING;
                 break;
             case RESETTING:

@@ -1,9 +1,14 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
+import static java.lang.Thread.sleep;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -14,6 +19,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -53,6 +60,7 @@ public class Turret {
     public ElapsedTime liftTimer = new ElapsedTime();
 
     public volatile Gamepad gamepad1 = null;
+
     public volatile Gamepad gamepad2 = null;
     AprilTagProcessor myAprilTagProcessor;
     DcMotorEx turretMotor;
@@ -62,7 +70,7 @@ public class Turret {
     private Servo lift;
     public Vector2d goalPosition;
     public Thread turretBackgroundThread;
-    VisionPortal myVisionPortal;
+    private Limelight3A limelight;
 
     public Turret(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2, Vector2d goalPosition, MecanumDrive mecanumDrive) {
 
@@ -71,6 +79,7 @@ public class Turret {
         this.gamepad2 = gamepad2;
         this.goalPosition = goalPosition;
         this.mecanumDrive = mecanumDrive;
+        this.limelight = limelight;
 
         //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
@@ -86,65 +95,15 @@ public class Turret {
         leftFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
-        // Create the AprilTag processor and assign it to a variable.
-//        AprilTagProcessor.Builder myAprilTagProcessorBuilder = new AprilTagProcessor.Builder();
-//        myAprilTagProcessor = myAprilTagProcessorBuilder
-//                .setDrawTagID(false)
-//                .setDrawTagOutline(false)
-//                .setDrawAxes(false)
-//                .setDrawCubeProjection(false)
-//                .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
-//                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
-//                .build();
-//
-//        myAprilTagProcessor.setDecimation(2); // Set dynamically later
-//
-//        // Create a VisionPortal, with the specified camera and AprilTag processor, and assign it to a variable.
-//        myVisionPortal = new VisionPortal.Builder()
-//                .setCamera(hardwareMap.get(WebcamName.class, "Leafy")) // Logitech
-//                .setCameraResolution(new Size(800, 600)) // try 1080p for more pixels
-//                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
-//                .addProcessor(myAprilTagProcessor)
-//                .setAutoStopLiveView(false)
-//
-//                .build();
-//
-//        try {
-//            Thread.sleep(2000);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
+        telemetry.setMsTransmissionInterval(11);
 
-//        ExposureControl exp = myVisionPortal.getCameraControl(ExposureControl.class);
-//        if (exp != null && exp.getMode() != ExposureControl.Mode.Manual) {
-//            exp.setMode(ExposureControl.Mode.Manual);
-//            exp.setExposure(InputValues.EXPOSURE, TimeUnit.MILLISECONDS);
-//        }
-//
-//        GainControl gain = myVisionPortal.getCameraControl(GainControl.class);
-//        if (gain != null) gain.setGain(InputValues.GAIN);
-//
-//        WhiteBalanceControl wb = myVisionPortal.getCameraControl(WhiteBalanceControl.class);
-//        if (wb != null) {
-//            wb.setMode(WhiteBalanceControl.Mode.MANUAL);
-//            wb.setWhiteBalanceTemperature(InputValues.WHITE_BALANCE);
-//        }
-//
-//        CameraControl cameraControl = myVisionPortal.getCameraControl(CameraControl.class);
-//
-//        FocusControl focusControl = myVisionPortal.getCameraControl(FocusControl.class);
-//        if (focusControl != null) {
-//            focusControl.setMode(FocusControl.Mode.Infinity);
-//            focusControl.setFocusLength(InputValues.FOCUS);
-//        }
-//
-//        telemetry.addData("Exposure(ms)", exp != null ? exp.getExposure(TimeUnit.MILLISECONDS) : -1);
-//        telemetry.addData("Gain", gain != null ? gain.getGain() : -1);
-//        telemetry.addData("WB(K)", wb != null ? wb.getWhiteBalanceTemperature() : -1);
+        limelight.pipelineSwitch(0);
 
-        // Enable or disable the AprilTag processor.
-        //myVisionPortal.setProcessorEnabled(myAprilTagProcessor, true);
+        //Starts polling for data.
+
+        limelight.start();
 
         // Reset the encoder during initialization
         turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -168,39 +127,6 @@ public class Turret {
         while (true) {
             adjustTurret();
         }
-    }
-
-//    int framesSinceSeen = 0;
-//    int decimation = 2;
-//    long fpsStart = System.nanoTime();
-//    int  fpsFrames = 0; double fps = 0;
-
-    void sendFpsToDashboard(FtcDashboard dash) {
-//        ++fpsFrames;
-//        if (System.nanoTime() - fpsStart >= 1_000_000_000L) {
-//            fps = fpsFrames / ((System.nanoTime() - fpsStart) / 1e9);
-//            fpsFrames = 0; fpsStart = System.nanoTime();
-//        }
-//        TelemetryPacket p = new TelemetryPacket();
-//        p.put("Vision FPS", fps);
-//        dash.sendTelemetryPacket(p);
-    }
-
-    void updateDecimation(List<AprilTagDetection> dets) {
-//        if (dets.isEmpty()) {
-//            if (++framesSinceSeen > 15 && decimation != 1) {
-//                decimation = 1;
-//                myAprilTagProcessor.setDecimation(1);
-//            }
-//            return;
-//        }
-//        framesSinceSeen = 0;
-//        double rangeIn = dets.get(0).ftcPose != null ? dets.get(0).ftcPose.range : 9999;
-//        int newDec = (rangeIn < 36) ? 3 : 2;
-//        if (newDec != decimation) {
-//            decimation = newDec;
-//            myAprilTagProcessor.setDecimation(newDec);
-//        }
     }
 
     public void turretControl() {
@@ -286,31 +212,19 @@ public class Turret {
 
     // Uses the camera to look at the obelisk and determine if the motif pattern is GPP, PGP, or PPG - last resort is GPP (21)
     public int determineMotif() {
-//        List<AprilTagDetection> myAprilTagDetections;  // list of all detections
-//        AprilTagDetection myAprilTagDetection;         // current detection in for() loop
-//        int myAprilTagIdCode;                           // ID code of current detection, in for() loop
-//
-//        for (int loopCounter = 0; loopCounter < 3; loopCounter++) {
-//            // Get a list of AprilTag detections.
-//            myAprilTagDetections = myAprilTagProcessor.getDetections();
-//
-//            telemetry.addLine(String.valueOf(myAprilTagDetections.size()));
-//
-//            for (int i = 0; i < myAprilTagDetections.size(); i++) {
-//                myAprilTagDetection = myAprilTagDetections.get(i);
-//
-//                if ((myAprilTagDetection.id == 21) || (myAprilTagDetection.id == 22) || (myAprilTagDetection.id == 23)) {
-////                if (myAprilTagDetection.id == 20) {
-//                    return (myAprilTagDetection.id);
-//                }
-//
-//            }
-//            try {
-//                Thread.sleep(InputValues.MOTIF_LOOP_WAIT);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
+        LLResult result = limelight.getLatestResult();
+        if (result != null) {
+            if (result.isValid()) {
+                List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
+                for (LLResultTypes.FiducialResult fiducial : fiducials) {
+                    int id = fiducial.getFiducialId(); // The ID number of the fiducial
+                    if (id == 21 || id == 22 || id == 23) {
+                        telemetry.addData("Detected Motif", id);
+                        return id;
+                    }
+                }
+            }
+        }
 
         telemetry.addData("LAST RESORT", 21);
         return 21;
@@ -364,7 +278,7 @@ public class Turret {
     public void shootArtifact() {
         switchTurretStateShooting();
         try {
-            Thread.sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+            sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

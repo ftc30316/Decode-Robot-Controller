@@ -26,9 +26,6 @@ public class BlueUpper3Row extends LinearOpMode {
         this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, mecanumDrive);
         telemetry.update();
 
-        //Detect motif for artifact order (Init)
-        int motifTagId = turret.determineMotif();
-        telemetry.addData("Motif Id", motifTagId);
         telemetry.update();
 
         waitForStart();
@@ -45,6 +42,9 @@ public class BlueUpper3Row extends LinearOpMode {
         Actions.runBlocking(mecanumDrive.actionBuilder(beginPose)
                 .strafeToLinearHeading(new Vector2d(-15, -12), Math.toRadians(-90))
                 .build());
+
+        //Detect motif for artifact order (Init)
+        int motifTagId = turret.determineMotif();
 
         // Flicks and shoots the preset artifacts and does backup flicks
         shootThreeArtifacts(motifTagId);
