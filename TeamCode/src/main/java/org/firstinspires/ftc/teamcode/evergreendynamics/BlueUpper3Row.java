@@ -24,7 +24,6 @@ public class BlueUpper3Row extends LinearOpMode {
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
         this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, mecanumDrive);
-        telemetry.update();
 
         telemetry.update();
 
