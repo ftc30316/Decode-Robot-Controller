@@ -48,7 +48,7 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
                         -gamepad1.right_stick_x
                 ));
             }
-
+            mecanumDrive.loop();
             sorter.detect();
             turret.score();
             turret.turretControl();
