@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
-import static java.lang.Thread.sleep;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -364,9 +362,9 @@ public class Turret {
     }
 
     public void shootArtifact() {
-        shootArtifact(); // lifts lift servo
+        switchTurretStateShooting();
         try {
-            sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+            Thread.sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

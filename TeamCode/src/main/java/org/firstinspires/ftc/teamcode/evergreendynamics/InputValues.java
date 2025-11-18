@@ -20,7 +20,7 @@ public class InputValues {
     public static double OPEN_GATE_POS_LEFT = 0.21;
     public static double OPEN_GATE_POS_RIGHT = 0.19;
     public static double FLICK_TRAVEL_TIME = 1.1;
-    public static double FLYWHEEL_SLOPE = 28.125;
+    public static double FLYWHEEL_SLOPE = 9.5;
     public static double FLYWHEEL_Y_INTERCEPT = 1000;
     public static double TURRET_MOTOR_POWER = 0.8;
     public static double SETTLE_TIME= 1.0;
