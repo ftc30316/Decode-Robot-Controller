@@ -42,8 +42,8 @@ public class BlueUpper3Row extends LinearOpMode {
         sorter.detect();
 
         //Moves to upper launch zone
-        Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
-                .strafeToLinearHeading(new Vector2d(-12, -12), Math.toRadians(-90))
+        Actions.runBlocking(mecanumDrive.actionBuilder(beginPose)
+                .strafeToLinearHeading(new Vector2d(-15, -12), Math.toRadians(-90))
                 .build());
 
         // Flicks and shoots the preset artifacts and does backup flicks
@@ -96,5 +96,6 @@ public class BlueUpper3Row extends LinearOpMode {
 
         // Safety net, flicks all just in case
         sorter.backupFlickAll();
+        turret.shootArtifact();
     }
 }
