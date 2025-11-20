@@ -326,10 +326,12 @@ public class Turret {
         // find distance (D): sqrt(A^2 + C^2)
         double D = Math.sqrt(Math.pow(A, 2) + Math.pow(C, 2));
 
-        double angleToGoal = Math.toDegrees(Math.atan2(A, C));
+        double theta = Math.toDegrees(Math.acos(A/D));
+        //double angleToGoal = Math.toDegrees(Math.atan2(A, C));
 
         // compute turret aiming angle relative to robot
-        double aimingDegrees = angleToGoal - robotHeadingDeg - turretStartingDegrees;
+        //double aimingDegrees = angleToGoal - robotHeadingDeg - turretStartingDegrees;
+        double aimingDegrees = turretStartingDegrees - theta - robotHeadingDeg;
 
         // turret starting heading: 0, heading is always relative to robot
         // move turret to new heading
@@ -355,7 +357,7 @@ public class Turret {
         turretValues.put("A", A);
         turretValues.put("C", C);
         turretValues.put("Distance", D);
-        turretValues.put("angle calculated", angleToGoal);
+        turretValues.put("angle calculated", theta);
 
         turretValues.put("aiming degrees", aimingDegrees);
         FtcDashboard.getInstance().sendTelemetryPacket(turretValues);

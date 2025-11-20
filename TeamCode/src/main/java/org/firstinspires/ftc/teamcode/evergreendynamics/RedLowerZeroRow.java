@@ -39,7 +39,7 @@ public class RedLowerZeroRow extends LinearOpMode {
         //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
         sorter.detect();
 
-//        //Moves to upper launch zone
+        //Moves to upper launch zone
 //        Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
 //                .strafeToLinearHeading(new Vector2d(50, 10), Math.toRadians(0))
 //                .build());
