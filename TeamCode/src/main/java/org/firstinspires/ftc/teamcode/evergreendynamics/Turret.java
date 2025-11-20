@@ -114,11 +114,13 @@ public class Turret {
         // Switch to RUN_TO_POSITION mode
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        // Start the motor moving by setting the max velocity to ___ ticks per second
-        turretMotor.setPower(InputValues.FLYWHEEL_SLOPE);
+//        // Start the motor moving by setting the max velocity to ___ ticks per second
+//        turretMotor.setPower(InputValues.TURRET_MOTOR_POWER);
 
         lift.setPosition(InputValues.LIFT_START_POS);
+    }
 
+    public void createTurretBackgroundThread() {
         // Creates a background thread so that while the robot is driving, intaking, and sorting, the turret can always be auto-locked on the goal
         this.turretBackgroundThread = new Thread(this::constantlyAdjustTurret);
     }
@@ -126,6 +128,11 @@ public class Turret {
     public void constantlyAdjustTurret() {
         while (true) {
             adjustTurret();
+//            try {
+//                sleep((long) (InputValues.TURRET_THREAD_SLEEP_TIME));
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
         }
     }
 

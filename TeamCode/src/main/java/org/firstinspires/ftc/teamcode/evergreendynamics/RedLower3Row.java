@@ -28,8 +28,10 @@ public class RedLower3Row extends LinearOpMode {
 
         waitForStart();
 
+        //Creates background thread
+        turret.createTurretBackgroundThread();
         // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
-        turret.turretBackgroundThread.start();
+        //turret.turretBackgroundThread.start();
         intake.startSpin();
         turret.startFlywheel();
 

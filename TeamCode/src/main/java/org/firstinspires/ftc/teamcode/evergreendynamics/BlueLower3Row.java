@@ -23,13 +23,15 @@ public class BlueLower3Row extends LinearOpMode {
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
         this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, mecanumDrive);
-       
+
         telemetry.update();
 
         waitForStart();
 
+        //Creates background thread
+        turret.createTurretBackgroundThread();
         // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
-        turret.turretBackgroundThread.start();
+        //turret.turretBackgroundThread.start();
         intake.startSpin();
         turret.startFlywheel();
 

@@ -56,7 +56,6 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
             //Flywheel and intake motor start
             turret.triggerFlywheel();
             intake.triggerIntake();
-            turret.adjustTurret();
             telemetry.update();
         }
     }
