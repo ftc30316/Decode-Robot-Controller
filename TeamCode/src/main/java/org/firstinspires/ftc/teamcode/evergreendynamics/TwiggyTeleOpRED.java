@@ -26,8 +26,10 @@ public class TwiggyTeleOpRED extends LinearOpMode{
 
         waitForStart();
 
-        // Starts the auto-lock on the RED goal
-        //turret.turretBackgroundThread.start();
+        //Creates background thread
+        turret.createTurretBackgroundThread();
+        // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
+        turret.turretBackgroundThread.start();
 
         // Sets up the driving system
         while (opModeIsActive()) {

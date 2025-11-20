@@ -19,6 +19,11 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         Pose2d startPose = PoseStorage.loadPose(hardwareMap.appContext);
+        telemetry.addData("auto end pose x", startPose.position.x);
+        telemetry.addData("auto end pose y", startPose.position.y);
+        telemetry.addData("auto end pose heading", Math.toDegrees(startPose.heading.toDouble()));
+
+        telemetry.update();
         this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, startPose);
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
@@ -26,8 +31,10 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
 
         waitForStart();
 
-        // Starts the auto-lock on the BLUE goal
-        //turret.turretBackgroundThread.start();
+        //Creates background thread
+        turret.createTurretBackgroundThread();
+        // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
+        turret.turretBackgroundThread.start();
 
         // Sets up the driving system
         while (opModeIsActive()) {
@@ -51,8 +58,8 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
             }
             mecanumDrive.loop();
             sorter.detect();
-            turret.score();
-            turret.turretControl();
+//            turret.score();
+//            turret.turretControl();
 
             //Flywheel and intake motor start
             turret.triggerFlywheel();

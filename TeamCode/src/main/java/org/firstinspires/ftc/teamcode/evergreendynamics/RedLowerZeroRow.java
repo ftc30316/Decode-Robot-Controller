@@ -40,10 +40,11 @@ public class RedLowerZeroRow extends LinearOpMode {
         sorter.detect();
 
         //Moves to upper launch zone
-//        Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
-//                .strafeToLinearHeading(new Vector2d(50, 10), Math.toRadians(0))
-//                .build());
+        Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
+                .strafeToLinearHeading(new Vector2d(60, 10), Math.toRadians(85))
+                .build());
 
+        PoseStorage.savePose(hardwareMap.appContext,mecanumDrive.localizer.getPose());
         //Detect motif for artifact order (Init)
         int motifTagId = turret.determineMotif();
 
