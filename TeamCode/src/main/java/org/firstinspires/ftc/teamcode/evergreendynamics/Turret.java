@@ -305,27 +305,31 @@ public class Turret {
         Pose2d robotPose = mecanumDrive.localizer.getPose();
         double robotX = robotPose.position.x;
         double robotY = robotPose.position.y;
-        double robotHeading = Math.toDegrees(robotPose.heading.toDouble());
+        double robotHeadingRad = robotPose.heading.toDouble();
+        double robotHeadingDeg = Math.toDegrees(robotHeadingRad);
 
         // get goal position; blue: -66, -66, red: -66, 66
         double goalX = goalPosition.x;
         double goalY = goalPosition.y;
         double turretStartingDegrees = -90;
 
+        // compute turret field position using robot heading + Y offset
+        double turretX = robotX - InputValues.TURRET_OFFSET_Y * Math.sin(robotHeadingRad);
+        double turretY = robotY + InputValues.TURRET_OFFSET_Y * Math.cos(robotHeadingRad);
+
         // find A: (Yr - Yb)
-        double A = robotY - goalY;
+        double A = turretY - goalY;
 
         // find C: (Xr - Xb)
-        double C = robotX - goalX;
+        double C = turretX - goalX;
 
         // find distance (D): sqrt(A^2 + C^2)
         double D = Math.sqrt(Math.pow(A, 2) + Math.pow(C, 2));
 
-        // solve for angle: c = acos(A/D); in field coordinates
-        double theta = Math.toDegrees(Math.acos(A/D));
+        double angleToGoal = Math.toDegrees(Math.atan2(A, C));
 
-        // aiming degrees = -90 - theta; in field coordinates
-        double aimingDegrees = turretStartingDegrees - theta - robotHeading;
+        // compute turret aiming angle relative to robot
+        double aimingDegrees = angleToGoal - robotHeadingDeg - turretStartingDegrees;
 
         // turret starting heading: 0, heading is always relative to robot
         // move turret to new heading
@@ -338,9 +342,12 @@ public class Turret {
 
         // telemetry
         TelemetryPacket turretValues = new TelemetryPacket();
-        turretValues.put("robot heading", robotHeading);
+        turretValues.put("robot heading", robotHeadingDeg);
         turretValues.put("robot X", robotX);
         turretValues.put("robot Y", robotY);
+
+        turretValues.put("turret X", turretX);
+        turretValues.put("turret Y", turretY);
 
         turretValues.put("goal X", goalX);
         turretValues.put("goal Y", goalY);
@@ -348,7 +355,7 @@ public class Turret {
         turretValues.put("A", A);
         turretValues.put("C", C);
         turretValues.put("Distance", D);
-        turretValues.put("angle calculated", theta);
+        turretValues.put("angle calculated", angleToGoal);
 
         turretValues.put("aiming degrees", aimingDegrees);
         FtcDashboard.getInstance().sendTelemetryPacket(turretValues);

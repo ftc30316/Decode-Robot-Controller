@@ -32,21 +32,22 @@ public class RedLowerZeroRow extends LinearOpMode {
         //Creates background thread
         turret.createTurretBackgroundThread();
         // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
-        //turret.turretBackgroundThread.start();
+        turret.turretBackgroundThread.start();
         intake.startSpin();
         turret.startFlywheel();
 
         //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
         sorter.detect();
 
-        //Moves to upper launch zone
-        Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
-                .strafeToLinearHeading(new Vector2d(50, 10), Math.toRadians(0))
-                .build());
+//        //Moves to upper launch zone
+//        Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
+//                .strafeToLinearHeading(new Vector2d(50, 10), Math.toRadians(0))
+//                .build());
 
         //Detect motif for artifact order (Init)
         int motifTagId = turret.determineMotif();
 
+        sleep(30000);
     }
 
     public void shootThreeArtifacts(int motifTagId) {

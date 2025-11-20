@@ -223,7 +223,7 @@ public final class MecanumDrive {
             return twist.velocity().value();
         }
     }
-       
+
     public MecanumDrive(HardwareMap hardwareMap, Pose2d pose) {
         this(hardwareMap, null, pose);
     }

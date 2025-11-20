@@ -37,4 +37,5 @@ public class InputValues {
     public static Vector2d BLUE_GOAL_POSITION = new Vector2d(-66,-66);
     public static Vector2d RED_GOAL_POSITION = new Vector2d(-66,66);
     public static int TURRET_THREAD_SLEEP_TIME = 50;
+    public static double TURRET_OFFSET_Y = 6.0; // positive = left side of robot
 }
