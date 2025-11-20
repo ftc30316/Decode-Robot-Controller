@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.teamcode.evergreendynamics.PoseStorage;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
@@ -43,6 +44,7 @@ public class RedLowerZeroRow extends LinearOpMode {
         Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
                 .strafeToLinearHeading(new Vector2d(50, 10), Math.toRadians(0))
                 .build());
+        PoseStorage.savePose(hardwareMap.appContext,mecanumDrive.localizer.getPose());
 
         //Detect motif for artifact order (Init)
         int motifTagId = turret.determineMotif();

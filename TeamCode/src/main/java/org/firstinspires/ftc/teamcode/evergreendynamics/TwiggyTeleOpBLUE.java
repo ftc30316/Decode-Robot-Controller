@@ -18,7 +18,8 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
 
     @Override
     public void runOpMode() throws InterruptedException {
-        this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, new Pose2d(0, 0, 0));
+        Pose2d startPose = PoseStorage.loadPose(hardwareMap.appContext);
+        this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, startPose);
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
         this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, mecanumDrive);

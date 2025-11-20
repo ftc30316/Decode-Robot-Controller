@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.teamcode.evergreendynamics.PoseStorage;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 @Autonomous
@@ -42,6 +43,7 @@ public class RedLower3Row extends LinearOpMode {
         Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
                 .strafeTo(new Vector2d(-12, 12))
                 .build());
+        PoseStorage.savePose(hardwareMap.appContext,mecanumDrive.localizer.getPose());
 
         //Detect motif for artifact order (Init)
         int motifTagId = turret.determineMotif();
@@ -54,6 +56,7 @@ public class RedLower3Row extends LinearOpMode {
                 .strafeTo(new Vector2d(-12,50))
                 .strafeTo(new Vector2d(-12,12))
                 .build());
+        PoseStorage.savePose(hardwareMap.appContext,mecanumDrive.localizer.getPose());
 
         // Flicks and shoots the first row artifacts and does backup flicks
         shootThreeArtifacts(motifTagId);
@@ -64,6 +67,7 @@ public class RedLower3Row extends LinearOpMode {
                 .strafeTo(new Vector2d(12,50))
                 .strafeTo(new Vector2d(-12,12))
                 .build());
+        PoseStorage.savePose(hardwareMap.appContext,mecanumDrive.localizer.getPose());
 
         // Flicks and shoots the second row artifacts and does backup flicks
         shootThreeArtifacts(motifTagId);
@@ -74,6 +78,7 @@ public class RedLower3Row extends LinearOpMode {
                 .strafeTo(new Vector2d(36,50))
                 .strafeTo(new Vector2d(-12,12))
                 .build());
+        PoseStorage.savePose(hardwareMap.appContext,mecanumDrive.localizer.getPose());
 
         // Flicks and shoots the third row artifacts and does backup flicks
         shootThreeArtifacts(motifTagId);
