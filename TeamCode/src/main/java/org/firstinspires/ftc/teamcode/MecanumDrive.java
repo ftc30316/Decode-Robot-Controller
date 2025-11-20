@@ -223,9 +223,13 @@ public final class MecanumDrive {
             return twist.velocity().value();
         }
     }
+       
+    public MecanumDrive(HardwareMap hardwareMap, Pose2d pose) {
+        this(hardwareMap, null, pose);
+    }
 
     public MecanumDrive(HardwareMap hardwareMap, Gamepad gamepad1, Pose2d pose) {
-        this.gamepad1 = gamepad1;
+            this.gamepad1 = gamepad1;
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {

@@ -19,7 +19,7 @@ public class RedLower3Row extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("Running Op Mode");
         Pose2d beginPose = new Pose2d(62, 12, Math.toRadians(90));
-        this.mecanumDrive = new MecanumDrive(hardwareMap, beginPose);
+        this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, beginPose);
         this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
         this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, mecanumDrive);
