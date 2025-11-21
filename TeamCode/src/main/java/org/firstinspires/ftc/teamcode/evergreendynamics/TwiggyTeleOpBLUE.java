@@ -19,9 +19,11 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         Pose2d startPose = PoseStorage.loadPose(hardwareMap.appContext);
+        double turretStartHeading = PoseStorage.loadTurretHeading(hardwareMap.appContext);
         telemetry.addData("auto end pose x", startPose.position.x);
         telemetry.addData("auto end pose y", startPose.position.y);
         telemetry.addData("auto end pose heading", Math.toDegrees(startPose.heading.toDouble()));
+        telemetry.addData("auto end turret heading", turretStartHeading);
 
         telemetry.update();
         this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, startPose);
@@ -39,6 +41,7 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
         // Sets up the driving system
         while (opModeIsActive()) {
             if (mecanumDrive.drivePowers == MecanumDrive.DrivePowers.SLOW) {
+                telemetry.addData("robot speed", "SLOW");
                 mecanumDrive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(
                                 -gamepad1.left_stick_y * 0.5,
@@ -48,6 +51,7 @@ public class TwiggyTeleOpBLUE extends LinearOpMode{
                 ));
 
             } else {
+                telemetry.addData("robot speed", "FAST");
                 mecanumDrive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(
                                 -gamepad1.left_stick_y,

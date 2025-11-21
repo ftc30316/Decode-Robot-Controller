@@ -116,7 +116,7 @@ public final class MecanumDrive {
     public final DcMotorEx leftFront, leftBack, rightBack, rightFront;
 
     public final VoltageSensor voltageSensor;
-    public final Gamepad gamepad1;
+    public final Gamepad gamepad;
 
     public final LazyImu lazyImu;
 
@@ -228,8 +228,8 @@ public final class MecanumDrive {
         this(hardwareMap, null, pose);
     }
 
-    public MecanumDrive(HardwareMap hardwareMap, Gamepad gamepad1, Pose2d pose) {
-            this.gamepad1 = gamepad1;
+    public MecanumDrive(HardwareMap hardwareMap, Gamepad gamepad, Pose2d pose) {
+            this.gamepad = gamepad;
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
@@ -272,14 +272,14 @@ public final class MecanumDrive {
         switch(drivePowers) {
             case NORMAL:
 
-                if (gamepad1.circleWasPressed()) {
+                if (gamepad.dpad_right) {
                     drivePowers = MecanumDrive.DrivePowers.SLOW;
                 }
                 break;
 
             case SLOW:
 
-                if (gamepad1.circleWasPressed()) {
+                if (gamepad.dpad_left) {
                     drivePowers = MecanumDrive.DrivePowers.NORMAL;
                 }
 

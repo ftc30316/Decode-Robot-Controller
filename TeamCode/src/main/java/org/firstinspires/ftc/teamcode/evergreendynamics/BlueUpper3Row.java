@@ -44,7 +44,8 @@ public class BlueUpper3Row extends LinearOpMode {
         Actions.runBlocking(mecanumDrive.actionBuilder(beginPose)
                 .strafeToLinearHeading(new Vector2d(-15, -12), Math.toRadians(-90))
                 .build());
-        PoseStorage.savePose(hardwareMap.appContext,mecanumDrive.localizer.getPose());
+        mecanumDrive.updatePoseEstimate();
+        PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
 
         //Detect motif for artifact order (Init)
         int motifTagId = turret.determineMotif();
@@ -57,7 +58,8 @@ public class BlueUpper3Row extends LinearOpMode {
                 .strafeTo(new Vector2d(-12,-50))
                 .strafeTo(new Vector2d(-12,-12))
                 .build());
-        PoseStorage.savePose(hardwareMap.appContext,mecanumDrive.localizer.getPose());
+        mecanumDrive.updatePoseEstimate();
+        PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
 
         // Flicks and shoots the first row artifacts and does backup flicks
         shootThreeArtifacts(motifTagId);
@@ -68,7 +70,8 @@ public class BlueUpper3Row extends LinearOpMode {
                 .strafeTo(new Vector2d(12,-50))
                 .strafeTo(new Vector2d(-12,-12))
                 .build());
-        PoseStorage.savePose(hardwareMap.appContext,mecanumDrive.localizer.getPose());
+        mecanumDrive.updatePoseEstimate();
+        PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
 
         // Flicks and shoots the second row artifacts and does backup flicks
         shootThreeArtifacts(motifTagId);
@@ -79,7 +82,8 @@ public class BlueUpper3Row extends LinearOpMode {
                 .strafeTo(new Vector2d(36,-50))
                 .strafeTo(new Vector2d(-12,-12))
                 .build());
-        PoseStorage.savePose(hardwareMap.appContext,mecanumDrive.localizer.getPose());
+        mecanumDrive.updatePoseEstimate();
+        PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
 
         // Flicks and shoots the third row artifacts and does backup flicks
         shootThreeArtifacts(motifTagId);

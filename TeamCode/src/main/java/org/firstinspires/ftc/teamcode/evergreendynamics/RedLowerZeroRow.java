@@ -17,38 +17,50 @@ public class RedLowerZeroRow extends LinearOpMode {
 
     @Override
 
-    public void runOpMode() throws InterruptedException {
-        telemetry.addLine("Running Op Mode");
-        Pose2d beginPose = new Pose2d(62, 12, Math.toRadians(90));
-        this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, beginPose);
-        this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
-        this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, mecanumDrive);
+    public void runOpMode() {
+        try {
+            telemetry.addLine("Running Op Mode");
 
-        telemetry.update();
+            Pose2d beginPose = new Pose2d(62, 12, Math.toRadians(90));
+            this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, beginPose);
+            this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
+            this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
+            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, mecanumDrive);
 
-        waitForStart();
+            telemetry.update();
 
-        //Creates background thread
-        turret.createTurretBackgroundThread();
-        // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
-        turret.turretBackgroundThread.start();
-        intake.startSpin();
-        turret.startFlywheel();
+            waitForStart();
 
-        //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
-        sorter.detect();
+            //Creates background thread
+            turret.createTurretBackgroundThread();
+            // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
+            turret.turretBackgroundThread.start();
+            intake.startSpin();
+            turret.startFlywheel();
 
-        //Moves to upper launch zone
-        Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
-                .strafeToLinearHeading(new Vector2d(60, 10), Math.toRadians(85))
-                .build());
+            //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
+            sorter.detect();
 
-        PoseStorage.savePose(hardwareMap.appContext,mecanumDrive.localizer.getPose());
-        //Detect motif for artifact order (Init)
-        int motifTagId = turret.determineMotif();
+            //Moves to upper launch zone
+            Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
+                    .strafeToLinearHeading(new Vector2d(60, 10), Math.toRadians(85))
+                    .build());
 
-        sleep(30000);
+            mecanumDrive.updatePoseEstimate();
+            PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
+
+            //Detect motif for artifact order (Init)
+            int motifTagId = turret.determineMotif();
+
+            turret.stopTurretBackgroundThread();
+
+            sleep(30000);
+
+        } catch(Exception e) {
+            // do nothing
+        } finally {
+            turret.stopTurretBackgroundThread();
+        }
     }
 
     public void shootThreeArtifacts(int motifTagId) {

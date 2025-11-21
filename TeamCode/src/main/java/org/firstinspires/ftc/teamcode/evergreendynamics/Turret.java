@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
-import static java.lang.Thread.sleep;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -72,6 +70,9 @@ public class Turret {
     public Thread turretBackgroundThread;
     private Limelight3A limelight;
 
+    private volatile boolean runAutoAimThread = true;
+    private volatile double turretDegrees = 0;
+
     public Turret(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2, Vector2d goalPosition, MecanumDrive mecanumDrive) {
 
         this.telemetry = telemetry;
@@ -122,17 +123,30 @@ public class Turret {
 
     public void createTurretBackgroundThread() {
         // Creates a background thread so that while the robot is driving, intaking, and sorting, the turret can always be auto-locked on the goal
-        this.turretBackgroundThread = new Thread(this::constantlyAdjustTurret);
+        this.turretBackgroundThread = new Thread(new AutoAimThread());
     }
 
-    public void constantlyAdjustTurret() {
-        while (true) {
-            adjustTurret();
-//            try {
-//                sleep((long) (InputValues.TURRET_THREAD_SLEEP_TIME));
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
+    public void stopTurretBackgroundThread() {
+        runAutoAimThread = false;
+    }
+
+    class AutoAimThread implements Runnable {
+        @Override
+        public void run() {
+            try {
+                while (runAutoAimThread) {
+                    adjustTurret();
+                    try {
+                        Thread.sleep((long) (InputValues.TURRET_THREAD_SLEEP_TIME));
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            } catch (Exception e) {
+
+            } finally {
+                turretMotor.setPower(0);
+            }
         }
     }
 
@@ -285,13 +299,13 @@ public class Turret {
     public void shootArtifact() {
         switchTurretStateShooting();
         try {
-            sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+            Thread.sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         score(); // resets lift servo
         try {
-            sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+            Thread.sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -318,10 +332,10 @@ public class Turret {
         double turretY = robotY + InputValues.TURRET_OFFSET_Y * Math.cos(robotHeadingRad);
 
         // find A: (Yr - Yb)
-        double A = turretY - goalY;
+        double A = robotY - goalY;
 
         // find C: (Xr - Xb)
-        double C = turretX - goalX;
+        double C = robotX - goalX;
 
         // find distance (D): sqrt(A^2 + C^2)
         double D = Math.sqrt(Math.pow(A, 2) + Math.pow(C, 2));
@@ -332,6 +346,7 @@ public class Turret {
         // compute turret aiming angle relative to robot
         //double aimingDegrees = angleToGoal - robotHeadingDeg - turretStartingDegrees;
         double aimingDegrees = turretStartingDegrees - theta - robotHeadingDeg;
+        turretDegrees = aimingDegrees;
 
         // turret starting heading: 0, heading is always relative to robot
         // move turret to new heading
@@ -362,6 +377,10 @@ public class Turret {
         turretValues.put("aiming degrees", aimingDegrees);
         FtcDashboard.getInstance().sendTelemetryPacket(turretValues);
 
+    }
+
+    public double getTurretDegrees() {
+        return this.turretDegrees;
     }
 }
 
