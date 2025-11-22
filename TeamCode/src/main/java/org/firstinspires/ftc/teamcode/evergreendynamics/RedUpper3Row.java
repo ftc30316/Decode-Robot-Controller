@@ -18,77 +18,87 @@ public class RedUpper3Row extends LinearOpMode {
 
     @Override
 
-    public void runOpMode() throws InterruptedException {
-        telemetry.addLine("Running Op Mode");
-        Pose2d beginPose = new Pose2d(-52, 52, Math.toRadians(45));
-        this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, beginPose);
-        this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
-        this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, mecanumDrive);
+    public void runOpMode() {
+        try {
+            telemetry.addLine("Running Op Mode");
+            Pose2d beginPose = new Pose2d(-50, 50, Math.toRadians(-45));
+            float turretStartHeading = -90;
+            this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, beginPose);
+            this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
+            this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
+            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, turretStartHeading, mecanumDrive);
 
-        telemetry.update();
+            telemetry.update();
 
-        waitForStart();
+            waitForStart();
 
-        //Creates background thread
-        turret.createTurretBackgroundThread();
-        // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
-        //turret.turretBackgroundThread.start();
-        intake.startSpin();
-        turret.startFlywheel();
+            //Creates background thread
+            turret.createTurretBackgroundThread();
+            // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
+            turret.turretBackgroundThread.start();
+            intake.startSpin();
 
-        //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
-        sorter.detect();
+            //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
+            sorter.detect();
 
-        //Moves to upper launch zone
-        Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
-                .strafeTo(new Vector2d(-12, 12))//, Math.toRadians(90))
-                .build());
-        mecanumDrive.updatePoseEstimate();
-        PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
+            //Moves to upper launch zone
+            Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
+                    .strafeToLinearHeading(new Vector2d(-15, 12), Math.toRadians(90))//, Math.toRadians(90))
+                    .build());
+            mecanumDrive.updatePoseEstimate();
+            PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
 
-        //Detect motif for artifact order (Init)
-        int motifTagId = turret.determineMotif();
+            //Detect motif for artifact order (Init)
+            int motifTagId = turret.determineMotif();
 
-        // Flicks and shoots the preset artifacts and does backup flicks
-        shootThreeArtifacts(motifTagId);
+            // Flicks and shoots the preset artifacts and does backup flicks
+            shootThreeArtifacts(motifTagId);
 
-        mecanumDrive.updatePoseEstimate();
-        Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose())
-                .strafeTo(new Vector2d(-12,50))
-                .strafeTo(new Vector2d(-12,12))
-                .build());
-        mecanumDrive.updatePoseEstimate();
-        PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
+            mecanumDrive.updatePoseEstimate();
+            Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose())
+                    .strafeTo(new Vector2d(-9,45))
+                    .strafeTo(new Vector2d(-9,22))
+                    .build());
+            mecanumDrive.updatePoseEstimate();
+            PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
 
-        // Flicks and shoots the first row artifacts and does backup flicks
-        shootThreeArtifacts(motifTagId);
+            // Flicks and shoots the first row artifacts and does backup flicks
+            shootThreeArtifacts(motifTagId);
 
-        mecanumDrive.updatePoseEstimate();
-        Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
-                .strafeTo(new Vector2d(12,12))
-                .strafeTo(new Vector2d(12,50))
-                .strafeTo(new Vector2d(-12,12))
-                .build());
-        mecanumDrive.updatePoseEstimate();
-        PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
+            turret.stopTurretBackgroundThread();
+            sleep(100);
+            turret.resetTurretToZero();
 
-        // Flicks and shoots the second row artifacts and does backup flicks
-        shootThreeArtifacts(motifTagId);
+//            mecanumDrive.updatePoseEstimate();
+//            Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
+//                    .strafeTo(new Vector2d(12, 12))
+//                    .strafeTo(new Vector2d(12, 50))
+//                    .strafeTo(new Vector2d(-12, 12))
+//                    .build());
+//            mecanumDrive.updatePoseEstimate();
+//            PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
+//
+//            // Flicks and shoots the second row artifacts and does backup flicks
+//            shootThreeArtifacts(motifTagId);
+//
+//            mecanumDrive.updatePoseEstimate();
+//            Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
+//                    .strafeTo(new Vector2d(36, 12))
+//                    .strafeTo(new Vector2d(36, 50))
+//                    .strafeTo(new Vector2d(-12, 12))
+//                    .build());
+//            mecanumDrive.updatePoseEstimate();
+//            PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
+//
+//            // Flicks and shoots the third row artifacts and does backup flicks
+//            shootThreeArtifacts(motifTagId);
 
-        mecanumDrive.updatePoseEstimate();
-        Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
-                .strafeTo(new Vector2d(36,12))
-                .strafeTo(new Vector2d(36,50))
-                .strafeTo(new Vector2d(-12,12))
-                .build());
-        mecanumDrive.updatePoseEstimate();
-        PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
-
-        // Flicks and shoots the third row artifacts and does backup flicks
-        shootThreeArtifacts(motifTagId);
-
-        sleep(30000);
+            sleep(30000);
+        } catch (Exception e) {
+            // do nothing
+        } finally {
+            turret.stopTurretBackgroundThread();
+        }
     }
 
     public void shootThreeArtifacts(int motifTagId) {
@@ -105,6 +115,7 @@ public class RedUpper3Row extends LinearOpMode {
         turret.shootArtifact();
 
         // Safety net, flicks all just in case
-        sorter.backupFlickAll();
+        //sorter.backupFlickAll();
     }
+
 }

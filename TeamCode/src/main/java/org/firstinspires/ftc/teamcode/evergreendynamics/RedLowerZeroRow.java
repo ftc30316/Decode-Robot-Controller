@@ -22,10 +22,11 @@ public class RedLowerZeroRow extends LinearOpMode {
             telemetry.addLine("Running Op Mode");
 
             Pose2d beginPose = new Pose2d(62, 12, Math.toRadians(90));
+            float turretStartHeading = -90;
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, beginPose);
             this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
             this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, mecanumDrive);
+            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, turretStartHeading, mecanumDrive);
 
             telemetry.update();
 
@@ -36,7 +37,6 @@ public class RedLowerZeroRow extends LinearOpMode {
             // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
             turret.turretBackgroundThread.start();
             intake.startSpin();
-            turret.startFlywheel();
 
             //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
             sorter.detect();

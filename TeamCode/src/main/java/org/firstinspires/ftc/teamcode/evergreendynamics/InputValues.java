@@ -9,8 +9,8 @@ public class InputValues {
     // Flywheels
     public static double FLYWHEEL_SPEED = 2000;
     public static double SLOW_FLYWHEEL_SPEED = 250;
-    public static double FLYWHEEL_SLOPE = 9.5;
-    public static double FLYWHEEL_Y_INTERCEPT = 1200;
+    public static double FLYWHEEL_SLOPE = 10;
+    public static double FLYWHEEL_Y_INTERCEPT = 1000;
 
     // Turret aim motor
     public static double TURRET_MOTOR_POWER = 0.8;
@@ -43,7 +43,7 @@ public class InputValues {
 
 
     // Sleep time for the artifact to settle in the lift divot during auto
-    public static double SETTLE_TIME= 1.0;
+    public static double SETTLE_TIME = 1.5;
 
 
     // Use to compute position for auto aiming turret motor

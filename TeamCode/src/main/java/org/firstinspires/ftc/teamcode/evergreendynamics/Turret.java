@@ -73,7 +73,11 @@ public class Turret {
     private volatile boolean runAutoAimThread = true;
     private volatile double turretDegrees = 0;
 
-    public Turret(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2, Vector2d goalPosition, MecanumDrive mecanumDrive) {
+    double turretStartHeading;
+    public Turret(HardwareMap hardwareMap, Telemetry telemetry,
+                  Gamepad gamepad1, Gamepad gamepad2,
+                  Vector2d goalPosition, double turretStartHeading,
+                  MecanumDrive mecanumDrive) {
 
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
@@ -81,6 +85,7 @@ public class Turret {
         this.goalPosition = goalPosition;
         this.mecanumDrive = mecanumDrive;
         this.limelight = limelight;
+        this.turretStartHeading = turretStartHeading;
 
         //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
@@ -156,6 +161,7 @@ public class Turret {
         telemetry.addData("RIGHT TRIGGER: ", gamepad2.right_bumper);
         switch (turretLockingState) {
             case AUTO:
+                //turretBackgroundThread.start();
                 turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 adjustTurret();
                 if (gamepad1.dpad_up) {
@@ -163,6 +169,7 @@ public class Turret {
                 }
                 break;
             case MANUAL:
+                stopTurretBackgroundThread();
                 turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 if (gamepad2.left_bumper) {
@@ -189,11 +196,6 @@ public class Turret {
     }
 
     // Starts the flywheel
-    public void startFlywheel() {
-        leftFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
-        rightFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
-    }
-
     public void triggerFlywheel() {
         telemetry.addData("Flywheel state is: ", flywheelState);
         switch (flywheelState) {
@@ -208,9 +210,6 @@ public class Turret {
             case ON:
                 leftFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
                 rightFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
-
-                leftFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
-                rightFlywheel.setVelocity(InputValues.FLYWHEEL_SPEED);
                 if (gamepad2.right_trigger > 0.5) {
                     flywheelState = FlywheelState.REVERSE;
                 }
@@ -218,9 +217,6 @@ public class Turret {
             case REVERSE:
                 leftFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
                 rightFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
-
-                leftFlywheel.setVelocity(InputValues.SLOW_FLYWHEEL_SPEED);
-                rightFlywheel.setVelocity(InputValues.SLOW_FLYWHEEL_SPEED);
                 if (gamepad2.left_trigger > 0.5) {
                     flywheelState = FlywheelState.ON;
                 }
@@ -311,6 +307,11 @@ public class Turret {
         }
     }
 
+    public void resetTurretToZero() {
+        turretMotor.setPower(0.8);
+        turretMotor.setTargetPosition(0);
+    }
+
     // Uses the position of the aprilTag to adjust the turret motor and center the aprilTag in the camera view
     public void adjustTurret() {
         mecanumDrive.updatePoseEstimate();
@@ -325,7 +326,6 @@ public class Turret {
         // get goal position; blue: -66, -66, red: -66, 66
         double goalX = goalPosition.x;
         double goalY = goalPosition.y;
-        double turretStartingDegrees = -90;
 
         // compute turret field position using robot heading + Y offset
         double turretX = robotX - InputValues.TURRET_OFFSET_Y * Math.sin(robotHeadingRad);
@@ -345,8 +345,8 @@ public class Turret {
 
         // compute turret aiming angle relative to robot
         //double aimingDegrees = angleToGoal - robotHeadingDeg - turretStartingDegrees;
-        double aimingDegrees = turretStartingDegrees - theta - robotHeadingDeg;
-        turretDegrees = aimingDegrees;
+        double aimingDegrees = turretStartHeading - theta - robotHeadingDeg;
+        turretDegrees = aimingDegrees + robotHeadingDeg; // added robotHeadingDeg
 
         // turret starting heading: 0, heading is always relative to robot
         // move turret to new heading

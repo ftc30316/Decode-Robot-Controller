@@ -20,10 +20,11 @@ public class TwiggyTeleOpRED extends LinearOpMode{
     public void runOpMode() {
         try {
             Pose2d startPose = PoseStorage.loadPose(hardwareMap.appContext);
+            double turretStartHeading = Math.toDegrees(startPose.heading.toDouble());
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad2, startPose);
             this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
             this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, mecanumDrive);
+            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, turretStartHeading, mecanumDrive);
 
             waitForStart();
 
