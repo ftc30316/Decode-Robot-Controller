@@ -62,14 +62,14 @@ public class Intake {
                 rightIntakeServo.setPower(1.0);
                 leftIntakeServo.setPower(1.0);
 
-                if (gamepad2.right_bumper) {
+                if (gamepad2.dpad_down) {
                     intakeState = IntakeState.REVERSE;
                 }
                 break;
             case REVERSE:
                 intake1.setDirection(DcMotorSimple.Direction.FORWARD);
                 intake1.setVelocity(InputValues.SLOW_INTAKE_SPEED);
-                if (gamepad2.left_bumper) {
+                if (gamepad2.dpad_up) {
                     intakeState = IntakeState.ON;
                 }
 //                if (gamepad1.square) {

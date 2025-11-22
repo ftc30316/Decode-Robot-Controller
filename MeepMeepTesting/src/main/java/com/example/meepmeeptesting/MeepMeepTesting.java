@@ -17,7 +17,7 @@ public class MeepMeepTesting {
 
         // blue lower launch zone auto
 //        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(62, -12, Math.toRadians(270)))
-//                .strafeTo(new Vector2d(-12, -12))
+//                .strafeTo(new Vector2d(30, -12))
 //                // shoots preloaded set of artifacts
 //                .waitSeconds(10)
 //                // grabs first set of artifacts
@@ -40,12 +40,12 @@ public class MeepMeepTesting {
 //                .strafeTo(new Vector2d(-12,-12))
 //                // shoots third set
 //                .waitSeconds(10)
-//
-//                .build());
+
+                //.build());
 
         // blue upper launch zone auto
-//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
-//                .strafeToLinearHeading(new Vector2d(-12, -12), Math.toRadians(-90))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
+                .strafeTo(new Vector2d(-30, -52))
 //                .waitSeconds(10)
 //                .strafeTo(new Vector2d(-12,-50))
 //                .strafeTo(new Vector2d(-12,-12))
@@ -59,52 +59,52 @@ public class MeepMeepTesting {
 //                .strafeTo(new Vector2d(-12,-12))
 //                .waitSeconds(10)
 //
-//                .build());
-
-        // red upper launch zone auto
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-52, 52, Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(-12, 12), Math.toRadians(90))
-                .waitSeconds(10)
-                .strafeTo(new Vector2d(-12,50))
-                .strafeTo(new Vector2d(-12,12))
-                .waitSeconds(10)
-                .strafeTo(new Vector2d(12,12))
-                .strafeTo(new Vector2d(12,50))
-                .strafeTo(new Vector2d(-12,12))
-                .waitSeconds(10)
-                .strafeTo(new Vector2d(36,12))
-                .strafeTo(new Vector2d(36,50))
-                .strafeTo(new Vector2d(-12,12))
-                .waitSeconds(10)
                 .build());
 
-        // red lower launch zone auto
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(62, 12, Math.toRadians(90)))
-                .strafeTo(new Vector2d(-12, 12))
+//        // red upper launch zone auto
+//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-50, 50, Math.toRadians(-45)))
+//                .strafeTo(new Vector2d(-30, 50))
+//                .waitSeconds(10)
+//                .strafeTo(new Vector2d(-12,50))
+//                .strafeTo(new Vector2d(-12,12))
+//                .waitSeconds(10)
+//                .strafeTo(new Vector2d(12,12))
+//                .strafeTo(new Vector2d(12,50))
+//                .strafeTo(new Vector2d(-12,12))
+//                .waitSeconds(10)
+//                .strafeTo(new Vector2d(36,12))
+//                .strafeTo(new Vector2d(36,50))
+//                .strafeTo(new Vector2d(-12,12))
+//                .waitSeconds(10)
+                //.build());
+//
+//        // red lower launch zone auto
+//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(62, 12, Math.toRadians(90)))
+//                .strafeTo(new Vector2d(30, 12))
                 // shoots preloaded set of artifacts
-                .waitSeconds(10)
-                // grabs first set of artifacts
-                .strafeTo(new Vector2d(-12,50))
-                // goes to shooting position
-                .strafeTo(new Vector2d(-12,12))
-                // shoots first set
-                .waitSeconds(10)
-                .strafeTo(new Vector2d(12,12))
-                // grabs second set of artifacts
-                .strafeTo(new Vector2d(12,50))
-                // goes to shooting position
-                .strafeTo(new Vector2d(-12,12))
-                // shoots second set of artifacts
-                .waitSeconds(10)
-                .strafeTo(new Vector2d(36,12))
-                // grabs third set
-                .strafeTo(new Vector2d(36,50))
-                // goes to shooting position
-                .strafeTo(new Vector2d(-12,12))
-                // shoots third set
-                .waitSeconds(10)
+//                .waitSeconds(10)
+//                // grabs first set of artifacts
+//                .strafeTo(new Vector2d(-12,50))
+//                // goes to shooting position
+//                .strafeTo(new Vector2d(-12,12))
+//                // shoots first set
+//                .waitSeconds(10)
+//                .strafeTo(new Vector2d(12,12))
+//                // grabs second set of artifacts
+//                .strafeTo(new Vector2d(12,50))
+//                // goes to shooting position
+//                .strafeTo(new Vector2d(-12,12))
+//                // shoots second set of artifacts
+//                .waitSeconds(10)
+//                .strafeTo(new Vector2d(36,12))
+//                // grabs third set
+//                .strafeTo(new Vector2d(36,50))
+//                // goes to shooting position
+//                .strafeTo(new Vector2d(-12,12))
+//                // shoots third set
+//                .waitSeconds(10)
 
-                .build());
+                //.build());
 
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_DECODE_OFFICIAL)

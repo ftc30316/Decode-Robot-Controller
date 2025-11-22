@@ -10,7 +10,7 @@ public class InputValues {
     public static double FLYWHEEL_SPEED = 2000;
     public static double SLOW_FLYWHEEL_SPEED = 250;
     public static double FLYWHEEL_SLOPE = 9.5;
-    public static double FLYWHEEL_Y_INTERCEPT = 1000;
+    public static double FLYWHEEL_Y_INTERCEPT = 900;
 
     // Turret aim motor
     public static double TURRET_MOTOR_POWER = 0.8;

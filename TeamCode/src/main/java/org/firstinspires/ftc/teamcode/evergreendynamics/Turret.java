@@ -188,9 +188,9 @@ public class Turret {
                     turretMotor.setPower(0);
                 }
 
-                if (gamepad2.dpad_up) {
-                    turretLockingState = TurretLockingState.AUTO;
-                }
+//                if (gamepad2.dpad_up) {
+//                    turretLockingState = TurretLockingState.AUTO;
+//                }
                 break;
         }
     }
