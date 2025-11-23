@@ -44,8 +44,8 @@ public class MeepMeepTesting {
                 //.build());
 
         // blue upper launch zone auto
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
-                .strafeTo(new Vector2d(-30, -52))
+//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-52, -52, Math.toRadians(45)))
+//                .strafeTo(new Vector2d(-30, -52))
 //                .waitSeconds(10)
 //                .strafeTo(new Vector2d(-12,-50))
 //                .strafeTo(new Vector2d(-12,-12))
@@ -59,7 +59,7 @@ public class MeepMeepTesting {
 //                .strafeTo(new Vector2d(-12,-12))
 //                .waitSeconds(10)
 //
-                .build());
+                //.build());
 
 //        // red upper launch zone auto
 //        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-50, 50, Math.toRadians(-45)))
@@ -79,8 +79,8 @@ public class MeepMeepTesting {
                 //.build());
 //
 //        // red lower launch zone auto
-//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(62, 12, Math.toRadians(90)))
-//                .strafeTo(new Vector2d(30, 12))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(62, 12, Math.toRadians(90)))
+                .strafeTo(new Vector2d(62, 56))
                 // shoots preloaded set of artifacts
 //                .waitSeconds(10)
 //                // grabs first set of artifacts
@@ -104,7 +104,7 @@ public class MeepMeepTesting {
 //                // shoots third set
 //                .waitSeconds(10)
 
-                //.build());
+                .build());
 
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_DECODE_OFFICIAL)
