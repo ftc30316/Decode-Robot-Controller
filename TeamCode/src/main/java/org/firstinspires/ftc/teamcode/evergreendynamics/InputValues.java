@@ -15,7 +15,8 @@ public class InputValues {
     // Turret aim motor
     public static double TURRET_MOTOR_POWER = 0.8;
     public static int TURRET_THREAD_SLEEP_TIME = 50;
-    public static double TURRET_OFFSET_Y = -4.0; // positive = left side of robot
+    public static double TURRET_OFFSET_X = -4.0;
+    public static double TURRET_OFFSET_Y = 0;
 
     // Lift
     public static double LIFT_TRAVEL_TIME = 0.7;
