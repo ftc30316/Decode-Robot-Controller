@@ -244,7 +244,52 @@ public class Turret {
         leftLiftFlywheel.setPower(0);
         rightLiftFlywheel.setPower(0);
     }
+    public double flywheelVelocity(double distanceToGoal) {
+        double[] D = {0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168, 180};
+        double[] velocity = {1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500,
+                3700, 3900, 4100, 4300, 4500};
+        int index = (int) Math.floor(distanceToGoal/12);
 
+        if (index < 1) {
+            return velocity[0];
+        } else if (index > 15) {
+            return velocity[15];
+        }
+
+        double flywheelV = (velocity[index + 1] - velocity[index]) / (D[index] - D[index-1]) *
+                (distanceToGoal - D[index - 1]);
+
+        return flywheelV;
+
+//        if (distanceToGoal > 0 && distanceToGoal <= 12) {
+//            return (2000.0 - 1500.0) / (12.0 - 0.0) * (distanceToGoal);
+//
+//        } else if (distanceToGoal > 12 && distanceToGoal <= 24) {
+//            return (2500.0 - 2000.0) / (24.0 - 12.0) * (distanceToGoal - 12);
+//
+//        } else if (distanceToGoal > 24 && distanceToGoal <= 36) {
+//            return (3000.0 - 2500.0) / (36.0 - 24.0) * (distanceToGoal - 24);
+//
+//        } else if (distanceToGoal > 36 && distanceToGoal <= 48) {
+//            return (3500.0 - 3000.0) / (48.0 - 36.0) * (distanceToGoal - 36);
+//
+//        } else if (distanceToGoal > 48 && distanceToGoal <= 60) {
+//            return (4000.0 - 3500.0) / (60.0 - 48.0) * (distanceToGoal - 48);
+//
+//        } else if (distanceToGoal > 60 && distanceToGoal <= 72) {
+//            return (4500.0 - 4000.0) / (72.0 - 60.0) * (distanceToGoal - 60);
+//
+//        } else if (distanceToGoal > 72 && distanceToGoal <= 84) {
+//            return (5000.0 - 4500.0) / (84.0 - 72.0) * (distanceToGoal - 72);
+//
+//        } else if (distanceToGoal > 84 && distanceToGoal <= 96) {
+//            return (5500.0 - 5000.0) / (96.0 - 84.0) * (distanceToGoal - 84);
+//
+//        } else if (distanceToGoal > 96 && distanceToGoal <= 108) {
+//            return (5500.0 - 5000.0) / (96.0 - 84.0) * (distanceToGoal - 84);
+//
+//        }
+    }
     public void resetTurretToZero() {
         turretMotor.setPower(0.8);
         turretMotor.setTargetPosition(0);
