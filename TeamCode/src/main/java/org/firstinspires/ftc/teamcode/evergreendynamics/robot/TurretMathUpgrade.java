@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.evergreendynamics;
+package org.firstinspires.ftc.teamcode.evergreendynamics.robot;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -17,16 +17,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-public class Turret {
+public class TurretMathUpgrade {
 
     // Setting up the state machines for the two states, aiming the turret towards the goal and shooting the artifacts to score
     public enum Aiming {
@@ -51,8 +47,8 @@ public class Turret {
     FlywheelState flywheelState = FlywheelState.ON;
     TurretLockingState turretLockingState = TurretLockingState.AUTO;
 
-    public Aiming turretAiming = Turret.Aiming.AIMING;
-    public Scoring turretScoring = Turret.Scoring.SEARCHING;
+    public Aiming turretAiming = TurretMathUpgrade.Aiming.AIMING;
+    public Scoring turretScoring = TurretMathUpgrade.Scoring.SEARCHING;
     private Telemetry telemetry;
     private DistanceSensor liftSensor;
     public ElapsedTime liftTimer = new ElapsedTime();
@@ -74,10 +70,19 @@ public class Turret {
     private volatile double turretDegrees = 0;
 
     double turretStartHeading;
-    public Turret(HardwareMap hardwareMap, Telemetry telemetry,
-                  Gamepad gamepad1, Gamepad gamepad2,
-                  Vector2d goalPosition, double turretStartHeading,
-                  MecanumDrive mecanumDrive) {
+
+
+
+    // Turret angle **relative to robot** when encoder = 0 (computed at init)
+    // K = turretFieldAngleAtStart - robotHeadingAtStart
+    private double turretZeroRelRobotDeg;
+
+
+
+    public TurretMathUpgrade(HardwareMap hardwareMap, Telemetry telemetry,
+                             Gamepad gamepad1, Gamepad gamepad2,
+                             Vector2d goalPosition, double turretFieldAngleStartDeg,
+                             MecanumDrive mecanumDrive) {
 
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
@@ -111,20 +116,110 @@ public class Turret {
 
         limelight.start();
 
-        // Reset the encoder during initialization
-        turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // Set the amount of ticks to move
-        turretMotor.setTargetPosition(0);
-
-        // Switch to RUN_TO_POSITION mode
-        turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
 //        // Start the motor moving by setting the max velocity to ___ ticks per second
 //        turretMotor.setPower(InputValues.TURRET_MOTOR_POWER);
 
         lift.setPosition(InputValues.LIFT_START_POS);
     }
+
+
+    /**
+     * Call once at the beginning of the match.
+     *
+     * @param robotHeadingStartDeg   robot's starting heading in field coords
+     * @param turretFieldAngleStartDeg turret's starting aim angle in field coords
+     *                                 (the direction the turret is pointing at init)
+     */
+    public void initialize(double robotHeadingStartDeg,
+                           double turretFieldAngleStartDeg) {
+
+        // 1) Reset encoder so current mechanical position = 0 ticks
+        turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turretMotor.setTargetPosition(0);
+        turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // 2) Compute turret angle relative to robot body when encoder = 0
+        //    K = (turret field angle) - (robot field heading)
+        //    This is a constant relationship that we use later.
+        turretZeroRelRobotDeg = turretFieldAngleStartDeg - robotHeadingStartDeg;
+    }
+
+
+    /**
+     * Call this every loop (in your OpMode's loop() or robot periodic).
+     * It updates the turret target so it keeps aiming at the goal.
+     */
+    public void update() {
+
+        // get heading, x pos, and y pos
+
+        // --- A) Get the robot's current pose in field coordinates ---
+        mecanumDrive.updatePoseEstimate();
+        Pose2d robotPose = mecanumDrive.localizer.getPose();
+        double robotX = robotPose.position.x;
+        double robotY = robotPose.position.y;
+        double robotHeadingRad = robotPose.heading.toDouble();
+        double robotHeadingDeg = Math.toDegrees(robotHeadingRad); // 0 = +X, CCW+
+
+        // --- B) Compute TURRET position in field coordinates ---
+        //
+        // turretOffsetXRobot, turretOffsetYRobot are in ROBOT frame:
+        //  - +X is forward from robot center
+        //  - +Y is left from robot center
+        //
+        // We rotate this offset by the robot's heading to convert it
+        // into FIELD coordinates, then add it to the robot's position.
+        double headingRad = Math.toRadians(robotHeadingDeg);
+        double cosH = Math.cos(headingRad);
+        double sinH = Math.sin(headingRad);
+
+        // Rotation of (x_r, y_r) into field frame:
+        // x_f = x_r * cosθ - y_r * sinθ
+        // y_f = x_r * sinθ + y_r * cosθ
+        double turretOffsetXField = InputValues.TURRET_OFFSET_X * cosH - InputValues.TURRET_OFFSET_Y * sinH;
+        double turretOffsetYField = InputValues.TURRET_OFFSET_X * sinH + InputValues.TURRET_OFFSET_Y * cosH;
+
+        double turretX = robotX + turretOffsetXField;
+        double turretY = robotY + turretOffsetYField;
+
+        // --- C) Vector from TURRET to GOAL in field coordinates ---
+        double dx = goalPosition.x - turretX;
+        double dy = goalPosition.y - turretY;
+
+        // Angle from turret to goal in field frame
+        double desiredFieldAngleDeg = Math.toDegrees(Math.atan2(dy, dx));
+
+        // --- D) Convert field angle to turret angle RELATIVE TO ROBOT ---
+        double desiredTurretRelRobotDeg = desiredFieldAngleDeg - robotHeadingDeg;
+
+        // --- E) Convert to angle from encoder zero ---
+        double deltaFromZeroDeg = desiredTurretRelRobotDeg - turretZeroRelRobotDeg;
+
+        // --- F) Angle → ticks and command motor ---
+        int targetTicks = (int) Math.round(deltaFromZeroDeg * InputValues.TICKS_PER_DEGREE);
+
+        telemetry.addData("desiredFieldAngleDeg", desiredFieldAngleDeg);
+        telemetry.addData("robotHeadingDeg", robotHeadingDeg);
+        telemetry.addData("desiredTurretRelRobotDeg", desiredTurretRelRobotDeg);
+        telemetry.addData("deltaFromZeroDeg", deltaFromZeroDeg);
+        telemetry.addData("targetTicks", targetTicks);
+
+        turretMotor.setTargetPosition(targetTicks);
+        turretMotor.setPower(0.5); // tune as needed
+    }
+
+    // Normalize angle to (-180, 180] so the turret takes the shortest path
+    private static double wrapDegrees(double angleDeg) {
+        double a = angleDeg;
+        while (a <= -180.0) a += 360.0;
+        while (a > 180.0) a -= 360.0;
+        return a;
+    }
+
+
+
+
+
 
     public void createTurretBackgroundThread() {
         // Creates a background thread so that while the robot is driving, intaking, and sorting, the turret can always be auto-locked on the goal
@@ -140,9 +235,10 @@ public class Turret {
         public void run() {
             try {
                 while (runAutoAimThread) {
-                    adjustTurret();
+                    //adjustTurret();
+                    update();
                     try {
-                        Thread.sleep((long) (InputValues.TURRET_THREAD_SLEEP_TIME));
+                        Thread.sleep((long) (InputValues.TURRET_THREAD_SLEEP_TIME_MILLIS));
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

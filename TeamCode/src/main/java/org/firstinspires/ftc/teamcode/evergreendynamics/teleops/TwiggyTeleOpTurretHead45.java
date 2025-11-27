@@ -1,15 +1,19 @@
-package org.firstinspires.ftc.teamcode.evergreendynamics;
+package org.firstinspires.ftc.teamcode.evergreendynamics.teleops;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.TurretMathUpgrade;
 
-@TeleOp(group="Evergreen Testing")
-public class TwiggyTeleOpTurretHead90 extends LinearOpMode {
+@TeleOp (group = "Evergreen Testing")
+@Disabled
+public class TwiggyTeleOpTurretHead45 extends LinearOpMode {
 
     public TurretMathUpgrade turret;
     public MecanumDrive mecanumDrive;
@@ -19,7 +23,7 @@ public class TwiggyTeleOpTurretHead90 extends LinearOpMode {
         try {
             // Your robot's starting heading and turret starting field angle:
             double robotHeadingStartDeg = 0.0;         // e.g., facing +X at start
-            double turretFieldAngleStartDeg = 90;     // turret initially pointing +Y in field coords
+            double turretFieldAngleStartDeg = 0.0;     // turret initially pointing halfway between +Y and +X in field coords
 
             Pose2d startPose = new Pose2d(0, 0, Math.toRadians(robotHeadingStartDeg));
 

@@ -1,17 +1,19 @@
-package org.firstinspires.ftc.teamcode.evergreendynamics;
+package org.firstinspires.ftc.teamcode.evergreendynamics.teleops;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Intake;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.PoseStorage;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
-@TeleOp
-public class TwiggyTeleOpBLUE extends LinearOpMode {
-    public Sorter sorter;
+@TeleOp (group = "Evergreen Teleop")
+public class TwiggyTeleOpRED extends LinearOpMode{
     public Intake intake;
     public Turret turret;
     public MecanumDrive mecanumDrive;
@@ -20,17 +22,10 @@ public class TwiggyTeleOpBLUE extends LinearOpMode {
     public void runOpMode() {
         try {
             Pose2d startPose = PoseStorage.loadPose(hardwareMap.appContext);
-            double turretStartHeading = Math.toDegrees(startPose.heading.toDouble()); //PoseStorage.loadTurretHeading(hardwareMap.appContext);
-            telemetry.addData("auto end pose x", startPose.position.x);
-            telemetry.addData("auto end pose y", startPose.position.y);
-            telemetry.addData("auto end pose heading", Math.toDegrees(startPose.heading.toDouble()));
-            telemetry.addData("auto end turret heading", turretStartHeading);
-
-            telemetry.update();
-            this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, startPose);
-            this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
+            double turretStartHeading = Math.toDegrees(startPose.heading.toDouble());
+            this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad2, startPose);
             this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, turretStartHeading, mecanumDrive);
+            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, turretStartHeading, mecanumDrive);
 
             waitForStart();
 
@@ -45,10 +40,10 @@ public class TwiggyTeleOpBLUE extends LinearOpMode {
                     telemetry.addData("robot speed", "SLOW");
                     mecanumDrive.setDrivePowers(new PoseVelocity2d(
                             new Vector2d(
-                                    -gamepad1.left_stick_y * 0.5,
-                                    -gamepad1.left_stick_x * 0.5
+                                    -gamepad1.left_stick_y * 0.25,
+                                    -gamepad1.left_stick_x * 0.25
                             ),
-                            -gamepad1.right_stick_x * 0.5
+                            -gamepad1.right_stick_x * 0.25
                     ));
 
                 } else {
@@ -61,21 +56,23 @@ public class TwiggyTeleOpBLUE extends LinearOpMode {
                             -gamepad1.right_stick_x
                     ));
                 }
+
                 mecanumDrive.loop();
-                sorter.detect();
                 turret.score();
                 turret.turretControl();
 
                 //Flywheel and intake motor start
                 turret.triggerFlywheel();
                 intake.triggerIntake();
+
+                // Send all telemetry to driver hub
                 telemetry.update();
             }
-        } catch (Exception e) {
-            // do nothing
+        } catch(Exception e) {
+            e.printStackTrace();
         } finally {
             turret.stopTurretBackgroundThread();
         }
-
     }
+
 }
