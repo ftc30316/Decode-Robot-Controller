@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Autonomous
 public class RedLowerZeroRow extends LinearOpMode {
-    public Sorter sorter;
     public Intake intake;
     public Turret turret;
     public MecanumDrive mecanumDrive;
@@ -24,7 +23,6 @@ public class RedLowerZeroRow extends LinearOpMode {
             Pose2d beginPose = new Pose2d(62, 12, Math.toRadians(90));
             float turretStartHeading = -90;
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, beginPose);
-            this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
             this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
             this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, turretStartHeading, mecanumDrive);
 
@@ -38,9 +36,6 @@ public class RedLowerZeroRow extends LinearOpMode {
             turret.turretBackgroundThread.start();
             intake.startSpin();
 
-            //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
-            sorter.detect();
-
             //Moves to upper launch zone
             Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
                     .strafeToLinearHeading(new Vector2d(60, 10), Math.toRadians(85))
@@ -49,34 +44,25 @@ public class RedLowerZeroRow extends LinearOpMode {
             mecanumDrive.updatePoseEstimate();
             PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
 
-            //Detect motif for artifact order (Init)
-            int motifTagId = turret.determineMotif();
-
             turret.stopTurretBackgroundThread();
 
             sleep(30000);
 
         } catch(Exception e) {
-            // do nothing
+            e.printStackTrace();
         } finally {
             turret.stopTurretBackgroundThread();
         }
     }
 
-    public void shootThreeArtifacts(int motifTagId) {
+    public void shootThreeArtifacts() {
         // Flicks first artifact
-        sorter.flickForMotif(motifTagId, 1);
         turret.shootArtifact();
 
         //Flick second artifact
-        sorter.flickForMotif(motifTagId, 2);
         turret.shootArtifact();
 
         //Flick third artifact
-        sorter.flickForMotif(motifTagId, 3);
         turret.shootArtifact();
-
-        // Safety net, flicks all just in case
-        sorter.backupFlickAll();
     }
 }

@@ -1,81 +1,76 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Intake {
-    private DcMotorEx intake1;
+    private DcMotorEx intakeMotor;
     private Gamepad gamepad1;
     private Gamepad gamepad2;
     private Telemetry telemetry;
-
-    private CRServo rightIntakeServo;
-
-    private CRServo leftIntakeServo;
+    private CRServo beltServo;
+    public DistanceSensor firstArtifactSensor;
+    public DistanceSensor secondArtifactSensor;
+    public DistanceSensor thirdArtifactSensor;
 
     public enum IntakeState {
         ON,
-        OFF,
-        REVERSE
+
+        REVERSE,
+
+        OFF
     }
 
     IntakeState intakeState = IntakeState.ON;
 
     public Intake(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
-        intake1 = hardwareMap.get(DcMotorEx.class, "intakeMotor");
-        intake1.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.telemetry = telemetry;
-        rightIntakeServo = hardwareMap.get(CRServo.class, "rightIntakeServo");
-        leftIntakeServo = hardwareMap.get(CRServo.class, "leftIntakeServo");
-
+        beltServo = hardwareMap.get(CRServo.class, "beltServo");
+        firstArtifactSensor = hardwareMap.get(DistanceSensor.class, "firstArtifactSensor");
+        secondArtifactSensor = hardwareMap.get(DistanceSensor.class, "secondArtifactSensor");
+        thirdArtifactSensor = hardwareMap.get(DistanceSensor.class, "thirdArtifactSensor");
 
     }
 
     public void startSpin() {
-        intake1.setVelocity(InputValues.INTAKE_SPEED);
+        intakeMotor.setVelocity(InputValues.INTAKE_SPEED);
+        beltServo.setPower(InputValues.BELT_SERVO_POWER);
     }
+
     public void triggerIntake() {
         telemetry.addData("Intake state is: ", intakeState);
         switch (intakeState) {
-//            case OFF:
-//                intake1.setVelocity(0);
-//                if (gamepad1.square) {
-//                    intakeState = IntakeState.ON;
-//                }
-//                break;
             case ON:
-                intake1.setDirection(DcMotorSimple.Direction.REVERSE);
-                intake1.setVelocity(InputValues.INTAKE_SPEED);
-                rightIntakeServo.setDirection(CRServo.Direction.REVERSE);
-                rightIntakeServo.setPower(1.0);
-                leftIntakeServo.setPower(1.0);
+                intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+                intakeMotor.setVelocity(InputValues.INTAKE_SPEED);
+                beltServo.setDirection(CRServo.Direction.REVERSE);
+                beltServo.setPower(InputValues.BELT_SERVO_POWER);
 
                 if (gamepad2.dpad_down) {
                     intakeState = IntakeState.REVERSE;
                 }
                 break;
             case REVERSE:
-                intake1.setDirection(DcMotorSimple.Direction.FORWARD);
-                intake1.setVelocity(InputValues.SLOW_INTAKE_SPEED);
+                intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+                intakeMotor.setVelocity(InputValues.SLOW_INTAKE_SPEED);
+                beltServo.setDirection(CRServo.Direction.FORWARD);
+                beltServo.setPower(InputValues.SLOW_BELT_SERVO_POWER);
                 if (gamepad2.dpad_up) {
                     intakeState = IntakeState.ON;
                 }
-//                if (gamepad1.square) {
-//                    intakeState = IntakeState.OFF;
-//                }
                 break;
+            case OFF:
+                intakeMotor.setVelocity(0);
         }
     }
 }

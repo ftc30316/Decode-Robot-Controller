@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @TeleOp
 public class TwiggyTeleOpRED extends LinearOpMode{
-    public Sorter sorter;
     public Intake intake;
     public Turret turret;
     public MecanumDrive mecanumDrive;
@@ -22,7 +21,6 @@ public class TwiggyTeleOpRED extends LinearOpMode{
             Pose2d startPose = PoseStorage.loadPose(hardwareMap.appContext);
             double turretStartHeading = Math.toDegrees(startPose.heading.toDouble());
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad2, startPose);
-            this.sorter = new Sorter(hardwareMap, telemetry, gamepad1, gamepad2);
             this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
             this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, turretStartHeading, mecanumDrive);
 
@@ -57,7 +55,6 @@ public class TwiggyTeleOpRED extends LinearOpMode{
                 }
 
                 mecanumDrive.loop();
-                sorter.detect();
                 turret.score();
                 turret.turretControl();
 
@@ -69,7 +66,7 @@ public class TwiggyTeleOpRED extends LinearOpMode{
                 telemetry.update();
             }
         } catch(Exception e) {
-            // do nothing
+            e.printStackTrace();
         } finally {
             turret.stopTurretBackgroundThread();
         }

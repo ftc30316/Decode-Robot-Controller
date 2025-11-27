@@ -238,7 +238,7 @@ public class TurretMathUpgrade {
                     //adjustTurret();
                     update();
                     try {
-                        Thread.sleep((long) (InputValues.TURRET_THREAD_SLEEP_TIME));
+                        Thread.sleep((long) (InputValues.TURRET_THREAD_SLEEP_TIME_MILLIS));
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

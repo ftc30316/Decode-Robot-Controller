@@ -4,35 +4,22 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-
-import java.util.List;
 
 public class Turret {
 
     // Setting up the state machines for the two states, aiming the turret towards the goal and shooting the artifacts to score
-    public enum Aiming {
-        DECODING,
-        AIMING
-    }
+
     public enum Scoring {
         SEARCHING,
         HOLDING,
@@ -41,7 +28,7 @@ public class Turret {
     }
     public enum FlywheelState {
         ON,
-        OFF,
+
         REVERSE
     }
     public enum TurretLockingState {
@@ -51,27 +38,26 @@ public class Turret {
     FlywheelState flywheelState = FlywheelState.ON;
     TurretLockingState turretLockingState = TurretLockingState.AUTO;
 
-    public Aiming turretAiming = Turret.Aiming.AIMING;
     public Scoring turretScoring = Turret.Scoring.SEARCHING;
     private Telemetry telemetry;
-    private DistanceSensor liftSensor;
-    public ElapsedTime liftTimer = new ElapsedTime();
 
     public volatile Gamepad gamepad1 = null;
 
     public volatile Gamepad gamepad2 = null;
-    AprilTagProcessor myAprilTagProcessor;
     DcMotorEx turretMotor;
-    private DcMotorEx leftFlywheel;
-    private DcMotorEx rightFlywheel;
+    private DcMotorEx leftShootingFlywheel;
+    private DcMotorEx rightShootingFlywheel;
+    private CRServo leftLiftFlywheel;
+    private CRServo rightLiftFlywheel;
     private MecanumDrive mecanumDrive;
     private Servo lift;
     public Vector2d goalPosition;
-    public Thread turretBackgroundThread;
-    private Limelight3A limelight;
 
+    public Thread turretBackgroundThread;
+    public int flywheelSpeed = 2000;
     private volatile boolean runAutoAimThread = true;
     private volatile double turretDegrees = 0;
+    public ElapsedTime liftTimer = new ElapsedTime();
 
     double turretStartHeading;
     public Turret(HardwareMap hardwareMap, Telemetry telemetry,
@@ -84,32 +70,26 @@ public class Turret {
         this.gamepad2 = gamepad2;
         this.goalPosition = goalPosition;
         this.mecanumDrive = mecanumDrive;
-        this.limelight = limelight;
         this.turretStartHeading = turretStartHeading;
 
         //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
         turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFlywheel = hardwareMap.get(DcMotorEx.class, "leftFlywheel");
-        rightFlywheel = hardwareMap.get(DcMotorEx.class, "rightFlywheel");
+        leftShootingFlywheel = hardwareMap.get(DcMotorEx.class, "leftShootingFlywheel");
+        rightShootingFlywheel = hardwareMap.get(DcMotorEx.class, "rightShootingFlywheel");
+        leftLiftFlywheel = hardwareMap.get(CRServo.class, "leftLiftFlywheel");
+        rightLiftFlywheel = hardwareMap.get(CRServo.class, "leftLiftFlywheel");
         lift = hardwareMap.get(Servo.class, "lift");
         //liftSensor = hardwareMap.get(DistanceSensor.class, "distancesensor1");
 
-        leftFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftShootingFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightShootingFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        leftFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftShootingFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightShootingFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-
-        telemetry.setMsTransmissionInterval(11);
-
-        limelight.pipelineSwitch(0);
-
-        //Starts polling for data.
-
-        limelight.start();
+        leftLiftFlywheel.setDirection(CRServo.Direction.REVERSE);
+        rightLiftFlywheel.setDirection(CRServo.Direction.FORWARD);
 
         // Reset the encoder during initialization
         turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -119,11 +99,6 @@ public class Turret {
 
         // Switch to RUN_TO_POSITION mode
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-//        // Start the motor moving by setting the max velocity to ___ ticks per second
-//        turretMotor.setPower(InputValues.TURRET_MOTOR_POWER);
-
-        lift.setPosition(InputValues.LIFT_START_POS);
     }
 
     public void createTurretBackgroundThread() {
@@ -141,11 +116,7 @@ public class Turret {
             try {
                 while (runAutoAimThread) {
                     adjustTurret();
-                    try {
-                        Thread.sleep((long) (InputValues.TURRET_THREAD_SLEEP_TIME));
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                    Helper.sleep(InputValues.TURRET_THREAD_SLEEP_TIME_MILLIS);
                 }
             } catch (Exception e) {
 
@@ -157,14 +128,11 @@ public class Turret {
 
     public void turretControl() {
         telemetry.addData("Turret locking state: ", turretLockingState);
-        telemetry.addData("LEFT TRIGGER: ", gamepad2.left_bumper);
-        telemetry.addData("RIGHT TRIGGER: ", gamepad2.right_bumper);
         switch (turretLockingState) {
             case AUTO:
-                //turretBackgroundThread.start();
                 turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 adjustTurret();
-                if (gamepad1.dpad_up) {
+                if (gamepad1.dpad_left) {
                     turretLockingState = TurretLockingState.MANUAL;
                 }
                 break;
@@ -187,10 +155,6 @@ public class Turret {
                 else {
                     turretMotor.setPower(0);
                 }
-
-//                if (gamepad2.dpad_up) {
-//                    turretLockingState = TurretLockingState.AUTO;
-//                }
                 break;
         }
     }
@@ -199,62 +163,29 @@ public class Turret {
     public void triggerFlywheel() {
         telemetry.addData("Flywheel state is: ", flywheelState);
         switch (flywheelState) {
-//            case OFF:
-//                leftFlywheel.setVelocity(0);
-//                rightFlywheel.setVelocity(0);
-//                if (gamepad1.x) {
-//                    flywheelState = FlywheelState.ON;
-//
-//                }
-//                break;
             case ON:
-                leftFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
-                rightFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
-                if (gamepad2.right_trigger > 0.5) {
+                leftShootingFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+                rightShootingFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
+                leftShootingFlywheel.setVelocity(flywheelSpeed);
+                rightShootingFlywheel.setVelocity(flywheelSpeed);
+                if (gamepad1.dpadUpWasPressed()) {
+                    flywheelSpeed += 25;
+                }
+                if (gamepad1.dpadDownWasPressed()) {
+                    flywheelSpeed -= 25;
+                }
+                if (gamepad1.circleWasPressed()) {//gamepad2.right_trigger > 0.5) {
                     flywheelState = FlywheelState.REVERSE;
                 }
                 break;
             case REVERSE:
-                leftFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
-                rightFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
-                if (gamepad2.left_trigger > 0.5) {
+                leftShootingFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
+                rightShootingFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+                leftShootingFlywheel.setVelocity(0);
+                rightShootingFlywheel.setVelocity(0);
+                if (gamepad1.circleWasPressed()) {//gamepad2.left_trigger > 0.5) {
                     flywheelState = FlywheelState.ON;
                 }
-//                if (gamepad1.circleWasPressed()) {
-//                    flywheelState = FlywheelState.OFF;
-//                }
-                break;
-        }
-    }
-
-    // Uses the camera to look at the obelisk and determine if the motif pattern is GPP, PGP, or PPG - last resort is GPP (21)
-    public int determineMotif() {
-        LLResult result = limelight.getLatestResult();
-        if (result != null) {
-            if (result.isValid()) {
-                List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
-                for (LLResultTypes.FiducialResult fiducial : fiducials) {
-                    int id = fiducial.getFiducialId(); // The ID number of the fiducial
-                    if (id == 21 || id == 22 || id == 23) {
-                        telemetry.addData("Detected Motif", id);
-                        return id;
-                    }
-                }
-            }
-        }
-
-        telemetry.addData("LAST RESORT", 21);
-        return 21;
-    }
-
-    // A state machine that auto-locks on goal
-    public void aim(int aimAtTagId) {
-
-        switch (turretAiming) {
-            case DECODING:
-                break;
-            case AIMING:
-                adjustTurret();
                 break;
         }
     }
@@ -262,49 +193,56 @@ public class Turret {
     // A state machine that checks if there is an artifact in the lift slot, and moves artifact into flywheel when x is pressed
     public void score() {
         telemetry.addData("score state", turretScoring);
+        mecanumDrive.updatePoseEstimate();
+        Pose2d robotPose = mecanumDrive.localizer.getPose();
+        double robotX = robotPose.position.x;
+        double robotY = robotPose.position.y;
+
+        // get goal position; blue: -66, -66, red: -66, 66
+        double goalX = goalPosition.x;
+        double goalY = goalPosition.y;
+
+        // find A: (Yr - Yb)
+        double A = robotY - goalY;
+
+        // find C: (Xr - Xb)
+        double C = robotX - goalX;
+
+        // find distance (D): sqrt(A^2 + C^2)
+        double D = Math.sqrt(Math.pow(A, 2) + Math.pow(C, 2));
+        telemetry.addData("Distance from goal is:", D);
+        telemetry.addData("Flywheel speed is: ", flywheelSpeed);
+        telemetry.addData("Shooting state is: ", turretScoring);
         switch (turretScoring) {
             case SEARCHING:
+                leftLiftFlywheel.setPower(0);
+                rightLiftFlywheel.setPower(0);
+                //if distance sensed is less than __, transition to holding
                 turretScoring = Scoring.HOLDING;
                 break;
             case HOLDING:
-                // && liftSensor.getDistance(DistanceUnit.INCH) < 5.5
                 if (gamepad1.cross) {
+                    liftTimer.reset();
                     turretScoring = Scoring.SHOOTING;
                 }
                 break;
             case SHOOTING:
-                lift.setPosition(InputValues.LIFT_END_POS);
-                liftTimer.reset();
-                turretScoring = Scoring.RESETTING;
-                break;
-            case RESETTING:
-                if (liftTimer.seconds() > InputValues.LIFT_TRAVEL_TIME) {
-                    lift.setPosition(0);
+                leftLiftFlywheel.setPower(1.0);
+                rightLiftFlywheel.setPower(1.0);
+                if (liftTimer.seconds() > InputValues.LIFT_FLYWHEEL_WAIT_MILLISECONDS) {
                     turretScoring = Scoring.SEARCHING;
                 }
+
                 break;
         }
-    }
-
-    // Switches the turret state to shooting, where the artifact will move into the flywheel
-    public void switchTurretStateShooting() {
-            turretScoring = Scoring.SHOOTING;
-            score();
     }
 
     public void shootArtifact() {
-        switchTurretStateShooting();
-        try {
-            Thread.sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        score(); // resets lift servo
-        try {
-            Thread.sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        leftLiftFlywheel.setPower(1.0);
+        rightLiftFlywheel.setPower(1.0);
+        Helper.sleep(InputValues.LIFT_FLYWHEEL_WAIT_MILLISECONDS);
+        leftLiftFlywheel.setPower(0);
+        rightLiftFlywheel.setPower(0);
     }
 
     public void resetTurretToZero() {
@@ -314,9 +252,9 @@ public class Turret {
 
     // Uses the position of the aprilTag to adjust the turret motor and center the aprilTag in the camera view
     public void adjustTurret() {
-        mecanumDrive.updatePoseEstimate();
         turretMotor.setPower(InputValues.TURRET_MOTOR_POWER);
         // get heading, x pos, and y pos
+        mecanumDrive.updatePoseEstimate();
         Pose2d robotPose = mecanumDrive.localizer.getPose();
         double robotX = robotPose.position.x;
         double robotY = robotPose.position.y;
@@ -354,8 +292,8 @@ public class Turret {
 
         // alter flywheel velocity based on distance computed
         double flywheelAdjustingSpeed = InputValues.FLYWHEEL_SLOPE * D + InputValues.FLYWHEEL_Y_INTERCEPT;
-        leftFlywheel.setVelocity(flywheelAdjustingSpeed);
-        rightFlywheel.setVelocity(flywheelAdjustingSpeed);
+        leftShootingFlywheel.setVelocity(flywheelAdjustingSpeed);
+        rightShootingFlywheel.setVelocity(flywheelAdjustingSpeed);
 
         // telemetry
         TelemetryPacket turretValues = new TelemetryPacket();
