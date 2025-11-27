@@ -1,14 +1,19 @@
-package org.firstinspires.ftc.teamcode.evergreendynamics;
+package org.firstinspires.ftc.teamcode.evergreendynamics.autos;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import org.firstinspires.ftc.teamcode.evergreendynamics.PoseStorage;
+
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Intake;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.PoseStorage;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
-@Autonomous
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
+
+@Autonomous (group = "Evergreen Autos")
 public class RedLower3Row extends LinearOpMode {
     public Intake intake;
     public Turret turret;

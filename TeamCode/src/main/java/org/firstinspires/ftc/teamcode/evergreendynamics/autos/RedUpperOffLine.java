@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.evergreendynamics;
+package org.firstinspires.ftc.teamcode.evergreendynamics.autos;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -7,9 +7,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Intake;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.PoseStorage;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
-@Autonomous
-public class RedLowerOffLine extends LinearOpMode {
+@Autonomous (group = "Evergreen Autos")
+public class RedUpperOffLine extends LinearOpMode {
     public Intake intake;
     public Turret turret;
     public MecanumDrive mecanumDrive;
@@ -19,7 +23,7 @@ public class RedLowerOffLine extends LinearOpMode {
     public void runOpMode() {
         try {
             telemetry.addLine("Running Op Mode");
-            Pose2d beginPose = new Pose2d(62, 12, Math.toRadians(90));
+            Pose2d beginPose = new Pose2d(-50, 50, Math.toRadians(-45));
             float turretStartHeading = -90;
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, beginPose);
             this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
@@ -35,12 +39,9 @@ public class RedLowerOffLine extends LinearOpMode {
             turret.turretBackgroundThread.start();
             //intake.startSpin();
 
-            //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
-            //sorter.detect();
-
             //Moves to upper launch zone
             Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
-                    .strafeTo(new Vector2d(30, 12))
+                    .strafeTo(new Vector2d(-30, 50))//, Math.toRadians(90))
                     .build());
             mecanumDrive.updatePoseEstimate();
             PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
@@ -49,46 +50,46 @@ public class RedLowerOffLine extends LinearOpMode {
 //            shootThreeArtifacts();
 //
 //            mecanumDrive.updatePoseEstimate();
-//            Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
-//                    //.strafeTo(new Vector2d(-9,16))
+//            Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose())
 //                    .strafeTo(new Vector2d(-9,45))
-//                    .strafeTo(new Vector2d(-9,20))
+//                    .strafeTo(new Vector2d(-9,22))
 //                    .build());
 //            mecanumDrive.updatePoseEstimate();
 //            PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
 //
 //            // Flicks and shoots the first row artifacts and does backup flicks
 //            shootThreeArtifacts();
+
             turret.stopTurretBackgroundThread();
             sleep(100);
             turret.resetTurretToZero();
 
-    //        mecanumDrive.updatePoseEstimate();
-    //        Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
-    //                .strafeTo(new Vector2d(12,12))
-    //                .strafeTo(new Vector2d(12,50))
-    //                .strafeTo(new Vector2d(-12,12))
-    //                .build());
-    //        mecanumDrive.updatePoseEstimate();
-    //        PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
-    //
-    //        // Flicks and shoots the second row artifacts and does backup flicks
-    //        shootThreeArtifacts();
-    //
-    //        mecanumDrive.updatePoseEstimate();
-    //        Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
-    //                .strafeTo(new Vector2d(36,12))
-    //                .strafeTo(new Vector2d(36,50))
-    //                .strafeTo(new Vector2d(-12,12))
-    //                .build());
-    //        mecanumDrive.updatePoseEstimate();
-    //        PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
-    //
-    //        // Flicks and shoots the third row artifacts and does backup flicks
-    //        shootThreeArtifacts();
+//            mecanumDrive.updatePoseEstimate();
+//            Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
+//                    .strafeTo(new Vector2d(12, 12))
+//                    .strafeTo(new Vector2d(12, 50))
+//                    .strafeTo(new Vector2d(-12, 12))
+//                    .build());
+//            mecanumDrive.updatePoseEstimate();
+//            PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
+//
+//            // Flicks and shoots the second row artifacts and does backup flicks
+//            shootThreeArtifacts();
+//
+//            mecanumDrive.updatePoseEstimate();
+//            Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
+//                    .strafeTo(new Vector2d(36, 12))
+//                    .strafeTo(new Vector2d(36, 50))
+//                    .strafeTo(new Vector2d(-12, 12))
+//                    .build());
+//            mecanumDrive.updatePoseEstimate();
+//            PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
+//
+//            // Flicks and shoots the third row artifacts and does backup flicks
+//            shootThreeArtifacts();
 
             sleep(30000);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             turret.stopTurretBackgroundThread();
@@ -105,4 +106,5 @@ public class RedLowerOffLine extends LinearOpMode {
         //Flick third artifact
         turret.shootArtifact();
     }
+
 }

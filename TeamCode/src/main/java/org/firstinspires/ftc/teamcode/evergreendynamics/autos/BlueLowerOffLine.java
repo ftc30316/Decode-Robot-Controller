@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.evergreendynamics;
+package org.firstinspires.ftc.teamcode.evergreendynamics.autos;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -7,9 +7,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Intake;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.PoseStorage;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
-@Autonomous
-public class RedLowerStrafe extends LinearOpMode {
+@Autonomous (group = "Evergreen Autos")
+public class BlueLowerOffLine extends LinearOpMode {
     public Intake intake;
     public Turret turret;
     public MecanumDrive mecanumDrive;
@@ -19,11 +23,11 @@ public class RedLowerStrafe extends LinearOpMode {
     public void runOpMode() {
         try {
             telemetry.addLine("Running Op Mode");
-            Pose2d beginPose = new Pose2d(62, 12, Math.toRadians(90));
+            Pose2d beginPose = new Pose2d(62, -12, Math.toRadians(-90)); // changed from 270 to -90
             float turretStartHeading = -90;
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, beginPose);
             this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, turretStartHeading, mecanumDrive);
+            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, turretStartHeading, mecanumDrive);
 
             telemetry.update();
 
@@ -40,34 +44,37 @@ public class RedLowerStrafe extends LinearOpMode {
 
             //Moves to upper launch zone
             Actions.runBlocking(mecanumDrive.actionBuilder(beginPose).setTangent(0)
-                    .strafeTo(new Vector2d(62, 56))
+                    .strafeTo(new Vector2d(30, -12))
                     .build());
             mecanumDrive.updatePoseEstimate();
             PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
+//
 //
 //            // Flicks and shoots the preset artifacts and does backup flicks
 //            shootThreeArtifacts();
 //
 //            mecanumDrive.updatePoseEstimate();
 //            Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
-//                    //.strafeTo(new Vector2d(-9,16))
-//                    .strafeTo(new Vector2d(-9,45))
-//                    .strafeTo(new Vector2d(-9,20))
+//                    //.strafeTo(new Vector2d(-9,-16))
+//                    .strafeTo(new Vector2d(-9,-45))
+//                    .strafeTo(new Vector2d(-9,-20))
 //                    .build());
 //            mecanumDrive.updatePoseEstimate();
 //            PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
 //
 //            // Flicks and shoots the first row artifacts and does backup flicks
 //            shootThreeArtifacts();
+
             turret.stopTurretBackgroundThread();
             sleep(100);
             turret.resetTurretToZero();
 
-    //        mecanumDrive.updatePoseEstimate();
+
+            //        mecanumDrive.updatePoseEstimate();
     //        Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
-    //                .strafeTo(new Vector2d(12,12))
-    //                .strafeTo(new Vector2d(12,50))
-    //                .strafeTo(new Vector2d(-12,12))
+    //                .strafeTo(new Vector2d(12,-12))
+    //                .strafeTo(new Vector2d(12,-50))
+    //                .strafeTo(new Vector2d(-12,-12))
     //                .build());
     //        mecanumDrive.updatePoseEstimate();
     //        PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
@@ -77,15 +84,16 @@ public class RedLowerStrafe extends LinearOpMode {
     //
     //        mecanumDrive.updatePoseEstimate();
     //        Actions.runBlocking(mecanumDrive.actionBuilder(mecanumDrive.localizer.getPose()).setTangent(0)
-    //                .strafeTo(new Vector2d(36,12))
-    //                .strafeTo(new Vector2d(36,50))
-    //                .strafeTo(new Vector2d(-12,12))
+    //                .strafeTo(new Vector2d(36,-12))
+    //                .strafeTo(new Vector2d(36,-50))
+    //                .strafeTo(new Vector2d(-12,-12))
     //                .build());
     //        mecanumDrive.updatePoseEstimate();
     //        PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
     //
     //        // Flicks and shoots the third row artifacts and does backup flicks
-    //        shootThreeArtifacts();
+    //            shootThreeArtifacts();
+
 
             sleep(30000);
         } catch(Exception e) {
