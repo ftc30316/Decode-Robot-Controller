@@ -119,7 +119,6 @@ public class TurretMathUpgrade {
 //        // Start the motor moving by setting the max velocity to ___ ticks per second
 //        turretMotor.setPower(InputValues.TURRET_MOTOR_POWER);
 
-        lift.setPosition(InputValues.LIFT_START_POS);
     }
 
 
@@ -369,15 +368,9 @@ public class TurretMathUpgrade {
                 }
                 break;
             case SHOOTING:
-                lift.setPosition(InputValues.LIFT_END_POS);
-                liftTimer.reset();
                 turretScoring = Scoring.RESETTING;
                 break;
             case RESETTING:
-                if (liftTimer.seconds() > InputValues.LIFT_TRAVEL_TIME) {
-                    lift.setPosition(0);
-                    turretScoring = Scoring.SEARCHING;
-                }
                 break;
         }
     }
@@ -389,18 +382,18 @@ public class TurretMathUpgrade {
     }
 
     public void shootArtifact() {
-        switchTurretStateShooting();
-        try {
-            Thread.sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        score(); // resets lift servo
-        try {
-            Thread.sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        switchTurretStateShooting();
+//        try {
+//            Thread.sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//        score(); // resets lift servo
+//        try {
+//            Thread.sleep((long) (InputValues.LIFT_TRAVEL_TIME * 1000));
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     public double flywheelVelocity(double distanceToGoal) {

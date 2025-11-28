@@ -23,7 +23,7 @@ public class FlywheelVelocityTestingOpMode extends LinearOpMode {
 
             telemetry.update();
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, startPose);
-            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, turretStartHeading, mecanumDrive);
+            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, mecanumDrive);
 
             waitForStart();
 

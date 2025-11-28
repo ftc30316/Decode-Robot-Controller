@@ -14,26 +14,30 @@ import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
 @TeleOp (group = "Evergreen Teleop")
 public class TwiggyTeleOpBLUE extends LinearOpMode {
-    public Intake intake;
+    //public Intake intake;
     public Turret turret;
     public MecanumDrive mecanumDrive;
 
     @Override
     public void runOpMode() {
         try {
-            Pose2d startPose = PoseStorage.loadPose(hardwareMap.appContext);
-            double turretStartHeading = Math.toDegrees(startPose.heading.toDouble()); //PoseStorage.loadTurretHeading(hardwareMap.appContext);
+            Pose2d startPose = new Pose2d(0, 0, 0);
+            double turretStartHeadingDeg = -90;
+            double robotHeadingDeg = Math.toDegrees(startPose.heading.toDouble());
+//            Pose2d startPose = PoseStorage.loadPose(hardwareMap.appContext);
+//            double turretStartHeading = Math.toDegrees(startPose.heading.toDouble()); //PoseStorage.loadTurretHeading(hardwareMap.appContext);
             telemetry.addData("auto end pose x", startPose.position.x);
             telemetry.addData("auto end pose y", startPose.position.y);
             telemetry.addData("auto end pose heading", Math.toDegrees(startPose.heading.toDouble()));
-            telemetry.addData("auto end turret heading", turretStartHeading);
+            telemetry.addData("auto end turret heading", turretStartHeadingDeg);
 
             telemetry.update();
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, startPose);
-            this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, turretStartHeading, mecanumDrive);
+            //this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
+            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, mecanumDrive);
 
             waitForStart();
+            turret.initialize(robotHeadingDeg, turretStartHeadingDeg);
 
             //Creates background thread
             turret.createTurretBackgroundThread();
@@ -63,12 +67,12 @@ public class TwiggyTeleOpBLUE extends LinearOpMode {
                     ));
                 }
                 mecanumDrive.loop();
-                turret.score();
-                turret.turretControl();
+//                turret.score();
+//                turret.turretControl();
 
                 //Flywheel and intake motor start
-                turret.triggerFlywheel();
-                intake.triggerIntake();
+//                turret.triggerFlywheel();
+//                intake.triggerIntake();
                 telemetry.update();
             }
         } catch (Exception e) {
