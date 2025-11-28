@@ -25,7 +25,7 @@ public class TwiggyTeleOpRED extends LinearOpMode{
             double turretStartHeading = Math.toDegrees(startPose.heading.toDouble());
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad2, startPose);
             this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, turretStartHeading, mecanumDrive);
+            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, mecanumDrive);
 
             waitForStart();
 

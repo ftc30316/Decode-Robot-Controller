@@ -27,7 +27,7 @@ public class RedUpperOffLine extends LinearOpMode {
             float turretStartHeading = -90;
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, beginPose);
             this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, turretStartHeading, mecanumDrive);
+            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, mecanumDrive);
 
             telemetry.update();
 

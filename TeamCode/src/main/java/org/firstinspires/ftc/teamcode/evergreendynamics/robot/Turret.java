@@ -17,7 +17,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 public class Turret {
-
     // Setting up the state machines for the two states, aiming the turret towards the goal and shooting the artifacts to score
 
     public enum Scoring {
@@ -50,19 +49,19 @@ public class Turret {
     private CRServo leftLiftFlywheel;
     private CRServo rightLiftFlywheel;
     private MecanumDrive mecanumDrive;
-    private Servo lift;
     public Vector2d goalPosition;
 
     public Thread turretBackgroundThread;
     public int flywheelSpeed = 2000;
     private volatile boolean runAutoAimThread = true;
     private volatile double turretDegrees = 0;
+    private double turretZeroRelRobotDeg;
+
     public ElapsedTime liftTimer = new ElapsedTime();
 
-    double turretStartHeading;
     public Turret(HardwareMap hardwareMap, Telemetry telemetry,
                   Gamepad gamepad1, Gamepad gamepad2,
-                  Vector2d goalPosition, double turretStartHeading,
+                  Vector2d goalPosition,
                   MecanumDrive mecanumDrive) {
 
         this.telemetry = telemetry;
@@ -70,35 +69,39 @@ public class Turret {
         this.gamepad2 = gamepad2;
         this.goalPosition = goalPosition;
         this.mecanumDrive = mecanumDrive;
-        this.turretStartHeading = turretStartHeading;
 
         //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
         turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftShootingFlywheel = hardwareMap.get(DcMotorEx.class, "leftShootingFlywheel");
-        rightShootingFlywheel = hardwareMap.get(DcMotorEx.class, "rightShootingFlywheel");
-        leftLiftFlywheel = hardwareMap.get(CRServo.class, "leftLiftFlywheel");
-        rightLiftFlywheel = hardwareMap.get(CRServo.class, "leftLiftFlywheel");
-        lift = hardwareMap.get(Servo.class, "lift");
-        //liftSensor = hardwareMap.get(DistanceSensor.class, "distancesensor1");
+//        leftShootingFlywheel = hardwareMap.get(DcMotorEx.class, "leftShootingFlywheel");
+//        rightShootingFlywheel = hardwareMap.get(DcMotorEx.class, "rightShootingFlywheel");
+//        leftLiftFlywheel = hardwareMap.get(CRServo.class, "leftLiftFlywheel");
+//        rightLiftFlywheel = hardwareMap.get(CRServo.class, "leftLiftFlywheel");
+//        //liftSensor = hardwareMap.get(DistanceSensor.class, "distancesensor1");
+//
+//        leftShootingFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+//        rightShootingFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
+//
+//        leftShootingFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightShootingFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        leftLiftFlywheel.setDirection(CRServo.Direction.REVERSE);
+//        rightLiftFlywheel.setDirection(CRServo.Direction.FORWARD);
 
-        leftShootingFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightShootingFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
+    }
 
-        leftShootingFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightShootingFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    public void initialize(double robotHeadingStartDeg,
+                           double turretFieldAngleStartDeg) {
 
-        leftLiftFlywheel.setDirection(CRServo.Direction.REVERSE);
-        rightLiftFlywheel.setDirection(CRServo.Direction.FORWARD);
-
-        // Reset the encoder during initialization
+        // 1) Reset encoder so current mechanical position = 0 ticks
         turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // Set the amount of ticks to move
         turretMotor.setTargetPosition(0);
-
-        // Switch to RUN_TO_POSITION mode
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // 2) Compute turret angle relative to robot body when encoder = 0
+        //    K = (turret field angle) - (robot field heading)
+        //    This is a constant relationship that we use later.
+        turretZeroRelRobotDeg = turretFieldAngleStartDeg - robotHeadingStartDeg;
     }
 
     public void createTurretBackgroundThread() {
@@ -179,10 +182,10 @@ public class Turret {
                 }
                 break;
             case REVERSE:
-                leftShootingFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
-                rightShootingFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
-                leftShootingFlywheel.setVelocity(0);
-                rightShootingFlywheel.setVelocity(0);
+//                leftShootingFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
+//                rightShootingFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+//                leftShootingFlywheel.setVelocity(0);
+//                rightShootingFlywheel.setVelocity(0);
                 if (gamepad1.circleWasPressed()) {//gamepad2.left_trigger > 0.5) {
                     flywheelState = FlywheelState.ON;
                 }
@@ -215,8 +218,8 @@ public class Turret {
         telemetry.addData("Shooting state is: ", turretScoring);
         switch (turretScoring) {
             case SEARCHING:
-                leftLiftFlywheel.setPower(0);
-                rightLiftFlywheel.setPower(0);
+//                leftLiftFlywheel.setPower(0);
+//                rightLiftFlywheel.setPower(0);
                 //if distance sensed is less than __, transition to holding
                 turretScoring = Scoring.HOLDING;
                 break;
@@ -227,11 +230,11 @@ public class Turret {
                 }
                 break;
             case SHOOTING:
-                leftLiftFlywheel.setPower(1.0);
-                rightLiftFlywheel.setPower(1.0);
-                if (liftTimer.seconds() > InputValues.LIFT_FLYWHEEL_WAIT_MILLISECONDS) {
-                    turretScoring = Scoring.SEARCHING;
-                }
+////                leftLiftFlywheel.setPower(1.0);
+////                rightLiftFlywheel.setPower(1.0);
+//                if (liftTimer.seconds() > InputValues.LIFT_FLYWHEEL_WAIT_MILLISECONDS) {
+//                    turretScoring = Scoring.SEARCHING;
+//                }
 
                 break;
         }
@@ -261,34 +264,6 @@ public class Turret {
 
         return flywheelV;
 
-//        if (distanceToGoal > 0 && distanceToGoal <= 12) {
-//            return (2000.0 - 1500.0) / (12.0 - 0.0) * (distanceToGoal);
-//
-//        } else if (distanceToGoal > 12 && distanceToGoal <= 24) {
-//            return (2500.0 - 2000.0) / (24.0 - 12.0) * (distanceToGoal - 12);
-//
-//        } else if (distanceToGoal > 24 && distanceToGoal <= 36) {
-//            return (3000.0 - 2500.0) / (36.0 - 24.0) * (distanceToGoal - 24);
-//
-//        } else if (distanceToGoal > 36 && distanceToGoal <= 48) {
-//            return (3500.0 - 3000.0) / (48.0 - 36.0) * (distanceToGoal - 36);
-//
-//        } else if (distanceToGoal > 48 && distanceToGoal <= 60) {
-//            return (4000.0 - 3500.0) / (60.0 - 48.0) * (distanceToGoal - 48);
-//
-//        } else if (distanceToGoal > 60 && distanceToGoal <= 72) {
-//            return (4500.0 - 4000.0) / (72.0 - 60.0) * (distanceToGoal - 60);
-//
-//        } else if (distanceToGoal > 72 && distanceToGoal <= 84) {
-//            return (5000.0 - 4500.0) / (84.0 - 72.0) * (distanceToGoal - 72);
-//
-//        } else if (distanceToGoal > 84 && distanceToGoal <= 96) {
-//            return (5500.0 - 5000.0) / (96.0 - 84.0) * (distanceToGoal - 84);
-//
-//        } else if (distanceToGoal > 96 && distanceToGoal <= 108) {
-//            return (5500.0 - 5000.0) / (96.0 - 84.0) * (distanceToGoal - 84);
-//
-//        }
     }
     public void resetTurretToZero() {
         turretMotor.setPower(0.8);
@@ -296,74 +271,69 @@ public class Turret {
     }
 
     // Uses the position of the aprilTag to adjust the turret motor and center the aprilTag in the camera view
+
     public void adjustTurret() {
-        turretMotor.setPower(InputValues.TURRET_MOTOR_POWER);
+
         // get heading, x pos, and y pos
+
+        // --- A) Get the robot's current pose in field coordinates ---
         mecanumDrive.updatePoseEstimate();
         Pose2d robotPose = mecanumDrive.localizer.getPose();
         double robotX = robotPose.position.x;
         double robotY = robotPose.position.y;
         double robotHeadingRad = robotPose.heading.toDouble();
-        double robotHeadingDeg = Math.toDegrees(robotHeadingRad);
+        double robotHeadingDeg = Math.toDegrees(robotHeadingRad); // 0 = +X, CCW+
 
-        // get goal position; blue: -66, -66, red: -66, 66
-        double goalX = goalPosition.x;
-        double goalY = goalPosition.y;
+        // --- B) Compute TURRET position in field coordinates ---
+        //
+        // turretOffsetXRobot, turretOffsetYRobot are in ROBOT frame:
+        //  - +X is forward from robot center
+        //  - +Y is left from robot center
+        //
+        // We rotate this offset by the robot's heading to convert it
+        // into FIELD coordinates, then add it to the robot's position.
+        double headingRad = Math.toRadians(robotHeadingDeg);
+        double cosH = Math.cos(headingRad);
+        double sinH = Math.sin(headingRad);
 
-        // compute turret field position using robot heading + Y offset
-        double turretX = robotX - InputValues.TURRET_OFFSET_Y * Math.sin(robotHeadingRad);
-        double turretY = robotY + InputValues.TURRET_OFFSET_Y * Math.cos(robotHeadingRad);
+        // Rotation of (x_r, y_r) into field frame:
+        // x_f = x_r * cosθ - y_r * sinθ
+        // y_f = x_r * sinθ + y_r * cosθ
+        double turretOffsetXField = InputValues.TURRET_OFFSET_X * cosH - InputValues.TURRET_OFFSET_Y * sinH;
+        double turretOffsetYField = InputValues.TURRET_OFFSET_X * sinH + InputValues.TURRET_OFFSET_Y * cosH;
 
-        // find A: (Yr - Yb)
-        double A = robotY - goalY;
+        double turretX = robotX + turretOffsetXField;
+        double turretY = robotY + turretOffsetYField;
 
-        // find C: (Xr - Xb)
-        double C = robotX - goalX;
+        // --- C) Vector from TURRET to GOAL in field coordinates ---
+        double dx = goalPosition.x - turretX;
+        double dy = goalPosition.y - turretY;
 
-        // find distance (D): sqrt(A^2 + C^2)
-        double D = Math.sqrt(Math.pow(A, 2) + Math.pow(C, 2));
+        // Angle from turret to goal in field frame
+        double desiredFieldAngleDeg = Math.toDegrees(Math.atan2(dy, dx));
 
-        double theta = Math.toDegrees(Math.acos(A/D));
-        //double angleToGoal = Math.toDegrees(Math.atan2(A, C));
+        // --- D) Convert field angle to turret angle RELATIVE TO ROBOT ---
+        double desiredTurretRelRobotDeg = desiredFieldAngleDeg - robotHeadingDeg;
 
-        // compute turret aiming angle relative to robot
-        //double aimingDegrees = angleToGoal - robotHeadingDeg - turretStartingDegrees;
-        double aimingDegrees = turretStartHeading - theta - robotHeadingDeg;
-        turretDegrees = aimingDegrees + robotHeadingDeg; // added robotHeadingDeg
+        // --- E) Convert to angle from encoder zero ---
+        double deltaFromZeroDeg = desiredTurretRelRobotDeg - turretZeroRelRobotDeg;
 
-        // turret starting heading: 0, heading is always relative to robot
-        // move turret to new heading
-        turretMotor.setTargetPosition((int) ((aimingDegrees) * InputValues.TICKS_PER_DEGREE));
+        // --- F) Angle → ticks and command motor ---
+        int targetTicks = (int) Math.round(deltaFromZeroDeg * InputValues.TICKS_PER_DEGREE);
 
-        // alter flywheel velocity based on distance computed
-        double flywheelAdjustingSpeed = InputValues.FLYWHEEL_SLOPE * D + InputValues.FLYWHEEL_Y_INTERCEPT;
-        leftShootingFlywheel.setVelocity(flywheelAdjustingSpeed);
-        rightShootingFlywheel.setVelocity(flywheelAdjustingSpeed);
+        telemetry.addData("desiredFieldAngleDeg", desiredFieldAngleDeg);
+        telemetry.addData("robotHeadingDeg", robotHeadingDeg);
+        telemetry.addData("desiredTurretRelRobotDeg", desiredTurretRelRobotDeg);
+        telemetry.addData("deltaFromZeroDeg", deltaFromZeroDeg);
+        telemetry.addData("targetTicks", targetTicks);
 
-        // telemetry
-        TelemetryPacket turretValues = new TelemetryPacket();
-        turretValues.put("robot heading", robotHeadingDeg);
-        turretValues.put("robot X", robotX);
-        turretValues.put("robot Y", robotY);
-
-        turretValues.put("turret X", turretX);
-        turretValues.put("turret Y", turretY);
-
-        turretValues.put("goal X", goalX);
-        turretValues.put("goal Y", goalY);
-
-        turretValues.put("A", A);
-        turretValues.put("C", C);
-        turretValues.put("Distance", D);
-        turretValues.put("angle calculated", theta);
-
-        turretValues.put("aiming degrees", aimingDegrees);
-        FtcDashboard.getInstance().sendTelemetryPacket(turretValues);
-
+        turretMotor.setTargetPosition(targetTicks);
+        turretMotor.setPower(0.5); // tune as needed
     }
 
     public double getTurretDegrees() {
         return this.turretDegrees;
     }
 }
+
 
