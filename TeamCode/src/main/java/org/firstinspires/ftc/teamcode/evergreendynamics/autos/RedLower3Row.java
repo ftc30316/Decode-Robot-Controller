@@ -99,12 +99,12 @@ public class RedLower3Row extends LinearOpMode {
 
     public void shootThreeArtifacts() {
         // Flicks first artifact
-        turret.shootArtifact();
+        turret.shoot();
 
         //Flick second artifact
-        turret.shootArtifact();
+        turret.shoot();
 
         //Flick third artifact
-        turret.shootArtifact();
+        turret.shoot();
     }
 }

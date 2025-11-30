@@ -35,10 +35,12 @@ public class DistanceSensorTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            telemetry.addData("ONE Distance detected: ", artifactSlot1.getDistance(DistanceUnit.MM));
-            telemetry.addData("TWO Distance detected: ", artifactSlot2.getDistance(DistanceUnit.MM));
-            telemetry.addData("THREE Distance detected: ", artifactSlot3.getDistance(DistanceUnit.MM));
-            telemetry.update();
+
+            TelemetryPacket distanceValues = new TelemetryPacket();
+            distanceValues.put("ONE Distance detected: ", artifactSlot1.getDistance(DistanceUnit.INCH));
+            distanceValues.put("TWO Distance detected: ", artifactSlot2.getDistance(DistanceUnit.INCH));
+            distanceValues.put("THREE Distance detected: ", artifactSlot3.getDistance(DistanceUnit.INCH));
+            FtcDashboard.getInstance().sendTelemetryPacket(distanceValues);
             idle();
         }
     }

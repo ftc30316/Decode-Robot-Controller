@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
 @TeleOp (group = "Evergreen Teleop")
 public class TwiggyTeleOpBLUE extends LinearOpMode {
-    //public Intake intake;
+    public Intake intake;
     public Turret turret;
     public MecanumDrive mecanumDrive;
 
@@ -33,8 +33,8 @@ public class TwiggyTeleOpBLUE extends LinearOpMode {
 
             telemetry.update();
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, startPose);
-            //this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, mecanumDrive);
+            this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
+            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, mecanumDrive, intake);
 
             waitForStart();
             turret.initialize(robotHeadingDeg, turretStartHeadingDeg);
