@@ -22,17 +22,25 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 public class DistanceSensorTest extends LinearOpMode {
     private DistanceSensor artifactSlot1;
+    private DistanceSensor artifactSlot2;
+    private DistanceSensor artifactSlot3;
 
     @Override
     public void runOpMode() {
-        artifactSlot1 = hardwareMap.get(DistanceSensor.class, "distancesensor");
+        artifactSlot1 = hardwareMap.get(DistanceSensor.class, "distancesensor1");
+        artifactSlot2 = hardwareMap.get(DistanceSensor.class, "distancesensor2");
+        artifactSlot3 = hardwareMap.get(DistanceSensor.class, "distancesensor3");
 
 
         waitForStart();
 
         while (opModeIsActive()) {
-            telemetry.addData("Distance detected: ", artifactSlot1.getDistance(DistanceUnit.MM));
-            telemetry.update();
+
+            TelemetryPacket distanceValues = new TelemetryPacket();
+            distanceValues.put("ONE Distance detected: ", artifactSlot1.getDistance(DistanceUnit.INCH));
+            distanceValues.put("TWO Distance detected: ", artifactSlot2.getDistance(DistanceUnit.INCH));
+            distanceValues.put("THREE Distance detected: ", artifactSlot3.getDistance(DistanceUnit.INCH));
+            FtcDashboard.getInstance().sendTelemetryPacket(distanceValues);
             idle();
         }
     }

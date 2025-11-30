@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.robot;
 
+import android.renderscript.ScriptGroup;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -8,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Intake {
     private DcMotorEx intakeMotor;
@@ -21,8 +24,6 @@ public class Intake {
 
     public enum IntakeState {
         ON,
-
-        REVERSE,
 
         OFF
     }
@@ -56,21 +57,32 @@ public class Intake {
                 beltServo.setDirection(CRServo.Direction.REVERSE);
                 beltServo.setPower(InputValues.BELT_SERVO_POWER);
 
-                if (gamepad2.dpad_down) {
-                    intakeState = IntakeState.REVERSE;
-                }
-                break;
-            case REVERSE:
-                intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-                intakeMotor.setVelocity(InputValues.SLOW_INTAKE_SPEED);
-                beltServo.setDirection(CRServo.Direction.FORWARD);
-                beltServo.setPower(InputValues.SLOW_BELT_SERVO_POWER);
-                if (gamepad2.dpad_up) {
-                    intakeState = IntakeState.ON;
+                if (getNumberOfArtifacts() == 3) {
+                    intakeState = IntakeState.OFF;
                 }
                 break;
             case OFF:
                 intakeMotor.setVelocity(0);
+
+                if (getNumberOfArtifacts() < 3) {
+                    intakeState = IntakeState.ON;
+                }
         }
+    }
+
+    public int getNumberOfArtifacts() {
+
+        int numberOfArtifacts = 0;
+
+        if (firstArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+            numberOfArtifacts++;
+        }
+        if (secondArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+            numberOfArtifacts++;
+        }
+        if (thirdArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+            numberOfArtifacts++;
+        }
+        return numberOfArtifacts;
     }
 }

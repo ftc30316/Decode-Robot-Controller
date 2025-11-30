@@ -40,7 +40,7 @@ public class FlywheelVelocityTestingOpMode extends LinearOpMode {
                 ));
 
                 turret.score();
-                turret.triggerFlywheel();
+                turret.loop();
 
                 telemetry.update();
             }

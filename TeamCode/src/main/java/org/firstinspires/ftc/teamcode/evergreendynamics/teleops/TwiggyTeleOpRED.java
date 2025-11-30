@@ -25,7 +25,7 @@ public class TwiggyTeleOpRED extends LinearOpMode{
             double turretStartHeading = Math.toDegrees(startPose.heading.toDouble());
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad2, startPose);
             this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, mecanumDrive);
+            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.RED_GOAL_POSITION, mecanumDrive, intake);
 
             waitForStart();
 
@@ -62,7 +62,7 @@ public class TwiggyTeleOpRED extends LinearOpMode{
                 turret.turretControl();
 
                 //Flywheel and intake motor start
-                turret.triggerFlywheel();
+                turret.loop();
                 intake.triggerIntake();
 
                 // Send all telemetry to driver hub
