@@ -56,6 +56,7 @@ public class Turret {
     private volatile boolean runAutoAimThread = true;
     private volatile double turretDegrees = 0;
     private double turretZeroRelRobotDeg;
+    double desiredFieldAngleDeg;
 
     public ElapsedTime liftTimer = new ElapsedTime();
 
@@ -310,7 +311,7 @@ public class Turret {
         double dy = goalPosition.y - turretY;
 
         // Angle from turret to goal in field frame
-        double desiredFieldAngleDeg = Math.toDegrees(Math.atan2(dy, dx));
+        desiredFieldAngleDeg = Math.toDegrees(Math.atan2(dy, dx));
 
         // --- D) Convert field angle to turret angle RELATIVE TO ROBOT ---
         double desiredTurretRelRobotDeg = desiredFieldAngleDeg - robotHeadingDeg;
@@ -332,7 +333,7 @@ public class Turret {
     }
 
     public double getTurretDegrees() {
-        return this.turretDegrees;
+        return this.desiredFieldAngleDeg;
     }
 }
 

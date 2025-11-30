@@ -21,11 +21,13 @@ public class TwiggyTeleOpBLUE extends LinearOpMode {
     @Override
     public void runOpMode() {
         try {
-            Pose2d startPose = new Pose2d(0, 0, 0);
+            Pose2d startPose = PoseStorage.loadPose(hardwareMap.appContext);
+            PoseStorage.loadTurretHeading(hardwareMap.appContext);
+//            Pose2d startPose = new Pose2d(0, 0, 0);
             double turretStartHeadingDeg = -90;
             double robotHeadingDeg = Math.toDegrees(startPose.heading.toDouble());
-//            Pose2d startPose = PoseStorage.loadPose(hardwareMap.appContext);
-//            double turretStartHeading = Math.toDegrees(startPose.heading.toDouble()); //PoseStorage.loadTurretHeading(hardwareMap.appContext);
+            double turretStartHeading = Math.toDegrees(startPose.heading.toDouble());
+
             telemetry.addData("auto end pose x", startPose.position.x);
             telemetry.addData("auto end pose y", startPose.position.y);
             telemetry.addData("auto end pose heading", Math.toDegrees(startPose.heading.toDouble()));
