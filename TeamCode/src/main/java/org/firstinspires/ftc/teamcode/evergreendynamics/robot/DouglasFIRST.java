@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.robot;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -40,6 +40,10 @@ public class DouglasFIRST {
         turret.createTurretBackgroundThread();
         // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
         turret.turretBackgroundThread.start();
+    }
+
+    public void shootArtifacts() {
+        turret.shoot();
     }
 
     public void loop() {
@@ -88,6 +92,24 @@ public class DouglasFIRST {
         }
 
         return goalPosition;
+    }
+
+    public TrajectoryActionBuilder getActionBuilder(Pose2d beginPose) {
+        return mecanumDrive.actionBuilder(beginPose);
+    }
+
+    public TrajectoryActionBuilder getActionBuilder() {
+        return mecanumDrive.actionBuilder(getCurrentPose());
+    }
+
+    public Pose2d getCurrentPose() {
+        mecanumDrive.updatePoseEstimate();
+        return mecanumDrive.localizer.getPose();
+    }
+
+    public void savePose() {
+        mecanumDrive.updatePoseEstimate();
+        PoseStorage.savePose(hardwareMap.appContext, mecanumDrive.localizer.getPose(), turret.getTurretDegrees());
     }
 
 }

@@ -9,12 +9,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
 @TeleOp (group = "Evergreen Testing")
 @Disabled
 public class TwiggyTeleOpTurretHead0 extends LinearOpMode {
 
-    public TurretMathUpgrade turret;
+    public Turret turret;
     public MecanumDrive mecanumDrive;
 
     @Override
@@ -34,8 +35,8 @@ public class TwiggyTeleOpTurretHead0 extends LinearOpMode {
             telemetry.update();
 
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, startPose);
-            this.turret = new TurretMathUpgrade(hardwareMap, telemetry, gamepad1, gamepad2,
-                    InputValues.RED_GOAL_POSITION, turretFieldAngleStartDeg, mecanumDrive);
+//            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2,
+//                    InputValues.RED_GOAL_POSITION, turretFieldAngleStartDeg, mecanumDrive);
 
 
             waitForStart();

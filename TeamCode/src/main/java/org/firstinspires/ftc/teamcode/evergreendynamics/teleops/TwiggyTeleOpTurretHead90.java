@@ -9,12 +9,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
 @TeleOp (group = "Evergreen Testing")
 @Disabled
 public class TwiggyTeleOpTurretHead90 extends LinearOpMode {
 
-    public TurretMathUpgrade turret;
+    public Turret turret;
     public MecanumDrive mecanumDrive;
 
     @Override
@@ -34,19 +35,19 @@ public class TwiggyTeleOpTurretHead90 extends LinearOpMode {
             telemetry.update();
 
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, startPose);
-            this.turret = new TurretMathUpgrade(hardwareMap, telemetry, gamepad1, gamepad2,
-                    InputValues.RED_GOAL_POSITION, turretFieldAngleStartDeg, mecanumDrive);
+//            this.turret = new TurretMathUpgrade(hardwareMap, telemetry, gamepad1, gamepad2,
+//                    InputValues.RED_GOAL_POSITION, turretFieldAngleStartDeg, mecanumDrive);
 
 
             waitForStart();
 
-            turret.initialize(robotHeadingStartDeg, turretFieldAngleStartDeg);
-
-
-            //Creates background thread
-            turret.createTurretBackgroundThread();
-            // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
-            turret.turretBackgroundThread.start();
+//            turret.initialize(robotHeadingStartDeg, turretFieldAngleStartDeg);
+//
+//
+//            //Creates background thread
+//            turret.createTurretBackgroundThread();
+//            // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
+//            turret.turretBackgroundThread.start();
 
             // Sets up the driving system
             while (opModeIsActive()) {
@@ -65,7 +66,7 @@ public class TwiggyTeleOpTurretHead90 extends LinearOpMode {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            turret.stopTurretBackgroundThread();
+            //turret.stopTurretBackgroundThread();
         }
 
     }
