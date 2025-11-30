@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.robot;
 
-import android.renderscript.ScriptGroup;
-
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -17,7 +15,9 @@ public class Intake {
     private Gamepad gamepad1;
     private Gamepad gamepad2;
     private Telemetry telemetry;
-    private CRServo beltServo;
+    private CRServo firstIntakeServo;
+    private CRServo secondIntakeServo;
+    private CRServo thirdIntakeServo;
     public DistanceSensor firstArtifactSensor;
     public DistanceSensor secondArtifactSensor;
     public DistanceSensor thirdArtifactSensor;
@@ -36,7 +36,12 @@ public class Intake {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.telemetry = telemetry;
-        beltServo = hardwareMap.get(CRServo.class, "beltServo");
+        firstIntakeServo = hardwareMap.get(CRServo.class, "firstIntakeServo");
+        secondIntakeServo = hardwareMap.get(CRServo.class, "secondIntakeServo");
+        thirdIntakeServo = hardwareMap.get(CRServo.class, "thirdIntakeServo");
+        firstIntakeServo.setDirection(CRServo.Direction.REVERSE);
+        secondIntakeServo.setDirection(CRServo.Direction.REVERSE);
+        thirdIntakeServo.setDirection(CRServo.Direction.REVERSE);
         firstArtifactSensor = hardwareMap.get(DistanceSensor.class, "firstArtifactSensor");
         secondArtifactSensor = hardwareMap.get(DistanceSensor.class, "secondArtifactSensor");
         thirdArtifactSensor = hardwareMap.get(DistanceSensor.class, "thirdArtifactSensor");
@@ -45,17 +50,19 @@ public class Intake {
 
     public void startSpin() {
         intakeMotor.setVelocity(InputValues.INTAKE_SPEED);
-        beltServo.setPower(InputValues.BELT_SERVO_POWER);
+        firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+        secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+        thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
     }
 
     public void loop() {
         telemetry.addData("Intake state is: ", intakeState);
         switch (intakeState) {
             case ON:
-                intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
                 intakeMotor.setVelocity(InputValues.INTAKE_SPEED);
-                beltServo.setDirection(CRServo.Direction.REVERSE);
-                beltServo.setPower(InputValues.BELT_SERVO_POWER);
+                firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+                secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+                thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
 
                 if (getNumberOfArtifacts() == 3) {
                     intakeState = IntakeState.OFF;
