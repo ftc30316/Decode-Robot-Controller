@@ -15,7 +15,7 @@ public class InputValues {
     public static final double LIFT_WHEEL_WAIT_SECONDS = LIFT_WHEEL_WAIT_MILLISECONDS / 1000.0;
 
     // Belt
-    public static double BELT_SERVO_POWER = 1.0;
+    public static double INTAKE_SERVO_POWER = 1.0;
     public static double SLOW_BELT_SERVO_POWER = 0.5;
 
     // Turret aim motor
