@@ -48,13 +48,6 @@ public class Intake {
 
     }
 
-    public void startSpin() {
-        intakeMotor.setVelocity(InputValues.INTAKE_SPEED);
-        firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
-        secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
-        thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
-    }
-
     public void loop() {
         telemetry.addData("Intake state is: ", intakeState);
         switch (intakeState) {

@@ -53,7 +53,6 @@ public class Turret {
     public Vector2d goalPosition;
 
     public Thread turretBackgroundThread;
-    public int flywheelSpeed = 2000;
     private volatile boolean runAutoAimThread = true;
     private volatile double turretDegrees = 0;
     private double turretZeroRelRobotDeg;
@@ -77,8 +76,8 @@ public class Turret {
         turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFlywheel = hardwareMap.get(DcMotorEx.class, "leftShootingFlywheel");
         rightFlywheel = hardwareMap.get(DcMotorEx.class, "rightShootingFlywheel");
-        leftLiftWheel = hardwareMap.get(CRServo.class, "leftLiftFlywheel");
-        rightLiftWheel = hardwareMap.get(CRServo.class, "leftLiftFlywheel");
+        leftLiftWheel = hardwareMap.get(CRServo.class, "liftLeftServo");
+        rightLiftWheel = hardwareMap.get(CRServo.class, "liftRightServo");
 
         leftFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -86,8 +85,8 @@ public class Turret {
         leftFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        leftLiftWheel.setDirection(CRServo.Direction.REVERSE);
-        rightLiftWheel.setDirection(CRServo.Direction.FORWARD);
+        leftLiftWheel.setDirection(CRServo.Direction.FORWARD);
+        rightLiftWheel.setDirection(CRServo.Direction.REVERSE);
 
     }
 
@@ -170,8 +169,6 @@ public class Turret {
         // State machine for the FLY wheels
         switch (flywheelState) {
             case ON:
-                leftFlywheel.setVelocity(flywheelSpeed);
-                rightFlywheel.setVelocity(flywheelSpeed);
                 if (gamepad1.circleWasPressed()) {
                     flywheelState = FlywheelState.OFF;
                 }
@@ -210,6 +207,7 @@ public class Turret {
         Helper.sleep(InputValues.LIFT_WHEEL_WAIT_MILLISECONDS * artifactsWhenShooting);
         leftLiftWheel.setPower(0);
         rightLiftWheel.setPower(0);
+        telemetry.addData("number of artifacts", artifactsWhenShooting);
     }
 
     public double getFlywheelVelocity(double distanceToGoal) {
@@ -227,7 +225,8 @@ public class Turret {
         double flywheelV = (velocity[index + 1] - velocity[index]) / (D[index] - D[index-1]) *
                 (distanceToGoal - D[index - 1]);
 
-        return flywheelV;
+        return 500;
+//        return flywheelV;
 
     }
     public void resetTurretToZero() {

@@ -21,16 +21,21 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 public class DouglasFIRST {
     public Intake intake;
     public Turret turret;
+    public Telemetry telemetry;
     public MecanumDrive mecanumDrive;
+    public Gamepad gamepad1;
+    public Gamepad gamepad2;
+    public HardwareMap hardwareMap;
 
 
     public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose) {
         this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, beginPose);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
-
+        this.telemetry = telemetry;
         this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, getGoalPosition(hardwareMap), mecanumDrive, intake);
-
-        telemetry.update();
+        this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
+        this.hardwareMap = hardwareMap;
     }
 
     public void start(double robotHeadingDeg, double turretStartHeadingDeg) {
@@ -68,6 +73,8 @@ public class DouglasFIRST {
             ));
         }
         mecanumDrive.loop();
+        intake.loop();
+        turret.loop();
     }
 
     public void shutdown() {
@@ -76,7 +83,7 @@ public class DouglasFIRST {
 
     public Vector2d getGoalPosition(HardwareMap hardwareMap) {
         Vector2d goalPosition = InputValues.BLUE_GOAL_POSITION;
-        NormalizedColorSensor signColorSensor = hardwareMap.get(NormalizedColorSensor.class, "signColorSensor");
+        NormalizedColorSensor signColorSensor = hardwareMap.get(NormalizedColorSensor.class, "thirdArtifactSensor");
 
         NormalizedRGBA signColor = signColorSensor.getNormalizedColors();
         float[] hsv = new float[3];
