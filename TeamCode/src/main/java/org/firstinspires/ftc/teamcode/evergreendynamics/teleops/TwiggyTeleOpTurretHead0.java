@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
-import org.firstinspires.ftc.teamcode.evergreendynamics.robot.TurretMathUpgrade;
 
 @TeleOp (group = "Evergreen Testing")
 @Disabled

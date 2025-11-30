@@ -48,7 +48,7 @@ public class Intake {
         beltServo.setPower(InputValues.BELT_SERVO_POWER);
     }
 
-    public void triggerIntake() {
+    public void loop() {
         telemetry.addData("Intake state is: ", intakeState);
         switch (intakeState) {
             case ON:

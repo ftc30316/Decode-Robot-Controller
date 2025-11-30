@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Intake;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
 @TeleOp (group = "Evergreen Testing")
@@ -23,7 +24,7 @@ public class FlywheelVelocityTestingOpMode extends LinearOpMode {
 
             telemetry.update();
             this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, startPose);
-            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, mecanumDrive);
+            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, mecanumDrive, null);
 
             waitForStart();
 
@@ -39,7 +40,6 @@ public class FlywheelVelocityTestingOpMode extends LinearOpMode {
                         -gamepad1.right_stick_x
                 ));
 
-                turret.score();
                 turret.loop();
 
                 telemetry.update();
