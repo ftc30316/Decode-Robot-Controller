@@ -41,9 +41,11 @@ public class Intake {
         firstIntakeServo = hardwareMap.get(CRServo.class, "firstIntakeServo");
         secondIntakeServo = hardwareMap.get(CRServo.class, "secondIntakeServo");
         thirdIntakeServo = hardwareMap.get(CRServo.class, "thirdIntakeServo");
+
         firstIntakeServo.setDirection(CRServo.Direction.REVERSE);
         secondIntakeServo.setDirection(CRServo.Direction.REVERSE);
         thirdIntakeServo.setDirection(CRServo.Direction.REVERSE);
+
         firstArtifactSensor = hardwareMap.get(DistanceSensor.class, "firstArtifactSensor");
         secondArtifactSensor = hardwareMap.get(DistanceSensor.class, "secondArtifactSensor");
         thirdArtifactSensor = hardwareMap.get(DistanceSensor.class, "thirdArtifactSensor");

@@ -21,9 +21,9 @@ public class ArtifactCountingTest extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        firstArtifactSensor = hardwareMap.get(DistanceSensor.class, "distancesensor1");
-        secondArtifactSensor = hardwareMap.get(DistanceSensor.class, "distancesensor2");
-        thirdArtifactSensor = hardwareMap.get(DistanceSensor.class, "distancesensor3");
+        firstArtifactSensor = hardwareMap.get(DistanceSensor.class, "firstArtifactSensor");
+        secondArtifactSensor = hardwareMap.get(DistanceSensor.class, "secondArtifactSensor");
+        thirdArtifactSensor = hardwareMap.get(DistanceSensor.class, "thirdArtifactSensor");
 
         waitForStart();
 
@@ -33,8 +33,33 @@ public class ArtifactCountingTest extends LinearOpMode {
             distanceValues.put("ONE Distance detected: ", firstArtifactSensor.getDistance(DistanceUnit.INCH));
             distanceValues.put("TWO Distance detected: ", secondArtifactSensor.getDistance(DistanceUnit.INCH));
             distanceValues.put("THREE Distance detected: ", thirdArtifactSensor.getDistance(DistanceUnit.INCH));
+            distanceValues.put("NUM OF ARTIFACTS: ", getNumberOfArtifacts());
+            distanceValues.put("Artifact detecting distance is ", InputValues.ARTIFACT_DISTANCE_DETECTION);
+            if (firstArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+                distanceValues.addLine("ONE IS DETECTING");
+            }
+            if (secondArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+                distanceValues.addLine("TWO IS DETECTING");
+            }
+            if (thirdArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+                distanceValues.addLine("THREE IS DETECTING");
+            }
             FtcDashboard.getInstance().sendTelemetryPacket(distanceValues);
             idle();
+
+            telemetry.addData("Number of Artifacts: ", getNumberOfArtifacts());
+
+            if (firstArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+                telemetry.addLine("ONE IS DETECTING");
+            }
+            if (secondArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+                telemetry.addLine("TWO IS DETECTING");
+            }
+            if (thirdArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+                telemetry.addLine("THREE IS DETECTING");
+            }
+
+            telemetry.update();
         }
     }
     public int getNumberOfArtifacts() {

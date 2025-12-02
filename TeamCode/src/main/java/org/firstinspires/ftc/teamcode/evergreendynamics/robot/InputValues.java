@@ -29,7 +29,7 @@ public class InputValues {
     public static double SLOW_INTAKE_SPEED = 1700;
 
     // Distance from sensor to detect artifact
-    public static double ARTIFACT_DISTANCE_DETECTION = 2.7;
+    public static double ARTIFACT_DISTANCE_DETECTION = 2.6;
 
     // Use to compute position for auto aiming turret motor
     public static double TICKS_PER_DEGREE = 5.3277777778;
