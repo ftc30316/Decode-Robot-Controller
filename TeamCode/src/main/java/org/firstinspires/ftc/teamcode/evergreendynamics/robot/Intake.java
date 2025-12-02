@@ -33,9 +33,11 @@ public class Intake {
     public Intake(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.telemetry = telemetry;
+
         firstIntakeServo = hardwareMap.get(CRServo.class, "firstIntakeServo");
         secondIntakeServo = hardwareMap.get(CRServo.class, "secondIntakeServo");
         thirdIntakeServo = hardwareMap.get(CRServo.class, "thirdIntakeServo");
