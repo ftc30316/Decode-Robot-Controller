@@ -38,22 +38,23 @@ public class Intake {
         this.gamepad2 = gamepad2;
         this.telemetry = telemetry;
 
-        firstIntakeServo = hardwareMap.get(CRServo.class, "firstIntakeServo");
-        secondIntakeServo = hardwareMap.get(CRServo.class, "secondIntakeServo");
-        thirdIntakeServo = hardwareMap.get(CRServo.class, "thirdIntakeServo");
+        firstIntakeServo = hardwareMap.get(CRServo.class, "frontTunnelServo");
+        secondIntakeServo = hardwareMap.get(CRServo.class, "middleTunnelServo");
+        thirdIntakeServo = hardwareMap.get(CRServo.class, "backTunnelServo");
 
         firstIntakeServo.setDirection(CRServo.Direction.REVERSE);
         secondIntakeServo.setDirection(CRServo.Direction.REVERSE);
         thirdIntakeServo.setDirection(CRServo.Direction.REVERSE);
 
-        firstArtifactSensor = hardwareMap.get(DistanceSensor.class, "firstArtifactSensor");
-        secondArtifactSensor = hardwareMap.get(DistanceSensor.class, "secondArtifactSensor");
-        thirdArtifactSensor = hardwareMap.get(DistanceSensor.class, "thirdArtifactSensor");
+        firstArtifactSensor = hardwareMap.get(DistanceSensor.class, "frontArtifactSensor");
+        secondArtifactSensor = hardwareMap.get(DistanceSensor.class, "middleArtifactSensor");
+        thirdArtifactSensor = hardwareMap.get(DistanceSensor.class, "backArtifactSensor");
 
     }
 
     public void loop() {
         telemetry.addData("Intake state is: ", intakeState);
+        telemetry.addData("Artifacts: ", getNumberOfArtifacts());
         switch (intakeState) {
             case ON:
                 intakeMotor.setVelocity(InputValues.INTAKE_SPEED);

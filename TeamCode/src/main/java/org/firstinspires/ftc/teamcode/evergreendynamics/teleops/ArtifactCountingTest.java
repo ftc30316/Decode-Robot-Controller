@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.evergreendynamics.teleops;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.evergreendynamics.robot.DouglasFIRST;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
 
 @TeleOp
+@Disabled
 
 public class ArtifactCountingTest extends LinearOpMode {
     private DistanceSensor firstArtifactSensor;

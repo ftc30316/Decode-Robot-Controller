@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @TeleOp
+@Disabled
 
 public class ColorSensorTest extends LinearOpMode {
     private NormalizedColorSensor artifactSlot1;

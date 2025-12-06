@@ -6,9 +6,13 @@ import com.acmerobotics.roadrunner.Vector2d;
 @Config
 public class InputValues {
 
+
+
     // Shooting flywheels
     public static double FLYWHEEL_SLOPE = 9.3;
     public static double FLYWHEEL_Y_INTERCEPT = 900;
+    public static final boolean FLYWHEEL_TEST_ON = true;
+    public static final double FLYWHEEL_TEST_VELOCITY = 500;
 
     // Lift flywheels
     public static int LIFT_WHEEL_WAIT_MILLISECONDS = 3000;

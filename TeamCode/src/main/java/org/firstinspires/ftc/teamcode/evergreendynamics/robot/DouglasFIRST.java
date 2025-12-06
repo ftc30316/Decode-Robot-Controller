@@ -26,6 +26,7 @@ public class DouglasFIRST {
     public Gamepad gamepad1;
     public Gamepad gamepad2;
     public HardwareMap hardwareMap;
+    public String alliance = "BLUE";
 
 
     public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose) {
@@ -75,6 +76,7 @@ public class DouglasFIRST {
         mecanumDrive.loop();
         intake.loop();
         turret.loop();
+        telemetry.addData("Alliance: ", alliance);
     }
 
     public void shutdown() {
@@ -83,7 +85,7 @@ public class DouglasFIRST {
 
     public Vector2d getGoalPosition(HardwareMap hardwareMap) {
         Vector2d goalPosition = InputValues.BLUE_GOAL_POSITION;
-        NormalizedColorSensor signColorSensor = hardwareMap.get(NormalizedColorSensor.class, "thirdArtifactSensor");
+        NormalizedColorSensor signColorSensor = hardwareMap.get(NormalizedColorSensor.class, "signColorSensor");
 
         NormalizedRGBA signColor = signColorSensor.getNormalizedColors();
         float[] hsv = new float[3];
@@ -96,6 +98,7 @@ public class DouglasFIRST {
 
         if (hue < 20 || hue > 340) { // if hue is in red range
             goalPosition = InputValues.RED_GOAL_POSITION;
+            alliance = "RED";
         }
 
         return goalPosition;

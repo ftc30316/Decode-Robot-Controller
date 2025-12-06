@@ -74,10 +74,10 @@ public class Turret {
 
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
         turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFlywheel = hardwareMap.get(DcMotorEx.class, "leftShootingFlywheel");
-        rightFlywheel = hardwareMap.get(DcMotorEx.class, "rightShootingFlywheel");
-        leftLiftWheel = hardwareMap.get(CRServo.class, "liftLeftServo");
-        rightLiftWheel = hardwareMap.get(CRServo.class, "liftRightServo");
+        leftFlywheel = hardwareMap.get(DcMotorEx.class, "leftFlywheel");
+        rightFlywheel = hardwareMap.get(DcMotorEx.class, "rightFlywheel");
+        leftLiftWheel = hardwareMap.get(CRServo.class, "leftLiftServo");
+        rightLiftWheel = hardwareMap.get(CRServo.class, "rightLiftServo");
 
         leftFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -129,43 +129,11 @@ public class Turret {
         }
     }
 
-    public void turretControl() {
-        telemetry.addData("Turret locking state: ", turretLockingState);
-        switch (turretLockingState) {
-            case AUTO:
-                turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                adjustTurret();
-                if (gamepad1.dpad_left) {
-                    turretLockingState = TurretLockingState.MANUAL;
-                }
-                break;
-            case MANUAL:
-                stopTurretBackgroundThread();
-                turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                if (gamepad2.left_bumper) {
-                    turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-                    turretMotor.setPower(InputValues.FLYWHEEL_SLOPE);
-                }
-                else if (gamepad2.right_bumper) {
-                    turretMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-                    turretMotor.setPower(InputValues.FLYWHEEL_SLOPE);
-                }
-                else if (gamepad2.left_stick_x != 0) {
-                    double turretJoystickPower = gamepad2.left_stick_x;
-                    turretMotor.setPower(turretJoystickPower);
-                }
-                else {
-                    turretMotor.setPower(0);
-                }
-                break;
-        }
-    }
-
     // Starts the flywheel
     public void loop() {
-        telemetry.addData("Flywheel state is: ", flywheelState);
-        telemetry.addData("Lift wheel state is: ", liftWheelState);
+        telemetry.addData("Flywheel: ", flywheelState);
+        telemetry.addData("Lift: ", liftWheelState);
+        telemetry.addData("Turret: ", turretLockingState);
         // State machine for the FLY wheels
         switch (flywheelState) {
             case ON:
@@ -198,16 +166,46 @@ public class Turret {
                     liftWheelState = LiftWheelState.ON;
                 }
         }
+        // State machine for turret locking state: Auto or Manual
+        switch (turretLockingState) {
+            case AUTO:
+                turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                adjustTurret();
+                if (gamepad1.dpad_left) {
+                    turretLockingState = TurretLockingState.MANUAL;
+                }
+                break;
+            case MANUAL:
+                stopTurretBackgroundThread();
+                turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                if (gamepad2.left_bumper) {
+                    turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+                    turretMotor.setPower(InputValues.FLYWHEEL_SLOPE);
+                }
+                else if (gamepad2.right_bumper) {
+                    turretMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+                    turretMotor.setPower(InputValues.FLYWHEEL_SLOPE);
+                }
+                else if (gamepad2.left_stick_x != 0) {
+                    double turretJoystickPower = gamepad2.left_stick_x;
+                    turretMotor.setPower(turretJoystickPower);
+                }
+                else {
+                    turretMotor.setPower(0);
+                }
+                break;
+        }
     }
 
     public void shoot() {
         artifactsWhenShooting = intake.getNumberOfArtifacts();
+        telemetry.addData("Artifacts when shooting: ", artifactsWhenShooting);
         leftLiftWheel.setPower(1.0);
         rightLiftWheel.setPower(1.0);
         Helper.sleep(InputValues.LIFT_WHEEL_WAIT_MILLISECONDS * artifactsWhenShooting);
         leftLiftWheel.setPower(0);
         rightLiftWheel.setPower(0);
-        telemetry.addData("number of artifacts", artifactsWhenShooting);
     }
 
     public double getFlywheelVelocity(double distanceToGoal) {
@@ -225,8 +223,12 @@ public class Turret {
         double flywheelV = (velocity[index + 1] - velocity[index]) / (D[index] - D[index-1]) *
                 (distanceToGoal - D[index - 1]);
 
-        return 500;
-//        return flywheelV;
+        if (InputValues.FLYWHEEL_TEST_ON) {
+            return InputValues.FLYWHEEL_TEST_VELOCITY;
+        }
+        else {
+            return flywheelV;
+        }
 
     }
     public void resetTurretToZero() {
@@ -288,12 +290,7 @@ public class Turret {
         double distanceFromGoal = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
         double flywheelVelocity = getFlywheelVelocity(distanceFromGoal);
 
-        telemetry.addData("desiredFieldAngleDeg", desiredFieldAngleDeg);
-        telemetry.addData("robotHeadingDeg", robotHeadingDeg);
-        telemetry.addData("desiredTurretRelRobotDeg", desiredTurretRelRobotDeg);
-        telemetry.addData("deltaFromZeroDeg", deltaFromZeroDeg);
-        telemetry.addData("targetTicks", targetTicks);
-        telemetry.addData("Distance from goal: ", distanceFromGoal);
+        telemetry.addData("Goal distance: ", distanceFromGoal);
         telemetry.addData("Flywheel velocity: ", flywheelVelocity);
 
         turretMotor.setTargetPosition(targetTicks);
@@ -303,8 +300,13 @@ public class Turret {
         rightFlywheel.setVelocity(flywheelVelocity);
 
         TelemetryPacket turretDistanceAndVelocity = new TelemetryPacket();
-        turretDistanceAndVelocity.put("Distance from goal: ", distanceFromGoal);
+        turretDistanceAndVelocity.put("Goal distance: ", distanceFromGoal);
         turretDistanceAndVelocity.put("Flywheel velocity", flywheelVelocity);
+        turretDistanceAndVelocity.put("desiredFieldAngleDeg", desiredFieldAngleDeg);
+        turretDistanceAndVelocity.put("robotHeadingDeg", robotHeadingDeg);
+        turretDistanceAndVelocity.put("desiredTurretRelRobotDeg", desiredTurretRelRobotDeg);
+        turretDistanceAndVelocity.put("deltaFromZeroDeg", deltaFromZeroDeg);
+        turretDistanceAndVelocity.put("targetTicks", targetTicks);
         FtcDashboard.getInstance().sendTelemetryPacket(turretDistanceAndVelocity);
     }
 
