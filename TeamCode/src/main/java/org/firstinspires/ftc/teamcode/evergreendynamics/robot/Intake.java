@@ -57,7 +57,7 @@ public class Intake {
         telemetry.addData("Artifacts: ", getNumberOfArtifacts());
         switch (intakeState) {
             case ON:
-                intakeMotor.setVelocity(InputValues.INTAKE_SPEED);
+                intakeMotor.setPower(InputValues.INTAKE_SPEED);
                 firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
                 secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
                 thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
@@ -67,7 +67,7 @@ public class Intake {
                 }
                 break;
             case OFF:
-                intakeMotor.setVelocity(0);
+                intakeMotor.setPower(0);
 
                 if (getNumberOfArtifacts() < 3) {
                     intakeState = IntakeState.ON;
@@ -95,6 +95,6 @@ public class Intake {
         if (thirdArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
             numberOfArtifacts++;
         }
-        return numberOfArtifacts;
+        return 3;
     }
 }

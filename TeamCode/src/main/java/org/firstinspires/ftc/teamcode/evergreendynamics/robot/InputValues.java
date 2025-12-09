@@ -12,7 +12,7 @@ public class InputValues {
     public static double FLYWHEEL_SLOPE = 9.3;
     public static double FLYWHEEL_Y_INTERCEPT = 900;
     public static final boolean FLYWHEEL_TEST_ON = true;
-    public static final double FLYWHEEL_TEST_VELOCITY = 500;
+    public static final double FLYWHEEL_TEST_VELOCITY = 1900;
 
     // Lift flywheels
     public static int LIFT_WHEEL_WAIT_MILLISECONDS = 3000;
@@ -25,11 +25,11 @@ public class InputValues {
     // Turret aim motor
     public static double TURRET_MOTOR_POWER = 0.8;
     public static int TURRET_THREAD_SLEEP_TIME_MILLIS = 50;
-    public static double TURRET_OFFSET_X = -4.0;
+    public static double TURRET_OFFSET_X = -5.0;
     public static double TURRET_OFFSET_Y = 0;
 
     // Intake motor
-    public static double INTAKE_SPEED = 2500;
+    public static double INTAKE_SPEED = 0.5;
     public static double SLOW_INTAKE_SPEED = 1700;
 
     // Distance from sensor to detect artifact
