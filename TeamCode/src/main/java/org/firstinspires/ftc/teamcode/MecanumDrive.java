@@ -65,13 +65,13 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
 
         // drive model parameters
-        public double inPerTick = 0.00196726471514007; //0.0019762278; //0.00197255392; //0.0019962933545;
-        public double lateralInPerTick = 0.0015088936500011305; //0.0014886353865302434; //0.0014792052056023454; //0.0017250491076879811
-        public double trackWidthTicks = 7418.353239993351; //7418.353239993351; //7363.1783633522655 //438688.6098467042
+        public double inPerTick = 0.0019689574998429; //0.0019762278; //0.00197255392; //0.0019962933545;
+        public double lateralInPerTick = 0.001593880210089011; // 0.0015088936500011305 //0.0014886353865302434; //0.0014792052056023454; //0.0017250491076879811
+        public double trackWidthTicks = 420976.2170863245; // 7418.353239993351 //7418.353239993351; //7363.1783633522655 //438688.6098467042
 
         // feedforward parameters (in tick units)
-        public double kS = 0.9850231467142749; //0.929192069799544939; //0.9329062218949811; //0.7065805084540235;
-        public double kV = 0.0003663200848652556; //0.0003605173805435224; //0.00035618632396670045; //0.000370159714003654;
+        public double kS = 0.8048044416181197; // 0.9850231467142749 //0.929192069799544939; //0.9329062218949811; //0.7065805084540235;
+        public double kV = 0.00035987041934585376; // 0.0003663200848652556 //0.0003605173805435224; //0.00035618632396670045; //0.000370159714003654;
         public double kA = 0.00005;
 
         // path profile parameters (in inches)
@@ -84,9 +84,9 @@ public final class MecanumDrive {
         public double maxAngAccel = Math.PI;
 
         // path controller gains
-        public double axialGain = 0.0;
-        public double lateralGain = 0.0;
-        public double headingGain = 0.0; // shared with turn
+        public double axialGain = 5;
+        public double lateralGain = 22;
+        public double headingGain = 0.29; // shared with turn
 
         public double axialVelGain = 0.0;
         public double lateralVelGain = 0.0;
@@ -251,10 +251,10 @@ public final class MecanumDrive {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // TODO: reverse motor directions if needed
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
         lazyImu = new LazyHardwareMapImu(hardwareMap, "imu", new RevHubOrientationOnRobot(

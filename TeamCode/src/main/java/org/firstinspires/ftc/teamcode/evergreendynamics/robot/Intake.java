@@ -88,6 +88,6 @@ public class Intake {
         if (thirdArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
             numberOfArtifacts++;
         }
-        return numberOfArtifacts;
+        return 3;
     }
 }

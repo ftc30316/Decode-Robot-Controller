@@ -25,7 +25,7 @@ public class InputValues {
     // Turret aim motor
     public static double TURRET_MOTOR_POWER = 0.8;
     public static int TURRET_THREAD_SLEEP_TIME_MILLIS = 50;
-    public static double TURRET_OFFSET_X = -4.0;
+    public static double TURRET_OFFSET_X = -5.0;
     public static double TURRET_OFFSET_Y = 0;
 
     // Intake motor
