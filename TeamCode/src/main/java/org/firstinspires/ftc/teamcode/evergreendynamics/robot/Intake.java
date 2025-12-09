@@ -75,6 +75,13 @@ public class Intake {
         }
     }
 
+    public void turnOnIntake () {
+        intakeMotor.setVelocity(InputValues.INTAKE_SPEED);
+        firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+        secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+        thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+    }
+
     public int getNumberOfArtifacts() {
 
         int numberOfArtifacts = 0;

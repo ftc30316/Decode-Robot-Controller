@@ -46,6 +46,8 @@ public class DouglasFIRST {
         turret.createTurretBackgroundThread();
         // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
         turret.turretBackgroundThread.start();
+        // Turns on intake
+        intake.turnOnIntake();
     }
 
     public void shootArtifacts() {
