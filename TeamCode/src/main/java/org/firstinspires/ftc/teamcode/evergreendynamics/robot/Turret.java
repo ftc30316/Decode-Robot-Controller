@@ -227,7 +227,7 @@ public class Turret {
             return InputValues.FLYWHEEL_TEST_VELOCITY;
         }
         else {
-            return flywheelV;
+            return flywheelV * InputValues.FLYWHEEL_MULTIPLIER;
         }
 
     }

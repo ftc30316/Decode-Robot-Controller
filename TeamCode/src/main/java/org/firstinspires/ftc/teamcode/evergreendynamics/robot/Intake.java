@@ -25,14 +25,14 @@ public class Intake {
     public enum IntakeState {
         ON,
 
-        OFF
+        //OFF
     }
 
     IntakeState intakeState = IntakeState.ON;
 
     public Intake(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
-        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
@@ -62,16 +62,16 @@ public class Intake {
                 secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
                 thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
 
-                if (getNumberOfArtifacts() == 3) {
-                    intakeState = IntakeState.OFF;
-                }
+//                if (getNumberOfArtifacts() == 3) {
+//                    intakeState = IntakeState.OFF;
+//                }
                 break;
-            case OFF:
-                intakeMotor.setPower(0);
-
-                if (getNumberOfArtifacts() < 3) {
-                    intakeState = IntakeState.ON;
-                }
+//            case OFF:
+//                intakeMotor.setPower(0);
+//
+//                if (getNumberOfArtifacts() < 3) {
+//                    intakeState = IntakeState.ON;
+//                }
         }
     }
 
