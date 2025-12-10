@@ -211,9 +211,8 @@ public class Turret {
     }
 
     public double getFlywheelVelocity(double distanceToGoal) {
-        double[] D = {0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168, 180};
-        double[] velocity = {1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500,
-                3700, 3900, 4100, 4300, 4500};
+        double[] D = {          0,   12,   24,   36,   48,   60,   72,   84,   96,  108,  120,  132,  144,  156,  168,  180};
+        double[] velocity = {1425, 1425, 1425, 1425, 1425, 1425, 1408, 1391, 1375, 1525, 1600, 1600, 1620, 1640, 1680, 1700};
         int index = (int) Math.floor(distanceToGoal/12);
 
         if (index < 1) {
@@ -222,20 +221,25 @@ public class Turret {
             return velocity[15];
         }
 
-        double flywheelV = (velocity[index + 1] - velocity[index]) / (D[index] - D[index-1]) *
-                (distanceToGoal - D[index - 1]);
+        double flywheelV = (velocity[index + 1] - velocity[index]) / (D[index + 1] - D[index]) *
+                (distanceToGoal - D[index]);
+
+        telemetry.addData("flywheel velocity", flywheelV);
+        telemetry.addData("velocity index", velocity[index]);
+        telemetry.addData("distance index", D[index]);
+        telemetry.addData("index", index);
 
         if (InputValues.FLYWHEEL_TEST_ON) {
-            if (gamepad1.dpad_up) {
+            if (gamepad1.dpadUpWasPressed()) {
                 InputValues.FLYWHEEL_TEST_VELOCITY += 25;
             }
-            if (gamepad1.dpad_down) {
+            if (gamepad1.dpadDownWasPressed()) {
                 InputValues.FLYWHEEL_TEST_VELOCITY -= 25;
             }
             return InputValues.FLYWHEEL_TEST_VELOCITY;
         }
         else {
-            return flywheelV * InputValues.FLYWHEEL_MULTIPLIER;
+            return flywheelV;
         }
 
     }
@@ -298,8 +302,8 @@ public class Turret {
         double distanceFromGoal = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
         double flywheelVelocity = getFlywheelVelocity(distanceFromGoal);
 
-        telemetry.addData("Goal distance: ", distanceFromGoal);
-        telemetry.addData("Flywheel velocity: ", flywheelVelocity);
+//        telemetry.addData("Goal distance: ", distanceFromGoal);
+//        telemetry.addData("Flywheel velocity: ", flywheelVelocity);
 
         turretMotor.setTargetPosition(targetTicks);
         turretMotor.setPower(0.5); // tune as needed
@@ -310,11 +314,11 @@ public class Turret {
         TelemetryPacket turretDistanceAndVelocity = new TelemetryPacket();
         turretDistanceAndVelocity.put("Goal distance: ", distanceFromGoal);
         turretDistanceAndVelocity.put("Flywheel velocity", flywheelVelocity);
-        turretDistanceAndVelocity.put("desiredFieldAngleDeg", desiredFieldAngleDeg);
-        turretDistanceAndVelocity.put("robotHeadingDeg", robotHeadingDeg);
-        turretDistanceAndVelocity.put("desiredTurretRelRobotDeg", desiredTurretRelRobotDeg);
-        turretDistanceAndVelocity.put("deltaFromZeroDeg", deltaFromZeroDeg);
-        turretDistanceAndVelocity.put("targetTicks", targetTicks);
+//        turretDistanceAndVelocity.put("desiredFieldAngleDeg", desiredFieldAngleDeg);
+//        turretDistanceAndVelocity.put("robotHeadingDeg", robotHeadingDeg);
+//        turretDistanceAndVelocity.put("desiredTurretRelRobotDeg", desiredTurretRelRobotDeg);
+//        turretDistanceAndVelocity.put("deltaFromZeroDeg", deltaFromZeroDeg);
+//        turretDistanceAndVelocity.put("targetTicks", targetTicks);
         FtcDashboard.getInstance().sendTelemetryPacket(turretDistanceAndVelocity);
     }
 

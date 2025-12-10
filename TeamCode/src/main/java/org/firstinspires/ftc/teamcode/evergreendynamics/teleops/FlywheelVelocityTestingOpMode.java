@@ -23,6 +23,8 @@ public class FlywheelVelocityTestingOpMode extends LinearOpMode {
             Pose2d startPose = new Pose2d (0, 0, 0);
             double turretStartHeading = Math.toDegrees(startPose.heading.toDouble()); //PoseStorage.loadTurretHeading(hardwareMap.appContext);
 
+            telemetry.addData("Flywheel velocity", InputValues.FLYWHEEL_TEST_VELOCITY);
+
             telemetry.update();
             this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose);
 
@@ -32,6 +34,7 @@ public class FlywheelVelocityTestingOpMode extends LinearOpMode {
             // Sets up the driving system
             while (opModeIsActive()) {
                 douglasFIRST.loop();
+
 
                 telemetry.update();
             }
