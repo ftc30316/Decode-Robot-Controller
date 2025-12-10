@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.robot;
 
+import android.renderscript.ScriptGroup;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -224,6 +226,12 @@ public class Turret {
                 (distanceToGoal - D[index - 1]);
 
         if (InputValues.FLYWHEEL_TEST_ON) {
+            if (gamepad1.dpad_up) {
+                InputValues.FLYWHEEL_TEST_VELOCITY += 25;
+            }
+            if (gamepad1.dpad_down) {
+                InputValues.FLYWHEEL_TEST_VELOCITY -= 25;
+            }
             return InputValues.FLYWHEEL_TEST_VELOCITY;
         }
         else {

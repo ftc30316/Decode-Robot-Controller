@@ -103,6 +103,7 @@ public class DouglasFIRST {
             alliance = "RED";
         }
 
+        telemetry.addData("hue", hue);
         return goalPosition;
     }
 

@@ -8,16 +8,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.DouglasFIRST;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Intake;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
-@Disabled
-
 @TeleOp (group = "Evergreen Testing")
 public class FlywheelVelocityTestingOpMode extends LinearOpMode {
-    public Turret turret;
-    public MecanumDrive mecanumDrive;
+    public DouglasFIRST douglasFIRST;
 
     @Override
     public void runOpMode() {
@@ -26,31 +24,21 @@ public class FlywheelVelocityTestingOpMode extends LinearOpMode {
             double turretStartHeading = Math.toDegrees(startPose.heading.toDouble()); //PoseStorage.loadTurretHeading(hardwareMap.appContext);
 
             telemetry.update();
-            this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, startPose);
-            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, InputValues.BLUE_GOAL_POSITION, mecanumDrive, null);
+            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose);
 
             waitForStart();
+            douglasFIRST.start(0, 0);
 
             // Sets up the driving system
             while (opModeIsActive()) {
-
-                telemetry.addData("robot speed", "FAST");
-                mecanumDrive.setDrivePowers(new PoseVelocity2d(
-                        new Vector2d(
-                                -gamepad1.left_stick_y,
-                                -gamepad1.left_stick_x
-                        ),
-                        -gamepad1.right_stick_x
-                ));
-
-                turret.loop();
+                douglasFIRST.loop();
 
                 telemetry.update();
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-
+            douglasFIRST.shutdown();
         }
 
     }
