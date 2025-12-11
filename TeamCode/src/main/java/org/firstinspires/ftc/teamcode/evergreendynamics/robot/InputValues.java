@@ -6,8 +6,6 @@ import com.acmerobotics.roadrunner.Vector2d;
 @Config
 public class InputValues {
 
-
-
     // Shooting flywheels
     public static double FLYWHEEL_SLOPE = 9.3;
     public static double FLYWHEEL_Y_INTERCEPT = 900;
@@ -30,7 +28,8 @@ public class InputValues {
     public static double TURRET_OFFSET_Y = 0;
 
     // Intake motor
-    public static double INTAKE_SPEED = 2000;
+    public static double INTAKE_POWER = 0.8;
+    public static final double INTAKE_POWER_SLOW = 0.1;
     public static double SLOW_INTAKE_SPEED = 1700;
 
     // Distance from sensor to detect artifact

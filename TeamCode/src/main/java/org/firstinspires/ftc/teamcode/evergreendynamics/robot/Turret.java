@@ -160,8 +160,8 @@ public class Turret {
                 }
                 break;
             case OFF:
-                leftLiftWheel.setPower(0);
-                rightLiftWheel.setPower(0);
+                leftLiftWheel.setPower(-1.0);
+                rightLiftWheel.setPower(-1.0);
                 if (gamepad1.crossWasPressed()) {
                     artifactsWhenCrossWasPressed = intake.getNumberOfArtifacts();
                     liftWheelTimer.reset();
@@ -206,8 +206,8 @@ public class Turret {
         leftLiftWheel.setPower(1.0);
         rightLiftWheel.setPower(1.0);
         Helper.sleep(InputValues.LIFT_WHEEL_WAIT_MILLISECONDS * artifactsWhenShooting);
-        leftLiftWheel.setPower(0);
-        rightLiftWheel.setPower(0);
+        leftLiftWheel.setPower(-1.0);
+        rightLiftWheel.setPower(-1.0);
     }
 
     public double getFlywheelVelocity(double distanceToGoal) {

@@ -15,7 +15,7 @@ public class Intake {
     private Gamepad gamepad1;
     private Gamepad gamepad2;
     private Telemetry telemetry;
-//    private CRServo firstIntakeServo;
+    private CRServo firstIntakeServo;
     private CRServo secondIntakeServo;
     private CRServo thirdIntakeServo;
     public DistanceSensor firstArtifactSensor;
@@ -25,7 +25,7 @@ public class Intake {
     public enum IntakeState {
         ON,
 
-        //OFF
+        OFF
     }
 
     IntakeState intakeState = IntakeState.ON;
@@ -38,11 +38,11 @@ public class Intake {
         this.gamepad2 = gamepad2;
         this.telemetry = telemetry;
 
-        //firstIntakeServo = hardwareMap.get(CRServo.class, "frontTunnelServo");
+        firstIntakeServo = hardwareMap.get(CRServo.class, "frontTunnelServo");
         secondIntakeServo = hardwareMap.get(CRServo.class, "middleTunnelServo");
         thirdIntakeServo = hardwareMap.get(CRServo.class, "backTunnelServo");
 
-        //firstIntakeServo.setDirection(CRServo.Direction.REVERSE);
+        firstIntakeServo.setDirection(CRServo.Direction.REVERSE);
         secondIntakeServo.setDirection(CRServo.Direction.REVERSE);
         thirdIntakeServo.setDirection(CRServo.Direction.REVERSE);
 
@@ -57,17 +57,23 @@ public class Intake {
         telemetry.addData("Artifacts: ", getNumberOfArtifacts());
         switch (intakeState) {
             case ON:
-                intakeMotor.setPower(InputValues.INTAKE_SPEED);
-                //firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+                intakeMotor.setPower(InputValues.INTAKE_POWER);
+                firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
                 secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
                 thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
 
 //                if (getNumberOfArtifacts() == 3) {
-//                    intakeState = IntakeState.OFF;
-//                }
+                if (gamepad1.squareWasPressed()) {
+                    intakeState = IntakeState.OFF;
+                }
                 break;
-//            case OFF:
-//                intakeMotor.setPower(0);
+            case OFF:
+                intakeMotor.setPower(InputValues.INTAKE_POWER_SLOW);
+
+                if (gamepad1.squareWasPressed()) {
+                    intakeState = IntakeState.ON;
+                }
+                break;
 //
 //                if (getNumberOfArtifacts() < 3) {
 //                    intakeState = IntakeState.ON;
@@ -76,8 +82,8 @@ public class Intake {
     }
 
     public void turnOnIntake () {
-        intakeMotor.setVelocity(InputValues.INTAKE_SPEED);
-        //firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+        intakeMotor.setVelocity(InputValues.INTAKE_POWER);
+        firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
         secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
         thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
     }
