@@ -215,18 +215,29 @@ public class Turret {
         double[] velocity = {1425, 1425, 1425, 1425, 1425, 1425, 1408, 1391, 1375, 1525, 1600, 1600, 1620, 1640, 1680, 1700};
         int index = (int) Math.floor(distanceToGoal/12);
 
-        if (index < 1) {
-            return velocity[0];
-        } else if (index > 15) {
-            return velocity[15];
+
+        // Clamp to valid range for interpolation
+        if (index <= 0) {
+            index = 0;
+        } else if (index >= D.length - 1) {
+            // If we're at or beyond the last point, just return the last velocity
+            return velocity[velocity.length - 1];
         }
 
-        double flywheelV = (velocity[index + 1] - velocity[index]) / (D[index + 1] - D[index]) *
-                (distanceToGoal - D[index]);
+        double x0 = D[index];
+        double x1 = D[index + 1];
+        double v0 = velocity[index];
+        double v1 = velocity[index + 1];
+
+        // Fraction between the two distance points
+        double t = (distanceToGoal - x0) / (x1 - x0);  // should be between 0 and 1
+
+        // Proper linear interpolation: v = v0 + t * (v1 - v0)
+        double flywheelV = v0 + t * (v1 - v0);
 
         telemetry.addData("flywheel velocity", flywheelV);
-        telemetry.addData("velocity index", velocity[index]);
-        telemetry.addData("distance index", D[index]);
+        telemetry.addData("velocity index", v0);
+        telemetry.addData("distance index", x0);
         telemetry.addData("index", index);
 
         if (InputValues.FLYWHEEL_TEST_ON) {
