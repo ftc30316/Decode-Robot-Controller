@@ -39,6 +39,16 @@ public class DouglasFIRST {
         this.hardwareMap = hardwareMap;
     }
 
+    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Vector2d goalPosition, Pose2d beginPose) {
+        this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, beginPose);
+        this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
+        this.telemetry = telemetry;
+        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, goalPosition, mecanumDrive, intake);
+        this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
+        this.hardwareMap = hardwareMap;
+    }
+
     public void start(double robotHeadingDeg, double turretStartHeadingDeg) {
         turret.initialize(robotHeadingDeg, turretStartHeadingDeg);
 
@@ -100,7 +110,9 @@ public class DouglasFIRST {
 
         if (hue < 20 || hue > 340) { // if hue is in red range
             goalPosition = InputValues.RED_GOAL_POSITION;
-            alliance = "RED";
+            alliance = "RED " + hue;
+        } else {
+            alliance = "BLUE " + hue;
         }
 
         telemetry.addData("hue", hue);

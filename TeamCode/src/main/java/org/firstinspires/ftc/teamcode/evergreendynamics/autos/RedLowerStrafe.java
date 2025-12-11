@@ -24,12 +24,13 @@ public class RedLowerStrafe extends LinearOpMode {
             telemetry.addLine("Running Op Mode");
             Pose2d beginPose = new Pose2d(62, 12, Math.toRadians(90));
             float turretStartHeading = -90;
+            double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
-            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, beginPose);
+            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.RED_GOAL_POSITION, beginPose);
 
             waitForStart();
 
-            douglasFIRST.start(beginPose.heading.toDouble(), turretStartHeading);
+            douglasFIRST.start(robotStartHeading, turretStartHeading);
 
             //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
             //sorter.detect();

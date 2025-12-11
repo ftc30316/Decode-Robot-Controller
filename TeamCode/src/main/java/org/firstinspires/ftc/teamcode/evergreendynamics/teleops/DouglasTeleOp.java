@@ -32,6 +32,7 @@ public class DouglasTeleOp extends LinearOpMode {
 
             // Sets up the driving system
             while (opModeIsActive()) {
+                telemetry.clearAll();
                 douglasFIRST.loop();
 
                 telemetry.update();

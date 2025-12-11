@@ -8,14 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.DouglasFIRST;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
-import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Intake;
-import org.firstinspires.ftc.teamcode.evergreendynamics.robot.PoseStorage;
-
-import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
 @Autonomous (group = "Evergreen Autos")
-public class BlueUpper3Row extends LinearOpMode {
+public class BlueUpper1Row extends LinearOpMode {
     public DouglasFIRST douglasFIRST;
 
     @Override
@@ -25,11 +20,13 @@ public class BlueUpper3Row extends LinearOpMode {
         telemetry.addLine("Running Op Mode");
         Pose2d beginPose = new Pose2d(-52, -52, Math.toRadians(45));
         float turretStartHeading = -90;
-        this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, beginPose);
+        double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
+
+        this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.BLUE_GOAL_POSITION, beginPose);
 
 
         waitForStart();
-        douglasFIRST.start(beginPose.heading.toDouble(), -90);
+        douglasFIRST.start(robotStartHeading, -90);
 
         //Moves to upper launch zone
         Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose)

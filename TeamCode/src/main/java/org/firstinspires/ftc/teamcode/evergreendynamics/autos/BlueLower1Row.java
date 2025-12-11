@@ -8,14 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.DouglasFIRST;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
-import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Intake;
-import org.firstinspires.ftc.teamcode.evergreendynamics.robot.PoseStorage;
-
-import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
 @Autonomous (group = "Evergreen Autos")
-public class RedLower3Row extends LinearOpMode {
+public class BlueLower1Row extends LinearOpMode {
     public DouglasFIRST douglasFIRST;
 
     @Override
@@ -23,31 +18,39 @@ public class RedLower3Row extends LinearOpMode {
     public void runOpMode() {
         try {
             telemetry.addLine("Running Op Mode");
-            Pose2d beginPose = new Pose2d(62, 12, Math.toRadians(90));
+            Pose2d beginPose = new Pose2d(62, -12, Math.toRadians(-90)); // changed from 270 to -90
             float turretStartHeading = -90;
+            double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
-            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, beginPose);
+            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.BLUE_GOAL_POSITION, beginPose);
 
             waitForStart();
 
-            douglasFIRST.start(beginPose.heading.toDouble(), turretStartHeading);
+            //Creates background thread
+            douglasFIRST.start(robotStartHeading, turretStartHeading);
 
             //Moves to upper launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .strafeTo(new Vector2d(-9, 20))
+                    .strafeTo(new Vector2d(-12, -20))
                     .build());
             douglasFIRST.savePose();
 
             douglasFIRST.shootArtifacts();
 
-            Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    //.strafeTo(new Vector2d(-9,16))
-                    .strafeTo(new Vector2d(-9,45))
-                    .strafeTo(new Vector2d(-9,20))
+            Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
+                    //.strafeTo(new Vector2d(-9,-16))
+                    .strafeTo(new Vector2d(-12,-45))
+                    .strafeTo(new Vector2d(-12,-20))
                     .build());
             douglasFIRST.savePose();
 
             douglasFIRST.shootArtifacts();
+
+            Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
+                    .strafeTo(new Vector2d(-12,-45))
+
+                    .build());
+            douglasFIRST.savePose();
 
         } catch(Exception e) {
             e.printStackTrace();
