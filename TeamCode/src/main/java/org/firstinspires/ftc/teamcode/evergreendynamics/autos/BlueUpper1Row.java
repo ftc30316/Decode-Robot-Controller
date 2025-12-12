@@ -26,11 +26,11 @@ public class BlueUpper1Row extends LinearOpMode {
 
 
         waitForStart();
-        douglasFIRST.start(robotStartHeading, -90);
+        douglasFIRST.start(robotStartHeading, turretStartHeading);
 
         //Moves to upper launch zone
         Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose)
-                .strafeToLinearHeading(new Vector2d(-15, -12), Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(-12, -12), Math.toRadians(-90))
                 .build());
         douglasFIRST.savePose();
 

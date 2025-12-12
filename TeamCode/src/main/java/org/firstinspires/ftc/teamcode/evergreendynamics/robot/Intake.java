@@ -82,7 +82,7 @@ public class Intake {
     }
 
     public void turnOnIntake () {
-        intakeMotor.setVelocity(InputValues.INTAKE_POWER);
+        intakeMotor.setPower(InputValues.INTAKE_POWER);
         firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
         secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
         thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
