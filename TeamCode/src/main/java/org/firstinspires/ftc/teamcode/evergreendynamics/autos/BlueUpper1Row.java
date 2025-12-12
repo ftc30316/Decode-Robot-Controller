@@ -18,8 +18,8 @@ public class BlueUpper1Row extends LinearOpMode {
     public void runOpMode() {
         try {
         telemetry.addLine("Running Op Mode");
-        Pose2d beginPose = new Pose2d(-52, -52, Math.toRadians(45));
-        float turretStartHeading = -90;
+        Pose2d beginPose = new Pose2d(-49.25, -49.25, Math.toRadians(45));
+        float turretStartHeading = 45;
         double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
         this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.BLUE_GOAL_POSITION, beginPose);
@@ -30,7 +30,7 @@ public class BlueUpper1Row extends LinearOpMode {
 
         //Moves to upper launch zone
         Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose)
-                .strafeToLinearHeading(new Vector2d(-12, -12), Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(-12, -20), Math.toRadians(-90))
                 .build());
         douglasFIRST.savePose();
 
@@ -38,11 +38,17 @@ public class BlueUpper1Row extends LinearOpMode {
 
         Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
                 .strafeTo(new Vector2d(-12,-50))
-                .strafeTo(new Vector2d(-9,-17))
+                .strafeTo(new Vector2d(-12,-20))
                 .build());
         douglasFIRST.savePose();
 
         douglasFIRST.shootArtifacts();
+
+        Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
+                .strafeTo(new Vector2d(-12,-50))
+                .build());
+
+        douglasFIRST.savePose();
 
     } catch(Exception e) {
             e.printStackTrace();

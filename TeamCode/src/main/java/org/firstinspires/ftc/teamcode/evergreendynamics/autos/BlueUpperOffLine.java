@@ -23,7 +23,7 @@ public class BlueUpperOffLine extends LinearOpMode {
         try {
         telemetry.addLine("Running Op Mode");
         Pose2d beginPose = new Pose2d(-52, -52, Math.toRadians(45));
-        float turretStartHeading = -90;
+        float turretStartHeading = 45;
         double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
         this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.BLUE_GOAL_POSITION, beginPose);

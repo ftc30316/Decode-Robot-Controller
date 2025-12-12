@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.evergreendynamics.robot.DouglasFIRST;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Intake;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
-
+@Disabled
 @TeleOp (group = "Evergreen Testing")
 public class FlywheelVelocityTestingOpMode extends LinearOpMode {
     public DouglasFIRST douglasFIRST;

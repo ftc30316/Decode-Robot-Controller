@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.evergreendynamics.robot.DouglasFIRST;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
 
 @Autonomous (group = "Evergreen Autos")
-public class RedLower1Row extends LinearOpMode {
+public class RedLowerLowRow extends LinearOpMode {
     public DouglasFIRST douglasFIRST;
 
     @Override
@@ -28,24 +28,27 @@ public class RedLower1Row extends LinearOpMode {
 
             douglasFIRST.start(robotStartHeading, turretStartHeading);
 
+            Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
+                    .waitSeconds(2)
+                    .build());
+            douglasFIRST.shootArtifacts();
+
             //Moves to upper launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .strafeTo(new Vector2d(-12, 20))
+                    .strafeTo(new Vector2d(36, 12))
+                    .strafeTo(new Vector2d(36, 62))
+                    .build());
+            douglasFIRST.savePose();
+
+            Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
+                    .strafeTo(new Vector2d(62,12))
                     .build());
             douglasFIRST.savePose();
 
             douglasFIRST.shootArtifacts();
 
             Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
-                    .strafeTo(new Vector2d(-12,52))
-                    .strafeTo(new Vector2d(-12,20))
-                    .build());
-            douglasFIRST.savePose();
-
-            douglasFIRST.shootArtifacts();
-
-            Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
-                    .strafeTo(new Vector2d(-12,50))
+                    .strafeTo(new Vector2d(30,12))
                     .build());
 
             douglasFIRST.savePose();

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.evergreendynamics.robot.DouglasFIRST;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
 
 @Autonomous (group = "Evergreen Autos")
-public class RedLower1Row extends LinearOpMode {
+public class RedLowerShootStrafe extends LinearOpMode {
     public DouglasFIRST douglasFIRST;
 
     @Override
@@ -18,8 +18,8 @@ public class RedLower1Row extends LinearOpMode {
     public void runOpMode() {
         try {
             telemetry.addLine("Running Op Mode");
-            Pose2d beginPose = new Pose2d(62, 12, Math.toRadians(90));
-            float turretStartHeading = 90;
+            Pose2d beginPose = new Pose2d(62, 12, Math.toRadians(0));
+            float turretStartHeading = 0;
             double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
             this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.RED_GOAL_POSITION, beginPose);
@@ -28,27 +28,21 @@ public class RedLower1Row extends LinearOpMode {
 
             douglasFIRST.start(robotStartHeading, turretStartHeading);
 
+            Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
+                    .waitSeconds(2)
+                    .strafeTo(new Vector2d(52, 12))
+                    .build());
+            douglasFIRST.savePose();
+
+            //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
+            douglasFIRST.shootArtifacts();
+
             //Moves to upper launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .strafeTo(new Vector2d(-12, 20))
+                    .strafeTo(new Vector2d(52, 56))
                     .build());
             douglasFIRST.savePose();
 
-            douglasFIRST.shootArtifacts();
-
-            Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
-                    .strafeTo(new Vector2d(-12,52))
-                    .strafeTo(new Vector2d(-12,20))
-                    .build());
-            douglasFIRST.savePose();
-
-            douglasFIRST.shootArtifacts();
-
-            Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
-                    .strafeTo(new Vector2d(-12,50))
-                    .build());
-
-            douglasFIRST.savePose();
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -56,5 +50,4 @@ public class RedLower1Row extends LinearOpMode {
             douglasFIRST.shutdown();
         }
     }
-
 }

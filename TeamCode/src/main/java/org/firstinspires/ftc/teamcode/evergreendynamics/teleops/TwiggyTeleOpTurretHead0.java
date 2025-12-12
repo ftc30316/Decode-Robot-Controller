@@ -35,7 +35,7 @@ public class TwiggyTeleOpTurretHead0 extends LinearOpMode {
 
             telemetry.update();
 
-            this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, startPose);
+            this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, gamepad2, startPose);
 //            this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2,
 //                    InputValues.RED_GOAL_POSITION, turretFieldAngleStartDeg, mecanumDrive);
 

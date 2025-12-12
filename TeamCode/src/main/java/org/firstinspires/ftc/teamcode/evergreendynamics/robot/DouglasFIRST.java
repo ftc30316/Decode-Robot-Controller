@@ -30,7 +30,7 @@ public class DouglasFIRST {
 
 
     public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose) {
-        this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, beginPose);
+        this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, gamepad2, beginPose);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
         this.telemetry = telemetry;
         this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, getGoalPosition(hardwareMap), mecanumDrive, intake);
@@ -40,7 +40,7 @@ public class DouglasFIRST {
     }
 
     public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Vector2d goalPosition, Pose2d beginPose) {
-        this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, beginPose);
+        this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, gamepad2, beginPose);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
         this.telemetry = telemetry;
         this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, goalPosition, mecanumDrive, intake);
@@ -69,10 +69,10 @@ public class DouglasFIRST {
             telemetry.addData("robot speed", "SLOW");
             mecanumDrive.setDrivePowers(new PoseVelocity2d(
                     new Vector2d(
-                            -gamepad1.left_stick_y * 0.5,
-                            -gamepad1.left_stick_x * 0.5
+                            -gamepad1.left_stick_y * 0.25,
+                            -gamepad1.left_stick_x * 0.25
                     ),
-                    -gamepad1.right_stick_x * 0.5
+                    -gamepad1.right_stick_x * 0.25
             ));
 
         } else {

@@ -39,7 +39,7 @@ public class BlueLower1Row extends LinearOpMode {
 
             Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
                     //.strafeTo(new Vector2d(-9,-16))
-                    .strafeTo(new Vector2d(-12,-45))
+                    .strafeTo(new Vector2d(-12,-52))
                     .strafeTo(new Vector2d(-12,-20))
                     .build());
             douglasFIRST.savePose();
@@ -47,7 +47,7 @@ public class BlueLower1Row extends LinearOpMode {
             douglasFIRST.shootArtifacts();
 
             Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
-                    .strafeTo(new Vector2d(-12,-45))
+                    .strafeTo(new Vector2d(-12,-50))
 
                     .build());
             douglasFIRST.savePose();
