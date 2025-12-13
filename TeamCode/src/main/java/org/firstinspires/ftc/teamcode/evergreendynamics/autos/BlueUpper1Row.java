@@ -37,7 +37,7 @@ public class BlueUpper1Row extends LinearOpMode {
         douglasFIRST.shootArtifacts();
 
         Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
-                .strafeTo(new Vector2d(-12,-50))
+                .strafeTo(new Vector2d(-12,-54))
                 .strafeTo(new Vector2d(-12,-20))
                 .build());
         douglasFIRST.savePose();

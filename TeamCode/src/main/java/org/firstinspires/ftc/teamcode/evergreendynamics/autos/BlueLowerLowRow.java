@@ -33,7 +33,6 @@ public class BlueLowerLowRow extends LinearOpMode {
                     .build());
             douglasFIRST.shootArtifacts();
 
-            //Moves to upper launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
                     .strafeTo(new Vector2d(36, -12))
                     .strafeTo(new Vector2d(36, -62))

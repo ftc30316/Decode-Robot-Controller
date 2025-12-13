@@ -31,14 +31,16 @@ public class RedUpper1Row extends LinearOpMode {
             //Moves to upper launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
                     .strafeToLinearHeading(new Vector2d(-12, 20), Math.toRadians(90))
+                    .waitSeconds(2)
                     .build());
             douglasFIRST.savePose();
 
             douglasFIRST.shootArtifacts();
 
             Actions.runBlocking(douglasFIRST.getActionBuilder()
-                    .strafeTo(new Vector2d(-12,55))
+                    .strafeTo(new Vector2d(-12,54))
                     .strafeTo(new Vector2d(-12,20))
+                    .waitSeconds(2)
                     .build());
             douglasFIRST.savePose();
 
