@@ -37,9 +37,14 @@ public class BlueLowerShootStrafe extends LinearOpMode {
             //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
             douglasFIRST.shootArtifacts();
 
+            Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
+                    .waitSeconds(2)
+                    .strafeTo(new Vector2d(62, -12))
+                    .build());
+
             //Moves to upper launch zone
-            Actions.runBlocking( douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .strafeTo(new Vector2d(52, -56))
+            Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
+                    .strafeTo(new Vector2d(58, -56))
                     .build());
             douglasFIRST.savePose();
 

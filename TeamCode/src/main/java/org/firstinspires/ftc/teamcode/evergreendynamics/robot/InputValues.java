@@ -28,10 +28,9 @@ public class InputValues {
     public static double TURRET_OFFSET_Y = 0;
 
     // Intake motor
-    public static double INTAKE_POWER = 1.0;
+    public static double INTAKE_POWER = 1;
     public static final double INTAKE_POWER_SLOW = 0.1;
     public static double SLOW_INTAKE_SPEED = 1700;
-
 
     // Distance from sensor to detect artifact
     public static double ARTIFACT_DISTANCE_DETECTION = 2.6;
@@ -40,7 +39,7 @@ public class InputValues {
     public static double TICKS_PER_DEGREE = 5.3277777778;
 
     // Goal positions
-    public static Vector2d BLUE_GOAL_POSITION = new Vector2d(-64,-60);
+    public static Vector2d BLUE_GOAL_POSITION = new Vector2d(-64,-62);
 
     public static Vector2d RED_GOAL_POSITION = new Vector2d(-64,60);
 
