@@ -16,46 +16,46 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp
 
 public class LEDValueTest extends LinearOpMode {
-    private Servo LED1;
-    private Servo LED2;
-    double LED1Value = 0.25;
-    double LED2Value = 0.25;
+    private Servo artifactLED;
+    private Servo launchZoneLED;
+    double artifactLEDValue = 0.25;
+    double launchZoneValue = 0.25;
 
     @Override
     public void runOpMode() {
 
-        LED1 = hardwareMap.get(Servo.class, "LED1");
-        LED2 = hardwareMap.get(Servo.class, "LED2");
+        artifactLED = hardwareMap.get(Servo.class, "LED1");
+        launchZoneLED = hardwareMap.get(Servo.class, "LED2");
 
         waitForStart();
 
         while (opModeIsActive()) {
 
             if (gamepad1.dpadUpWasPressed()) {
-                LED1Value = LED1Value + 0.01;
-                LED1.setPosition(LED1Value);
+                artifactLEDValue = artifactLEDValue + 0.01;
+                artifactLED.setPosition(artifactLEDValue);
             }
             if (gamepad1.dpadDownWasPressed()) {
-                LED1Value = LED1Value - 0.01;
-                LED1.setPosition(LED1Value);
+                artifactLEDValue = artifactLEDValue - 0.01;
+                artifactLED.setPosition(artifactLEDValue);
             }
             if (gamepad1.dpadLeftWasPressed()) {
-                LED2Value = LED2Value - 0.01;
-                LED2.setPosition(LED2Value);
+                launchZoneValue = launchZoneValue - 0.01;
+                launchZoneLED.setPosition(launchZoneValue);
             }
             if (gamepad1.dpadRightWasPressed()) {
-                LED2Value = LED2Value + 0.01;
-                LED2.setPosition(LED2Value);
+                launchZoneValue = launchZoneValue + 0.01;
+                launchZoneLED.setPosition(launchZoneValue);
             }
 
             TelemetryPacket colorValues = new TelemetryPacket();
-            colorValues.put("LED1 Color Value: ", LED1Value);
-            colorValues.put("LED2 Color Value: ", LED2Value);
+            colorValues.put("LED1 Color Value: ", artifactLEDValue);
+            colorValues.put("LED2 Color Value: ", launchZoneValue);
             FtcDashboard.getInstance().sendTelemetryPacket(colorValues);
             idle();
 
-            telemetry.addData("LED1 Color Value: ", LED1Value);
-            telemetry.addData("LED2 Color Value: ", LED2Value);
+            telemetry.addData("LED1 Color Value: ", artifactLEDValue);
+            telemetry.addData("LED2 Color Value: ", launchZoneValue);
             telemetry.update();
         }
     }

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -21,6 +22,8 @@ public class Intake {
     public DistanceSensor firstArtifactSensor;
     public DistanceSensor secondArtifactSensor;
     public DistanceSensor thirdArtifactSensor;
+    private Servo artifactLED;
+    private Servo launchZoneLED;
 
     public enum IntakeState {
         ON,
@@ -50,11 +53,15 @@ public class Intake {
         secondArtifactSensor = hardwareMap.get(DistanceSensor.class, "middleArtifactSensor");
         thirdArtifactSensor = hardwareMap.get(DistanceSensor.class, "backArtifactSensor");
 
+        artifactLED = hardwareMap.get(Servo.class, "artifactLED");
+        launchZoneLED = hardwareMap.get(Servo.class, "launchZoneLED");
+
     }
 
     public void loop() {
         telemetry.addData("Intake state is: ", intakeState);
         telemetry.addData("Artifacts: ", getNumberOfArtifacts());
+        turnOnLEDs();
         switch (intakeState) {
             case ON:
                 intakeMotor.setPower(InputValues.INTAKE_POWER);
@@ -81,11 +88,27 @@ public class Intake {
         }
     }
 
-    public void turnOnIntake () {
+    public void turnOnIntake() {
         intakeMotor.setPower(InputValues.INTAKE_POWER);
         firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
         secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
         thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+    }
+
+    public void turnOnLEDs () {
+        // Controls the color of the LED that represents how many artifacts you have
+        if (getNumberOfArtifacts() == 0) {
+            artifactLED.setPosition(0.27); // Off
+        }
+        if (getNumberOfArtifacts() == 1) {
+            artifactLED.setPosition(0.28); // Red
+        }
+        if (getNumberOfArtifacts() == 2) {
+            artifactLED.setPosition(0.33); // Yellow
+        }
+        if (getNumberOfArtifacts() == 3) {
+            artifactLED.setPosition(0.45); // Green
+        }
     }
 
     public int getNumberOfArtifacts() {

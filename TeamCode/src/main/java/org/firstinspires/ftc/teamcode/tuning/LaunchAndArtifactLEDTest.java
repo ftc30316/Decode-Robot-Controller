@@ -3,8 +3,6 @@
 
 package org.firstinspires.ftc.teamcode.tuning;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -12,16 +10,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp
 
 public class LaunchAndArtifactLEDTest extends LinearOpMode {
-    private Servo LED1;
-    private Servo LED2;
+    private Servo artifactLED;
+    private Servo launchZoneLED;
     int NumberOfArtifacts = 0;
     boolean InLaunchZone = false;
 
     @Override
     public void runOpMode() {
 
-        LED1 = hardwareMap.get(Servo.class, "LED1");
-        LED2 = hardwareMap.get(Servo.class, "LED2");
+        artifactLED = hardwareMap.get(Servo.class, "LED1");
+        launchZoneLED = hardwareMap.get(Servo.class, "LED2");
 
         waitForStart();
 
@@ -49,24 +47,24 @@ public class LaunchAndArtifactLEDTest extends LinearOpMode {
 
             // Controls the color of the LED that represents how many artifacts you have
             if (NumberOfArtifacts == 0) {
-                LED1.setPosition(0.27); // Off
+                artifactLED.setPosition(0.27); // Off
             }
             if (NumberOfArtifacts == 1) {
-                LED1.setPosition(0.28); // Red
+                artifactLED.setPosition(0.28); // Red
             }
             if (NumberOfArtifacts == 2) {
-                LED1.setPosition(0.33); // Yellow
+                artifactLED.setPosition(0.33); // Yellow
             }
             if (NumberOfArtifacts >= 3) {
-                LED1.setPosition(0.45); // Green
+                artifactLED.setPosition(0.45); // Green
             }
 
             // Controls the color of the LED that represents if you are in the launch zone or not
             if (InLaunchZone) {
-                LED2.setPosition(0.72); // Pink
+                launchZoneLED.setPosition(0.72); // Pink
             }
             if (!InLaunchZone) {
-                LED2.setPosition(0.27); // Off
+                launchZoneLED.setPosition(0.27); // Off
             }
 
             telemetry.addData("Number of artifacts: ", NumberOfArtifacts);
