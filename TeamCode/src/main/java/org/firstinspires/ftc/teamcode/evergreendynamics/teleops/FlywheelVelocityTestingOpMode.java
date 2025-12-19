@@ -26,7 +26,7 @@ public class FlywheelVelocityTestingOpMode extends LinearOpMode {
             telemetry.addData("Flywheel velocity", InputValues.FLYWHEEL_TEST_VELOCITY);
 
             telemetry.update();
-            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose);
+            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC);
 
             waitForStart();
             douglasFIRST.start(0, 0);

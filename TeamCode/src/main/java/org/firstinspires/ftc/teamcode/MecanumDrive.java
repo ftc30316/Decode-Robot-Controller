@@ -42,6 +42,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.DouglasFIRST;
 import org.firstinspires.ftc.teamcode.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumLocalizerInputsMessage;
@@ -54,7 +55,6 @@ import java.util.List;
 
 @Config
 public final class MecanumDrive {
-
     public static class Params {
         // IMU orientation
         // TODO: fill in these values based on
@@ -287,7 +287,20 @@ public final class MecanumDrive {
                 }
 
         }
+        if (gamepad2.xWasPressed()) {
+            goToZero();
+            gamepad2.rumble(5000);
+        }
     }
+
+    public void goToZero() {
+        updatePoseEstimate();
+        com.acmerobotics.roadrunner.ftc.Actions.runBlocking(actionBuilder(localizer.getPose()).setTangent(0)
+                .turnTo(0)
+                .build());
+    }
+
+
 
     public void setDrivePowers(PoseVelocity2d powers) {
         MecanumKinematics.WheelVelocities<Time> wheelVels = new MecanumKinematics(1).inverse(

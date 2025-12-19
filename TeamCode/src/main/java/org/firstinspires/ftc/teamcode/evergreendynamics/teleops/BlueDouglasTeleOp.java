@@ -25,7 +25,7 @@ public class BlueDouglasTeleOp extends LinearOpMode {
             telemetry.addData("auto end pose heading", Math.toDegrees(startPose.heading.toDouble()));
             telemetry.addData("auto end turret heading", turretStartHeadingDeg);
 
-            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.BLUE_GOAL_POSITION, startPose); //startPose);
+            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.BLUE_GOAL_POSITION, startPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC); //startPose);
 
             waitForStart();
 
