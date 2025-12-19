@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.robot;
 
+import android.renderscript.ScriptGroup;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -23,7 +25,6 @@ public class Intake {
     public DistanceSensor secondArtifactSensor;
     public DistanceSensor thirdArtifactSensor;
     private Servo artifactLED;
-    private Servo launchZoneLED;
 
     public enum IntakeState {
         ON,
@@ -54,7 +55,6 @@ public class Intake {
         thirdArtifactSensor = hardwareMap.get(DistanceSensor.class, "backArtifactSensor");
 
         artifactLED = hardwareMap.get(Servo.class, "artifactLED");
-        launchZoneLED = hardwareMap.get(Servo.class, "launchZoneLED");
 
     }
 
@@ -95,19 +95,19 @@ public class Intake {
         thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
     }
 
-    public void turnOnLEDs () {
+    public void turnOnLEDs() {
         // Controls the color of the LED that represents how many artifacts you have
         if (getNumberOfArtifacts() == 0) {
-            artifactLED.setPosition(0.27); // Off
+            artifactLED.setPosition(InputValues.OFF);
         }
         if (getNumberOfArtifacts() == 1) {
-            artifactLED.setPosition(0.28); // Red
+            artifactLED.setPosition(InputValues.RED);
         }
         if (getNumberOfArtifacts() == 2) {
-            artifactLED.setPosition(0.33); // Yellow
+            artifactLED.setPosition(InputValues.YELLOW);
         }
         if (getNumberOfArtifacts() == 3) {
-            artifactLED.setPosition(0.45); // Green
+            artifactLED.setPosition(InputValues.GREEN);
         }
     }
 

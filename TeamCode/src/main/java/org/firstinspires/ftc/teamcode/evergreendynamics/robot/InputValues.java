@@ -43,4 +43,11 @@ public class InputValues {
 
     public static Vector2d RED_GOAL_POSITION = new Vector2d(-64,60);
 
+    // Colors for LEDs
+    public static double OFF = 0.27;
+    public static double RED = 0.28;
+    public static double PINK = 0.72;
+    public static double YELLOW = 0.33;
+    public static double GREEN = 0.45;
+
 }

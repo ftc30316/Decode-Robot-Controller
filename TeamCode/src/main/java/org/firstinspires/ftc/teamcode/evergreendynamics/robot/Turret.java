@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.robot;
 
-import android.renderscript.ScriptGroup;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -12,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -59,6 +58,7 @@ public class Turret {
     private volatile double turretDegrees = 0;
     private double turretZeroRelRobotDeg;
     double desiredFieldAngleDeg;
+    private Servo launchZoneLED;
 
     public ElapsedTime liftWheelTimer = new ElapsedTime();
 
@@ -80,6 +80,7 @@ public class Turret {
         rightFlywheel = hardwareMap.get(DcMotorEx.class, "rightFlywheel");
         leftLiftWheel = hardwareMap.get(CRServo.class, "leftLiftServo");
         rightLiftWheel = hardwareMap.get(CRServo.class, "rightLiftServo");
+        launchZoneLED = hardwareMap.get(Servo.class, "launchZoneLED");
 
         leftFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -136,6 +137,7 @@ public class Turret {
         telemetry.addData("Flywheel: ", flywheelState);
         telemetry.addData("Lift: ", liftWheelState);
         telemetry.addData("Turret: ", turretLockingState);
+        turnOnLEDs();
         // State machine for the FLY wheels
         switch (flywheelState) {
             case ON:
@@ -162,12 +164,13 @@ public class Turret {
             case OFF:
                 leftLiftWheel.setPower(-1.0);
                 rightLiftWheel.setPower(-1.0);
-                if (gamepad1.crossWasPressed()) {
+                if (gamepad1.crossWasPressed() && isInLaunchZone()) {
                     artifactsWhenCrossWasPressed = intake.getNumberOfArtifacts();
                     liftWheelTimer.reset();
                     liftWheelState = LiftWheelState.ON;
                 }
         }
+
         // State machine for turret locking state: Auto or Manual
         switch (turretLockingState) {
             case AUTO:
@@ -197,6 +200,49 @@ public class Turret {
                     turretMotor.setPower(0);
                 }
                 break;
+        }
+    }
+
+    // If x is greater than 48
+        // y = x + 48, lower launch zone line formula
+        // y bottom is equal to negative x plus 48
+        // y top is equal to x minus 48
+        // If robot y is in between y top on y bottom, the robot is in the lower launch zone
+    // If x is less than 0
+        // y = x, upper launch zone line formula
+        // y bottom is equal to the x position of the robot
+        // y top is equal to the negative x position of the robot
+        // If robot y is in between y top and y bottom, the robot is in the upper launch zone
+    // 0 through 48 = not inside any launch zone
+
+    public boolean isInLaunchZone() {
+        boolean inLaunchZone = false;
+        mecanumDrive.updatePoseEstimate();
+        Pose2d robotPose = mecanumDrive.localizer.getPose();
+        if (robotPose.position.x > 48) {
+            double lowerLaunchZoneTopY = robotPose.position.x - 48;
+            double lowerLaunchZoneBottomY = -1 * robotPose.position.x + 48;
+            if (robotPose.position.y <= lowerLaunchZoneTopY || robotPose.position.y >= lowerLaunchZoneBottomY) {
+                inLaunchZone = true;
+            }
+        }
+        if (robotPose.position.x < 0) {
+            double upperLaunchZoneTopY = -1 * robotPose.position.x;
+            double upperLaunchZoneBottomY = robotPose.position.x;
+            if (robotPose.position.y <= upperLaunchZoneTopY || robotPose.position.y >= upperLaunchZoneBottomY) {
+                inLaunchZone = true;
+            }
+        }
+        return inLaunchZone;
+    }
+
+    public void turnOnLEDs() {
+        // Controls the color of the LED that represents how many artifacts you have
+        if (isInLaunchZone()) {
+            launchZoneLED.setPosition(InputValues.PINK);
+        }
+        else {
+            launchZoneLED.setPosition(InputValues.OFF);
         }
     }
 
