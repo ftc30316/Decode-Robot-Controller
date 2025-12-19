@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.DouglasFIRST;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
 @Autonomous (group = "Evergreen Autos")
 public class BlueUpper1Row extends LinearOpMode {
@@ -22,7 +23,7 @@ public class BlueUpper1Row extends LinearOpMode {
         float turretStartHeading = 45;
         double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
-        this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.BLUE_GOAL_POSITION, beginPose);
+        this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.BLUE_GOAL_POSITION, beginPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO);
 
 
         waitForStart();

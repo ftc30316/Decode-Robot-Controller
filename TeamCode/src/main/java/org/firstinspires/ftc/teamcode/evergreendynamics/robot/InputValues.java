@@ -12,6 +12,8 @@ public class InputValues {
     public static final boolean FLYWHEEL_TEST_ON = false;
     public static double FLYWHEEL_TEST_VELOCITY = 500;
     public static double FLYWHEEL_MULTIPLIER = 4.0;
+    public  static int STARTING_VELOCITY = 500;
+    public static int VELOCITY_ADJUSTMENT = 5;
 
     // Lift flywheels
     public static int LIFT_WHEEL_WAIT_MILLISECONDS = 1000;

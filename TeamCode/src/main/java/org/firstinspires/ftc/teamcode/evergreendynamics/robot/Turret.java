@@ -33,6 +33,12 @@ public class Turret {
         AUTO,
         MANUAL
     }
+
+    public enum TurretVelocityMode {
+        AUTO,
+        MANUAL
+    }
+
     FlywheelState flywheelState = FlywheelState.ON;
     LiftWheelState liftWheelState = LiftWheelState.OFF;
     TurretLockingState turretLockingState = TurretLockingState.AUTO;
@@ -50,22 +56,20 @@ public class Turret {
     private CRServo rightLiftWheel;
     public int artifactsWhenCrossWasPressed = 0;
     public int artifactsWhenShooting = 0;
+    public int manualVelocity = InputValues.STARTING_VELOCITY;
     private MecanumDrive mecanumDrive;
     public Vector2d goalPosition;
-
-    public Thread turretBackgroundThread;
-    private volatile boolean runAutoAimThread = true;
     private volatile double turretDegrees = 0;
     private double turretZeroRelRobotDeg;
     double desiredFieldAngleDeg;
     private Servo launchZoneLED;
-
+    TurretVelocityMode turretVelocityMode = TurretVelocityMode.AUTO;
     public ElapsedTime liftWheelTimer = new ElapsedTime();
 
     public Turret(HardwareMap hardwareMap, Telemetry telemetry,
                   Gamepad gamepad1, Gamepad gamepad2,
                   Vector2d goalPosition,
-                  MecanumDrive mecanumDrive, Intake intake) {
+                  MecanumDrive mecanumDrive, Intake intake, TurretVelocityMode turretVelocityMode) {
 
         this.telemetry = telemetry;
         this.intake = intake;
@@ -73,6 +77,7 @@ public class Turret {
         this.gamepad2 = gamepad2;
         this.goalPosition = goalPosition;
         this.mecanumDrive = mecanumDrive;
+        this.turretVelocityMode = turretVelocityMode;
 
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
         turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -105,31 +110,6 @@ public class Turret {
         //    K = (turret field angle) - (robot field heading)
         //    This is a constant relationship that we use later.
         turretZeroRelRobotDeg = turretFieldAngleStartDeg - robotHeadingStartDeg;
-    }
-
-    public void createTurretBackgroundThread() {
-        // Creates a background thread so that while the robot is driving, intaking, and sorting, the turret can always be auto-locked on the goal
-        this.turretBackgroundThread = new Thread(new AutoAimThread());
-    }
-
-    public void stopTurretBackgroundThread() {
-        runAutoAimThread = false;
-    }
-
-    class AutoAimThread implements Runnable {
-        @Override
-        public void run() {
-            try {
-                while (runAutoAimThread) {
-                    adjustTurret();
-                    Helper.sleep(InputValues.TURRET_THREAD_SLEEP_TIME_MILLIS);
-                }
-            } catch (Exception e) {
-
-            } finally {
-                turretMotor.setPower(0);
-            }
-        }
     }
 
     // Starts the flywheel
@@ -176,12 +156,11 @@ public class Turret {
             case AUTO:
                 turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 adjustTurret();
-                if (gamepad1.dpad_left) {
+                if (gamepad1.dpadLeftWasPressed()) {
                     turretLockingState = TurretLockingState.MANUAL;
                 }
                 break;
             case MANUAL:
-                stopTurretBackgroundThread();
                 turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 if (gamepad2.left_bumper) {
@@ -198,6 +177,27 @@ public class Turret {
                 }
                 else {
                     turretMotor.setPower(0);
+                }
+                if (gamepad1.dpadLeftWasPressed()) {
+                    turretLockingState = TurretLockingState.AUTO;
+                }
+                break;
+        }
+
+        // State machine to test flywheel velocity or have the velocity be based on the piecewise function
+        switch (turretVelocityMode) {
+            case AUTO:
+                break;
+            case MANUAL:
+                telemetry.addData("Current velocity is: ", manualVelocity);
+                turretMotor.setVelocity(manualVelocity);
+                if (gamepad1.dpadUpWasPressed()) {
+                    manualVelocity = manualVelocity + InputValues.VELOCITY_ADJUSTMENT;
+                    turretMotor.setVelocity(manualVelocity);
+                }
+                if (gamepad1.dpadDownWasPressed()) {
+                    manualVelocity = manualVelocity - InputValues.VELOCITY_ADJUSTMENT;
+                    turretMotor.setVelocity(manualVelocity);
                 }
                 break;
         }

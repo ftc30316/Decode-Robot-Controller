@@ -32,25 +32,25 @@ public class DouglasFIRST {
         ROBOT_CENTRIC,
         FIELD_CENTRIC
     }
-
+    Turret.TurretVelocityMode turretVelocityMode = Turret.TurretVelocityMode.AUTO;
     DriveMode driveMode = DriveMode.ROBOT_CENTRIC;
 
-    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose, DriveMode driveMode) {
+    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
         this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, gamepad2, beginPose);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
         this.telemetry = telemetry;
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, getGoalPosition(hardwareMap), mecanumDrive, intake);
+        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, getGoalPosition(hardwareMap), mecanumDrive, intake, turretVelocityMode);
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
         this.driveMode = driveMode;
     }
 
-    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Vector2d goalPosition, Pose2d beginPose, DriveMode driveMode) {
+    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Vector2d goalPosition, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
         this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, gamepad2, beginPose);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
         this.telemetry = telemetry;
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, goalPosition, mecanumDrive, intake);
+        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, goalPosition, mecanumDrive, intake, turretVelocityMode);
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
