@@ -146,7 +146,7 @@ public class Turret {
             case OFF:
                 leftFlywheel.setVelocity(0);
                 rightFlywheel.setVelocity(0);
-                if (gamepad1.circleWasPressed()) {
+                if (gamepad1.circleWasPressed() & mecanumDrive.localizer.getPose().position.y == Math.abs(mecanumDrive.localizer.getPose().position.x) + 48) {
                     flywheelState = FlywheelState.ON;
                 }
         }
