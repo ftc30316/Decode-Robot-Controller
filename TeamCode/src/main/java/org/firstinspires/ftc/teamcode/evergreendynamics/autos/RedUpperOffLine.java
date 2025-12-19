@@ -26,7 +26,7 @@ public class RedUpperOffLine extends LinearOpMode {
             float turretStartHeading = -45;
             double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
-            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.RED_GOAL_POSITION, beginPose);
+            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.RED_GOAL_POSITION, beginPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC);
 
             waitForStart();
 
