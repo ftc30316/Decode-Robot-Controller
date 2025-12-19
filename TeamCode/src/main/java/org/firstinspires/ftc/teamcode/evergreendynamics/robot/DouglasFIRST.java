@@ -157,17 +157,21 @@ public class DouglasFIRST {
         mecanumDrive.updatePoseEstimate();
 
         if (mecanumDrive.localizer.getPose().position.y < 0) {
+            alliance = Alliance.BLUE;
             return goalPosition;
         }
         if (mecanumDrive.localizer.getPose().position.y > 0) {
             goalPosition = InputValues.RED_GOAL_POSITION;
+            alliance = Alliance.RED;
             return goalPosition;
         }
 
         return goalPosition;
     }
 
-    
+    public Alliance getAlliance() {
+        return alliance;
+    }
 
     public TrajectoryActionBuilder getActionBuilder(Pose2d beginPose) {
         return mecanumDrive.actionBuilder(beginPose);
