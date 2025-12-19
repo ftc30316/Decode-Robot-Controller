@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -27,9 +28,14 @@ public class DouglasFIRST {
     public Gamepad gamepad2;
     public HardwareMap hardwareMap;
     public String alliance = "BLUE";
+    public enum DriveMode {
+        ROBOT_CENTRIC,
+        FIELD_CENTRIC
+    }
 
+    DriveMode driveMode = DriveMode.ROBOT_CENTRIC;
 
-    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose) {
+    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose, DriveMode driveMode) {
         this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, gamepad2, beginPose);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
         this.telemetry = telemetry;
@@ -37,9 +43,10 @@ public class DouglasFIRST {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
+        this.driveMode = driveMode;
     }
 
-    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Vector2d goalPosition, Pose2d beginPose) {
+    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Vector2d goalPosition, Pose2d beginPose, DriveMode driveMode) {
         this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, gamepad2, beginPose);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
         this.telemetry = telemetry;
@@ -47,6 +54,7 @@ public class DouglasFIRST {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
+        this.driveMode = driveMode;
     }
 
     public void start(double robotHeadingDeg, double turretStartHeadingDeg) {
@@ -65,6 +73,31 @@ public class DouglasFIRST {
     }
 
     public void loop() {
+        switch (driveMode) {
+            case ROBOT_CENTRIC:
+                setRobotCentricDrivePowers();
+
+                if (gamepad2.xWasPressed()) {
+                    driveMode = DriveMode.FIELD_CENTRIC;
+                }
+                break;
+
+            case FIELD_CENTRIC:
+                setFieldCentricDrivePowers();
+
+                if (gamepad2.xWasPressed()) {
+                    driveMode = DriveMode.ROBOT_CENTRIC;
+                }
+                break;
+        }
+
+        mecanumDrive.loop();
+        intake.loop();
+        turret.loop();
+        telemetry.addData("Alliance: ", alliance);
+    }
+
+    public void setRobotCentricDrivePowers() {
         if (mecanumDrive.drivePowers == MecanumDrive.DrivePowers.SLOW) {
             telemetry.addData("robot speed", "SLOW");
             mecanumDrive.setDrivePowers(new PoseVelocity2d(
@@ -85,10 +118,29 @@ public class DouglasFIRST {
                     -gamepad1.right_stick_x
             ));
         }
-        mecanumDrive.loop();
-        intake.loop();
-        turret.loop();
-        telemetry.addData("Alliance: ", alliance);
+    }
+
+    public void setFieldCentricDrivePowers() {
+        // Read pose
+        mecanumDrive.updatePoseEstimate();
+
+        Rotation2d negativeHeading = new Rotation2d(-mecanumDrive.localizer.getPose().heading.toDouble(), 0);
+
+    // Create a vector from the gamepad x/y inputs
+    // Then, rotate that vector by the inverse of that heading
+        Vector2d input = negativeHeading.times(new Vector2d(
+                -gamepad1.left_stick_y,
+                -gamepad1.left_stick_x));
+
+// Pass in the rotated input + right stick value for rotation
+// Rotation is not part of the rotated input thus must be passed in separately
+        mecanumDrive.setDrivePowers(
+                new PoseVelocity2d(
+                        input,
+                        -gamepad1.right_stick_x
+                )
+        );
+
     }
 
     public void shutdown() {
