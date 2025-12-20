@@ -22,6 +22,7 @@ public class FlywheelVelocityTest extends LinearOpMode {
             telemetry.addLine("The flywheel velocity changes in increments of 5. To increase, press up on the dpad. To decrease, press down on the dpad.");
 
             telemetry.update();
+
             this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.BLUE_GOAL_POSITION, startPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.MANUAL);
 
             waitForStart();
@@ -36,7 +37,7 @@ public class FlywheelVelocityTest extends LinearOpMode {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            douglasFIRST.shutdown();
+
         }
 
     }

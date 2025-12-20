@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -27,15 +28,24 @@ public class DouglasFIRST {
     public Gamepad gamepad1;
     public Gamepad gamepad2;
     public HardwareMap hardwareMap;
-    public String alliance = "BLUE";
+
     public enum DriveMode {
         ROBOT_CENTRIC,
         FIELD_CENTRIC
     }
+
     Turret.TurretVelocityMode turretVelocityMode = Turret.TurretVelocityMode.AUTO;
     DriveMode driveMode = DriveMode.ROBOT_CENTRIC;
 
+    public enum Alliance {
+        BLUE,
+        RED
+    }
+
+    Alliance alliance = Alliance.BLUE;
+
     public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
+
         this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, gamepad2, beginPose);
         this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
         this.telemetry = telemetry;
@@ -60,10 +70,6 @@ public class DouglasFIRST {
     public void start(double robotHeadingDeg, double turretStartHeadingDeg) {
         turret.initialize(robotHeadingDeg, turretStartHeadingDeg);
 
-        //Creates background thread
-        turret.createTurretBackgroundThread();
-        // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
-        turret.turretBackgroundThread.start();
         // Turns on intake
         intake.turnOnIntake();
     }
@@ -94,7 +100,6 @@ public class DouglasFIRST {
         mecanumDrive.loop();
         intake.loop();
         turret.loop();
-        telemetry.addData("Alliance: ", alliance);
     }
 
     public void setRobotCentricDrivePowers() {
@@ -143,32 +148,25 @@ public class DouglasFIRST {
 
     }
 
-    public void shutdown() {
-        turret.stopTurretBackgroundThread();
-    }
-
     public Vector2d getGoalPosition(HardwareMap hardwareMap) {
         Vector2d goalPosition = InputValues.BLUE_GOAL_POSITION;
-        NormalizedColorSensor signColorSensor = hardwareMap.get(NormalizedColorSensor.class, "signColorSensor");
+        mecanumDrive.updatePoseEstimate();
 
-        NormalizedRGBA signColor = signColorSensor.getNormalizedColors();
-        float[] hsv = new float[3];
-
-        Color.colorToHSV(signColor.toColor(), hsv);
-
-        float hue = hsv[0];
-        float sat = hsv[1];
-        float val = hsv[2];
-
-        if (hue < 20 || hue > 340) { // if hue is in red range
+        if (mecanumDrive.localizer.getPose().position.y < 0) {
+            alliance = Alliance.BLUE;
+            return goalPosition;
+        }
+        if (mecanumDrive.localizer.getPose().position.y > 0) {
             goalPosition = InputValues.RED_GOAL_POSITION;
-            alliance = "RED " + hue;
-        } else {
-            alliance = "BLUE " + hue;
+            alliance = Alliance.RED;
+            return goalPosition;
         }
 
-        telemetry.addData("hue", hue);
         return goalPosition;
+    }
+
+    public Alliance getAlliance() {
+        return alliance;
     }
 
     public TrajectoryActionBuilder getActionBuilder(Pose2d beginPose) {

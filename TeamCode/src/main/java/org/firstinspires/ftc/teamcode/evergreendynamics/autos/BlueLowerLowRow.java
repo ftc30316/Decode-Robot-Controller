@@ -23,6 +23,7 @@ public class BlueLowerLowRow extends LinearOpMode {
             float turretStartHeading = -90;
             double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
+
             this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.BLUE_GOAL_POSITION, beginPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO);
 
             waitForStart();
@@ -57,7 +58,7 @@ public class BlueLowerLowRow extends LinearOpMode {
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
-            douglasFIRST.shutdown();
+
         }
     }
 

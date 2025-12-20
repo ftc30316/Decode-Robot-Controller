@@ -57,7 +57,7 @@ public class RedLowerLowRow extends LinearOpMode {
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
-            douglasFIRST.shutdown();
+
         }
     }
 
