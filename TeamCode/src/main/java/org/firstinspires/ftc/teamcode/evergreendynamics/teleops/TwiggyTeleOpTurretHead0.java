@@ -44,12 +44,6 @@ public class TwiggyTeleOpTurretHead0 extends LinearOpMode {
 
             turret.initialize(robotHeadingStartDeg, turretFieldAngleStartDeg);
 
-
-            //Creates background thread
-            turret.createTurretBackgroundThread();
-            // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
-            turret.turretBackgroundThread.start();
-
             // Sets up the driving system
             while (opModeIsActive()) {
                 telemetry.addData("robot speed", "FAST");
@@ -67,7 +61,7 @@ public class TwiggyTeleOpTurretHead0 extends LinearOpMode {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            turret.stopTurretBackgroundThread();
+
         }
 
     }

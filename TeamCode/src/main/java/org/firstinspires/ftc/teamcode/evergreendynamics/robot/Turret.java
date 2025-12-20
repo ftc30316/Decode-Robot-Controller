@@ -262,6 +262,10 @@ public class Turret {
         //double[] velocity = {1425, 1425, 1425, 1425, 1425, 1425, 1400, 1421, 1500, 1575, 1620, 1620, 1640, 1680, 1700, 1720};
         int index = (int) Math.floor(distanceToGoal/12);
 
+        // Choose whichever index where you are less than it but greater than the last one
+        // If you are less than
+
+
         // Clamp to valid range for interpolation
         if (index <= 0) {
             index = 0;
