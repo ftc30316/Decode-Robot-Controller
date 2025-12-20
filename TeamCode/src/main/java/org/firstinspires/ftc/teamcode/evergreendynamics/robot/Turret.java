@@ -257,38 +257,48 @@ public class Turret {
     }
 
     public double getFlywheelVelocity(double distanceToGoal) {
-        double[] D = {          0,   12,   24,   36,   48,   60,   72,   84,   96,  108,  120,  132,  144,  156,  168,  180};
-        double[] velocity = {1425, 1425, 1425, 1440, 1460, 1470, 1475, 1421, 1500, 1575, 1620, 1680, 1680, 1695, 1700, 1720};
-        //double[] velocity = {1425, 1425, 1425, 1425, 1425, 1425, 1400, 1421, 1500, 1575, 1620, 1620, 1640, 1680, 1700, 1720};
-        int index = (int) Math.floor(distanceToGoal/12);
+        double[] D = {         60,   72,   84,  144,  156,  168,  180};
+        double[] velocity = {1440, 1460, 1470, 1475, 1421, 1680, 1695};
+        int above_index = 0;
+        int below_index = 0;
+
+
+        for(int index = 0; index < D.length; index ++) {
+            if (D[index] > distanceToGoal) {
+                above_index = index;
+                below_index = index - 1;
+                break;
+            }
+        }
 
         // Choose whichever index where you are less than it but greater than the last one
         // If you are less than
 
 
         // Clamp to valid range for interpolation
-        if (index <= 0) {
-            index = 0;
-        } else if (index >= D.length - 1) {
+        if (below_index <= 0) {
+            below_index = 0;
+            above_index = 1;
+        } else if (above_index >= D.length - 1) {
             // If we're at or beyond the last point, just return the last velocity
             return velocity[velocity.length - 1];
         }
 
-        double x0 = D[index];
-        double x1 = D[index + 1];
-        double v0 = velocity[index];
-        double v1 = velocity[index + 1];
+        double x0 = D[below_index];
+        double x1 = D[above_index];
+        double v0 = velocity[below_index];
+        double v1 = velocity[above_index];
 
         // Fraction between the two distance points
-        double t = (distanceToGoal - x0) / (x1 - x0);  // should be between 0 and 1
+        double t = (v1 - v0) / (x1 - x0);  // should be between 0 and 1
 
         // Proper linear interpolation: v = v0 + t * (v1 - v0)
-        double flywheelV = v0 + t * (v1 - v0);
+        double flywheelV = v0 + t * (distanceToGoal - x0);
 
         telemetry.addData("flywheel velocity", flywheelV);
         telemetry.addData("velocity index", v0);
         telemetry.addData("distance index", x0);
-        telemetry.addData("index", index);
+        telemetry.addData("index", above_index);
         telemetry.addData("distance from goal", distanceToGoal);
 
         if (InputValues.FLYWHEEL_TEST_ON) {
