@@ -47,6 +47,7 @@ public class Turret {
     private Telemetry telemetry;
 
     public Intake intake;
+    public Datalogger datalogger;
     public Keybinds keybinds;
     DcMotorEx turretMotor;
     private DcMotorEx leftFlywheel;
@@ -62,6 +63,8 @@ public class Turret {
     private double turretZeroRelRobotDeg;
     double desiredFieldAngleDeg;
     private Servo launchZoneLED;
+    Datalogger datalog = new Datalogger("datalog_01");
+
     TurretVelocityMode turretVelocityMode = TurretVelocityMode.AUTO;
     public ElapsedTime liftWheelTimer = new ElapsedTime();
 
@@ -133,8 +136,7 @@ public class Turret {
         // State machine for the LIFT wheels
         switch (liftWheelState) {
             case ON:
-                telemetry.addData("Battery", datalog.battery);
-                
+
                 System.currentTimeMillis();
                 leftLiftWheel.setPower(1.0);
                 rightLiftWheel.setPower(1.0);
