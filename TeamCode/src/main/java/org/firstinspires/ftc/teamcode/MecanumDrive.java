@@ -35,7 +35,6 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -56,6 +55,7 @@ import java.util.List;
 
 @Config
 public final class MecanumDrive {
+    public Keybinds keybinds;
     public static class Params {
         // IMU orientation
         // TODO: fill in these values based on
@@ -270,14 +270,14 @@ public final class MecanumDrive {
         switch(drivePowers) {
             case NORMAL:
 
-                if (gamepad2.dpad_right) {
+                if (keybinds.changeDrivePowersRightWasPressed()) {
                     drivePowers = MecanumDrive.DrivePowers.SLOW;
                 }
                 break;
 
             case SLOW:
 
-                if (gamepad2.dpad_left) {
+                if (keybinds.changeDrivePowersRightWasPressed()) {
                     drivePowers = MecanumDrive.DrivePowers.NORMAL;
                 }
 

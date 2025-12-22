@@ -28,28 +28,33 @@ public class Keybinds {
         gamepad1.dpadLeftWasPressed();
         return true;
     }
-
     public boolean turretManualAdjustmentLeftBumperIsPressed() {
         return gamepad2.left_bumper;
     }
-
     public boolean turretManualAdjustmentRightBumperIsPressed() {
         return gamepad2.right_bumper;
     }
-
     public float turretManualAdjustmentLeftJoystickX() {
         return gamepad2.left_stick_x;
     }
-
     public boolean turretManualVelocityIncreaseWasPressed() {
         gamepad1.dpadUpWasPressed();
         return true;
     }
-
     public boolean turretManualVelocityDecreaseWasPressed() {
         gamepad1.dpadUpWasPressed();
         return true;
     }
 
+    // Intake
+    public boolean changeIntakeState() {
+        gamepad1.squareWasPressed();
+        return true;
+    }
+
     // Mecanum drive
+    public boolean changeDrivePowersRightWasPressed() {
+        gamepad1.dpadRightWasPressed();
+        return true;
+    }
 }
