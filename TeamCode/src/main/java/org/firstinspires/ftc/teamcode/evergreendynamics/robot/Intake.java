@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -14,9 +13,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Intake {
+    public Keybinds keybinds;
     private DcMotorEx intakeMotor;
-    private Gamepad gamepad1;
-    private Gamepad gamepad2;
     private Telemetry telemetry;
     private CRServo firstIntakeServo;
     private CRServo secondIntakeServo;
@@ -38,9 +36,8 @@ public class Intake {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        this.gamepad1 = gamepad1;
-        this.gamepad2 = gamepad2;
         this.telemetry = telemetry;
+        this.keybinds = keybinds;
 
         firstIntakeServo = hardwareMap.get(CRServo.class, "frontTunnelServo");
         secondIntakeServo = hardwareMap.get(CRServo.class, "middleTunnelServo");
@@ -70,14 +67,14 @@ public class Intake {
                 thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
 
 //                if (getNumberOfArtifacts() == 3) {
-                if (gamepad1.squareWasPressed()) {
+                if (keybinds.changeIntakeState()) {
                     intakeState = IntakeState.OFF;
                 }
                 break;
             case OFF:
                 intakeMotor.setPower(InputValues.INTAKE_POWER_SLOW);
 
-                if (gamepad1.squareWasPressed()) {
+                if (keybinds.changeIntakeState()) {
                     intakeState = IntakeState.ON;
                 }
                 break;
