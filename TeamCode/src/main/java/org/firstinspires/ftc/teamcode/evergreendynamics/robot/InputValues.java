@@ -45,6 +45,11 @@ public class InputValues {
 
     public static Vector2d RED_GOAL_POSITION = new Vector2d(-64,60);
 
+    // Park positions
+    public static Vector2d BLUE_PARK_POSITION = new Vector2d(39,34);
+
+    public static Vector2d RED_PARK_POSITION = new Vector2d(39,-34);
+
     // Colors for LEDs
     public static double OFF = 0.27;
     public static double RED = 0.28;

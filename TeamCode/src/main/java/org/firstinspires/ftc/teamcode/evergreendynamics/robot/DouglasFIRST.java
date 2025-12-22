@@ -1,21 +1,12 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.robot;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-
-import android.graphics.Color;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
@@ -100,6 +91,7 @@ public class DouglasFIRST {
         mecanumDrive.loop();
         intake.loop();
         turret.loop();
+        checkAndRunDriverShortcuts();
     }
 
     public void setRobotCentricDrivePowers() {
@@ -163,6 +155,44 @@ public class DouglasFIRST {
         }
 
         return goalPosition;
+    }
+
+    public Vector2d getParkPosition(HardwareMap hardwareMap) {
+        Vector2d parkPosition = InputValues.BLUE_PARK_POSITION;
+
+        if (alliance == Alliance.BLUE) {
+            parkPosition = InputValues.BLUE_PARK_POSITION;
+            return parkPosition;
+        }
+        if (alliance == Alliance.RED) {
+            parkPosition = InputValues.RED_PARK_POSITION;
+            return parkPosition;
+        }
+        return parkPosition;
+    }
+
+    public void park() {
+        if (gamepad2.circleWasPressed()) {
+            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(getActionBuilder().setTangent(0)
+                    .strafeTo(getParkPosition(hardwareMap))
+                    .turnTo(0)
+                    .build());
+            gamepad2.rumble(5000);
+        }
+    }
+
+    public void goToZero() {
+        if (gamepad2.circleWasPressed()) {
+            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(getActionBuilder().setTangent(0)
+                    .turnTo(0)
+                    .build());
+            gamepad2.rumble(5000);
+        }
+    }
+
+    public void checkAndRunDriverShortcuts() {
+        park();
+        goToZero();
     }
 
     public Alliance getAlliance() {

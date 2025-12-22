@@ -287,20 +287,7 @@ public final class MecanumDrive {
                 }
 
         }
-        if (gamepad2.xWasPressed()) {
-            goToZero();
-            gamepad2.rumble(5000);
-        }
     }
-
-    public void goToZero() {
-        updatePoseEstimate();
-        com.acmerobotics.roadrunner.ftc.Actions.runBlocking(actionBuilder(localizer.getPose()).setTangent(0)
-                .turnTo(0)
-                .build());
-    }
-
-
 
     public void setDrivePowers(PoseVelocity2d powers) {
         MecanumKinematics.WheelVelocities<Time> wheelVels = new MecanumKinematics(1).inverse(
