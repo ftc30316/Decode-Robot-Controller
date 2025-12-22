@@ -15,6 +15,7 @@ public class DouglasFIRST {
     public Intake intake;
     public Turret turret;
     public Datalogger datalogger;
+    public Datalog datalog;
     public Telemetry telemetry;
     public Keybinds keybinds;
     public MecanumDrive mecanumDrive;
@@ -37,30 +38,30 @@ public class DouglasFIRST {
 
     Alliance alliance = Alliance.BLUE;
 
-    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose, DriveMode driveMode, Datalogger datalogger, Turret.TurretVelocityMode turretVelocityMode) {
+    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
 
         this.keybinds = new Keybinds(gamepad1, gamepad2);
         this.mecanumDrive = new MecanumDrive(hardwareMap, keybinds, beginPose);
         this.intake = new Intake(hardwareMap, keybinds, telemetry);
         this.telemetry = telemetry;
-        this.turret = new Turret(hardwareMap, telemetry, keybinds, getGoalPosition(hardwareMap), mecanumDrive, intake, turretVelocityMode);
+        this.turret = new Turret(hardwareMap, telemetry, keybinds, getGoalPosition(hardwareMap), mecanumDrive, intake, turretVelocityMode, datalogger);
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
         this.driveMode = driveMode;
-        this.datalogger = datalogger;
+        createDatalog();
     }
 
-    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Vector2d goalPosition, Pose2d beginPose, DriveMode driveMode, Datalogger datalogger, Turret.TurretVelocityMode turretVelocityMode) {
+    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Vector2d goalPosition, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
         this.mecanumDrive = new MecanumDrive(hardwareMap, keybinds, beginPose);
         this.intake = new Intake(hardwareMap, keybinds, telemetry);
         this.telemetry = telemetry;
-        this.turret = new Turret(hardwareMap, telemetry, keybinds, goalPosition, mecanumDrive, intake, turretVelocityMode);
+        this.turret = new Turret(hardwareMap, telemetry, keybinds, goalPosition, mecanumDrive, intake, turretVelocityMode, datalogger);
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
         this.driveMode = driveMode;
-        this.datalogger = datalogger;
+        createDatalog();
     }
 
     public void start(double robotHeadingDeg, double turretStartHeadingDeg) {
@@ -70,6 +71,9 @@ public class DouglasFIRST {
         intake.turnOnIntake();
     }
 
+    public void createDatalog() {
+        Datalog datalog = new Datalog("DougData.csv");
+    }
     public void shootArtifacts() {
         turret.shoot();
     }

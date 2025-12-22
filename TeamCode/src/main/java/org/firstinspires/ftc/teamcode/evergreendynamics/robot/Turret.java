@@ -47,7 +47,6 @@ public class Turret {
     private Telemetry telemetry;
 
     public Intake intake;
-    public Datalogger datalogger;
     public Keybinds keybinds;
     DcMotorEx turretMotor;
     private DcMotorEx leftFlywheel;
@@ -63,7 +62,8 @@ public class Turret {
     private double turretZeroRelRobotDeg;
     double desiredFieldAngleDeg;
     private Servo launchZoneLED;
-    Datalogger datalog = new Datalog("datalog_01");
+    Datalog datalog = null;
+
 
     TurretVelocityMode turretVelocityMode = TurretVelocityMode.AUTO;
     public ElapsedTime liftWheelTimer = new ElapsedTime();
@@ -71,7 +71,7 @@ public class Turret {
     public Turret(HardwareMap hardwareMap, Telemetry telemetry,
                   Keybinds keybinds, Vector2d goalPosition,
                   MecanumDrive mecanumDrive, Intake intake,
-                  TurretVelocityMode turretVelocityMode) {
+                  TurretVelocityMode turretVelocityMode, Datalog datalog) {
 
         this.telemetry = telemetry;
         this.intake = intake;
@@ -79,6 +79,7 @@ public class Turret {
         this.goalPosition = goalPosition;
         this.mecanumDrive = mecanumDrive;
         this.turretVelocityMode = turretVelocityMode;
+        this.datalog = datalog;
 
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
         turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -136,8 +137,9 @@ public class Turret {
         // State machine for the LIFT wheels
         switch (liftWheelState) {
             case ON:
+                datalog.shootCycleStartTime.set(System.currentTimeMillis());
+                datalog.artifactCounter.set(artifactsWhenCrossWasPressed);
 
-                System.currentTimeMillis();
                 leftLiftWheel.setPower(1.0);
                 rightLiftWheel.setPower(1.0);
                 if (liftWheelTimer.seconds() > InputValues.LIFT_WHEEL_WAIT_SECONDS * artifactsWhenCrossWasPressed) {
@@ -145,6 +147,7 @@ public class Turret {
                 }
                 break;
             case OFF:
+                datalog.shootCycleEndTime.set(System.currentTimeMillis());
                 leftLiftWheel.setPower(-1.0);
                 rightLiftWheel.setPower(-1.0);
                 if (keybinds.liftWheelWasPressed() && isInLaunchZone()) {
@@ -152,6 +155,7 @@ public class Turret {
                     liftWheelTimer.reset();
                     liftWheelState = LiftWheelState.ON;
                 }
+                datalog.writeLine();
         }
 
         // State machine for turret locking state: Auto or Manual
