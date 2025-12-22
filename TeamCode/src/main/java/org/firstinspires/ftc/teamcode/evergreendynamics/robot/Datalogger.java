@@ -25,7 +25,7 @@ public class Datalogger
      */
     private OpModeNotifications opModeNotifications = new OpModeNotifications();
 
-    private Datalogger(BufferedCsvWriter bufferedCsvWriter, LoggableField[] fields)
+    public Datalogger(BufferedCsvWriter bufferedCsvWriter, LoggableField[] fields)
     {
         this.bufferedCsvWriter = bufferedCsvWriter;
         this.fields = fields;
