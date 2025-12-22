@@ -136,7 +136,7 @@ public class Turret {
         // State machine for the LIFT wheels
         switch (liftWheelState) {
             case ON:
-                                
+
                 System.currentTimeMillis();
                 leftLiftWheel.setPower(1.0);
                 rightLiftWheel.setPower(1.0);
