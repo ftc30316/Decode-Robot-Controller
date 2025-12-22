@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 public class DouglasFIRST {
     public Intake intake;
     public Turret turret;
+    public Datalogger datalogger;
     public Telemetry telemetry;
     public Keybinds keybinds;
     public MecanumDrive mecanumDrive;
@@ -36,7 +37,7 @@ public class DouglasFIRST {
 
     Alliance alliance = Alliance.BLUE;
 
-    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
+    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose, DriveMode driveMode, Datalogger datalogger, Turret.TurretVelocityMode turretVelocityMode) {
 
         this.keybinds = new Keybinds(gamepad1, gamepad2);
         this.mecanumDrive = new MecanumDrive(hardwareMap, keybinds, beginPose);
@@ -47,9 +48,10 @@ public class DouglasFIRST {
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
         this.driveMode = driveMode;
+        this.datalogger = datalogger;
     }
 
-    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Vector2d goalPosition, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
+    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Vector2d goalPosition, Pose2d beginPose, DriveMode driveMode, Datalogger datalogger, Turret.TurretVelocityMode turretVelocityMode) {
         this.mecanumDrive = new MecanumDrive(hardwareMap, keybinds, beginPose);
         this.intake = new Intake(hardwareMap, keybinds, telemetry);
         this.telemetry = telemetry;
@@ -58,6 +60,7 @@ public class DouglasFIRST {
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
         this.driveMode = driveMode;
+        this.datalogger = datalogger;
     }
 
     public void start(double robotHeadingDeg, double turretStartHeadingDeg) {
