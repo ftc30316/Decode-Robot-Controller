@@ -159,16 +159,16 @@ public class Turret {
             case MANUAL:
                 turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                if (gamepad2.left_bumper) {
+                if (keybinds.turretManualAdjustmentLeftBumperIsPressed()) {
                     turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
                     turretMotor.setPower(InputValues.FLYWHEEL_SLOPE);
                 }
-                else if (gamepad2.right_bumper) {
+                else if (keybinds.turretManualAdjustmentRightBumperIsPressed()) {
                     turretMotor.setDirection(DcMotorSimple.Direction.FORWARD);
                     turretMotor.setPower(InputValues.FLYWHEEL_SLOPE);
                 }
-                else if (gamepad2.left_stick_x != 0) {
-                    double turretJoystickPower = gamepad2.left_stick_x;
+                else if (keybinds.turretManualAdjustmentLeftJoystickX() != 0) {
+                    double turretJoystickPower = keybinds.turretManualAdjustmentLeftJoystickX();
                     turretMotor.setPower(turretJoystickPower);
                 }
                 else {
@@ -187,11 +187,11 @@ public class Turret {
             case MANUAL:
                 telemetry.addData("Current velocity is: ", manualVelocity);
                 turretMotor.setVelocity(manualVelocity);
-                if (gamepad1.dpadUpWasPressed()) {
+                if (keybinds.turretManualVelocityIncreaseWasPressed()) {
                     manualVelocity = manualVelocity + InputValues.VELOCITY_ADJUSTMENT;
                     turretMotor.setVelocity(manualVelocity);
                 }
-                if (gamepad1.dpadDownWasPressed()) {
+                if (keybinds.turretManualVelocityDecreaseWasPressed()) {
                     manualVelocity = manualVelocity - InputValues.VELOCITY_ADJUSTMENT;
                     turretMotor.setVelocity(manualVelocity);
                 }
@@ -297,19 +297,7 @@ public class Turret {
         telemetry.addData("index", above_index);
         telemetry.addData("distance from goal", distanceToGoal);
 
-        if (InputValues.FLYWHEEL_TEST_ON) {
-            if (gamepad1.dpadUpWasPressed()) {
-                InputValues.FLYWHEEL_TEST_VELOCITY += 25;
-            }
-            if (gamepad1.dpadDownWasPressed()) {
-                InputValues.FLYWHEEL_TEST_VELOCITY -= 25;
-            }
-            return InputValues.FLYWHEEL_TEST_VELOCITY;
-        }
-        else {
-            return flywheelV;
-        }
-
+        return flywheelV;
     }
     public void resetTurretToZero() {
         turretMotor.setPower(0.8);

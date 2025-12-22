@@ -29,8 +29,17 @@ public class Keybinds {
         return true;
     }
 
+    public boolean turretManualAdjustmentLeftBumperIsPressed() {
+        return gamepad2.left_bumper;
+    }
 
+    public boolean turretManualAdjustmentRightBumperIsPressed() {
+        return gamepad2.right_bumper;
+    }
 
+    public float turretManualAdjustmentLeftJoystickX() {
+        return gamepad2.left_stick_x;
+    }
 
     public boolean turretManualVelocityIncreaseWasPressed() {
         gamepad1.dpadUpWasPressed();
