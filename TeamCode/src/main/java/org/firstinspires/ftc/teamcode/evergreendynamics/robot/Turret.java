@@ -12,8 +12,10 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.internal.files.DataLogger;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 public class Turret {
@@ -131,6 +133,9 @@ public class Turret {
         // State machine for the LIFT wheels
         switch (liftWheelState) {
             case ON:
+                telemetry.addData("Battery", datalog.battery);
+                
+                System.currentTimeMillis();
                 leftLiftWheel.setPower(1.0);
                 rightLiftWheel.setPower(1.0);
                 if (liftWheelTimer.seconds() > InputValues.LIFT_WHEEL_WAIT_SECONDS * artifactsWhenCrossWasPressed) {
@@ -186,14 +191,16 @@ public class Turret {
                 break;
             case MANUAL:
                 telemetry.addData("Current velocity is: ", manualVelocity);
-                turretMotor.setVelocity(manualVelocity);
+
                 if (keybinds.turretManualVelocityIncreaseWasPressed()) {
                     manualVelocity = manualVelocity + InputValues.VELOCITY_ADJUSTMENT;
-                    turretMotor.setVelocity(manualVelocity);
+                    leftFlywheel.setVelocity(manualVelocity);
+                    rightFlywheel.setVelocity(manualVelocity);
                 }
                 if (keybinds.turretManualVelocityDecreaseWasPressed()) {
                     manualVelocity = manualVelocity - InputValues.VELOCITY_ADJUSTMENT;
-                    turretMotor.setVelocity(manualVelocity);
+                    leftFlywheel.setVelocity(manualVelocity);
+                    rightFlywheel.setVelocity(manualVelocity);
                 }
                 break;
         }
@@ -365,8 +372,10 @@ public class Turret {
         turretMotor.setTargetPosition(targetTicks);
         turretMotor.setPower(0.5); // tune as needed
 
-        leftFlywheel.setVelocity(flywheelVelocity);
-        rightFlywheel.setVelocity(flywheelVelocity);
+        if (turretVelocityMode == TurretVelocityMode.AUTO) {
+            leftFlywheel.setVelocity(flywheelVelocity);
+            rightFlywheel.setVelocity(flywheelVelocity);
+        }
 
         TelemetryPacket turretDistanceAndVelocity = new TelemetryPacket();
         turretDistanceAndVelocity.put("Goal distance: ", distanceFromGoal);
