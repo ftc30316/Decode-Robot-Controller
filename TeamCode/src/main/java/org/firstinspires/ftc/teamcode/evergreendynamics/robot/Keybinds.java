@@ -17,16 +17,13 @@ public class Keybinds {
 
     // Turret
     public boolean flywheelWasPressed() {
-        gamepad1.circleWasPressed();
-        return true;
+        return gamepad1.circleWasPressed();
     }
     public boolean liftWheelWasPressed() {
-        gamepad1.crossWasPressed();
-        return true;
+        return gamepad1.crossWasPressed();
     }
     public boolean turretLockingStateWasPressed() {
-        gamepad1.dpadLeftWasPressed();
-        return true;
+        return gamepad1.dpadLeftWasPressed();
     }
     public boolean turretManualAdjustmentLeftBumperIsPressed() {
         return gamepad2.left_bumper;
@@ -38,23 +35,19 @@ public class Keybinds {
         return gamepad2.left_stick_x;
     }
     public boolean turretManualVelocityIncreaseWasPressed() {
-        gamepad1.dpadUpWasPressed();
-        return true;
+        return gamepad1.dpadUpWasPressed();
     }
     public boolean turretManualVelocityDecreaseWasPressed() {
-        gamepad1.dpadUpWasPressed();
-        return true;
+        return gamepad1.dpadUpWasPressed();
     }
 
     // Intake
     public boolean changeIntakeState() {
-        gamepad1.squareWasPressed();
-        return true;
+        return gamepad1.squareWasPressed();
     }
 
     // Mecanum drive
     public boolean changeDrivePowersRightWasPressed() {
-        gamepad1.dpadRightWasPressed();
-        return true;
+        return gamepad1.dpadRightWasPressed();
     }
 }
