@@ -25,7 +25,7 @@ public class DouglasTeleOp extends LinearOpMode {
             telemetry.addData("auto end pose heading", Math.toDegrees(startPose.heading.toDouble()));
             telemetry.addData("auto end turret heading", turretStartHeadingDeg);
 
-            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose, DouglasFIRST.DriveMode.FIELD_CENTRIC, douglasFIRST.datalogger, Turret.TurretVelocityMode.AUTO); //startPose);
+            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose, DouglasFIRST.DriveMode.FIELD_CENTRIC, Turret.TurretVelocityMode.AUTO); //startPose);
 
             waitForStart();
 

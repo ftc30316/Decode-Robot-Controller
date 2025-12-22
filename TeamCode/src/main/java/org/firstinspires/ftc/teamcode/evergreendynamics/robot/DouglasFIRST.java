@@ -44,7 +44,7 @@ public class DouglasFIRST {
         this.mecanumDrive = new MecanumDrive(hardwareMap, keybinds, beginPose);
         this.intake = new Intake(hardwareMap, keybinds, telemetry);
         this.telemetry = telemetry;
-        this.turret = new Turret(hardwareMap, telemetry, keybinds, getGoalPosition(hardwareMap), mecanumDrive, intake, turretVelocityMode, datalogger);
+        this.turret = new Turret(hardwareMap, telemetry, keybinds, getGoalPosition(hardwareMap), mecanumDrive, intake, turretVelocityMode, datalog);
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
@@ -56,7 +56,7 @@ public class DouglasFIRST {
         this.mecanumDrive = new MecanumDrive(hardwareMap, keybinds, beginPose);
         this.intake = new Intake(hardwareMap, keybinds, telemetry);
         this.telemetry = telemetry;
-        this.turret = new Turret(hardwareMap, telemetry, keybinds, goalPosition, mecanumDrive, intake, turretVelocityMode, datalogger);
+        this.turret = new Turret(hardwareMap, telemetry, keybinds, goalPosition, mecanumDrive, intake, turretVelocityMode, datalog);
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
