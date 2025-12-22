@@ -1,21 +1,12 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.robot;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-
-import android.graphics.Color;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
@@ -24,6 +15,7 @@ public class DouglasFIRST {
     public Intake intake;
     public Turret turret;
     public Telemetry telemetry;
+    public Keybinds keybinds;
     public MecanumDrive mecanumDrive;
     public Gamepad gamepad1;
     public Gamepad gamepad2;
@@ -46,10 +38,11 @@ public class DouglasFIRST {
 
     public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
 
-        this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, gamepad2, beginPose);
-        this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
+        this.keybinds = new Keybinds(gamepad1, gamepad2);
+        this.mecanumDrive = new MecanumDrive(hardwareMap, keybinds, beginPose);
+        this.intake = new Intake(hardwareMap, keybinds, telemetry);
         this.telemetry = telemetry;
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, getGoalPosition(hardwareMap), mecanumDrive, intake, turretVelocityMode);
+        this.turret = new Turret(hardwareMap, telemetry, keybinds, getGoalPosition(hardwareMap), mecanumDrive, intake, turretVelocityMode);
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
@@ -57,10 +50,10 @@ public class DouglasFIRST {
     }
 
     public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Vector2d goalPosition, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
-        this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, gamepad2, beginPose);
-        this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
+        this.mecanumDrive = new MecanumDrive(hardwareMap, keybinds, beginPose);
+        this.intake = new Intake(hardwareMap, keybinds, telemetry);
         this.telemetry = telemetry;
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, goalPosition, mecanumDrive, intake, turretVelocityMode);
+        this.turret = new Turret(hardwareMap, telemetry, keybinds, goalPosition, mecanumDrive, intake, turretVelocityMode);
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
@@ -100,6 +93,7 @@ public class DouglasFIRST {
         mecanumDrive.loop();
         intake.loop();
         turret.loop();
+        checkAndRunDriverShortcuts();
     }
 
     public void setRobotCentricDrivePowers() {
@@ -163,6 +157,44 @@ public class DouglasFIRST {
         }
 
         return goalPosition;
+    }
+
+    public Vector2d getParkPosition(HardwareMap hardwareMap) {
+        Vector2d parkPosition = InputValues.BLUE_PARK_POSITION;
+
+        if (alliance == Alliance.BLUE) {
+            parkPosition = InputValues.BLUE_PARK_POSITION;
+            return parkPosition;
+        }
+        if (alliance == Alliance.RED) {
+            parkPosition = InputValues.RED_PARK_POSITION;
+            return parkPosition;
+        }
+        return parkPosition;
+    }
+
+    public void park() {
+        if (gamepad2.circleWasPressed()) {
+            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(getActionBuilder().setTangent(0)
+                    .strafeTo(getParkPosition(hardwareMap))
+                    .turnTo(0)
+                    .build());
+            gamepad2.rumble(5000);
+        }
+    }
+
+    public void goToZero() {
+        if (gamepad2.circleWasPressed()) {
+            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(getActionBuilder().setTangent(0)
+                    .turnTo(0)
+                    .build());
+            gamepad2.rumble(5000);
+        }
+    }
+
+    public void checkAndRunDriverShortcuts() {
+        park();
+        goToZero();
     }
 
     public Alliance getAlliance() {

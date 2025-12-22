@@ -43,6 +43,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.DouglasFIRST;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Keybinds;
 import org.firstinspires.ftc.teamcode.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumLocalizerInputsMessage;
@@ -115,10 +116,6 @@ public final class MecanumDrive {
     public final DcMotorEx leftFront, leftBack, rightBack, rightFront;
 
     public final VoltageSensor voltageSensor;
-
-    public final Gamepad gamepad1;
-
-    public final Gamepad gamepad2;
 
     public final LazyImu lazyImu;
 
@@ -227,12 +224,10 @@ public final class MecanumDrive {
     }
 
     public MecanumDrive(HardwareMap hardwareMap, Pose2d pose) {
-        this(hardwareMap, null, null, pose);
+        this(hardwareMap, null, pose);
     }
 
-    public MecanumDrive(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Pose2d pose) {
-        this.gamepad1 = gamepad1;
-        this.gamepad2 = gamepad2;
+    public MecanumDrive(HardwareMap hardwareMap, Keybinds keybinds, Pose2d pose) {
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
@@ -287,20 +282,7 @@ public final class MecanumDrive {
                 }
 
         }
-        if (gamepad2.xWasPressed()) {
-            goToZero();
-            gamepad2.rumble(5000);
-        }
     }
-
-    public void goToZero() {
-        updatePoseEstimate();
-        com.acmerobotics.roadrunner.ftc.Actions.runBlocking(actionBuilder(localizer.getPose()).setTangent(0)
-                .turnTo(0)
-                .build());
-    }
-
-
 
     public void setDrivePowers(PoseVelocity2d powers) {
         MecanumKinematics.WheelVelocities<Time> wheelVels = new MecanumKinematics(1).inverse(
