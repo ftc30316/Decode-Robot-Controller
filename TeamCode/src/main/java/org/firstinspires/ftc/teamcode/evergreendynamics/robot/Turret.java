@@ -63,7 +63,7 @@ public class Turret {
     private double turretZeroRelRobotDeg;
     double desiredFieldAngleDeg;
     private Servo launchZoneLED;
-    Datalogger datalog = new Datalogger("datalog_01");
+    Datalogger datalog = new Datalog("datalog_01");
 
     TurretVelocityMode turretVelocityMode = TurretVelocityMode.AUTO;
     public ElapsedTime liftWheelTimer = new ElapsedTime();
