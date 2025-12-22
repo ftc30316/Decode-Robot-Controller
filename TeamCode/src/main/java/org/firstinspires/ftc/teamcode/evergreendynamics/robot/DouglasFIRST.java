@@ -15,6 +15,7 @@ public class DouglasFIRST {
     public Intake intake;
     public Turret turret;
     public Telemetry telemetry;
+    public Keybinds keybinds;
     public MecanumDrive mecanumDrive;
     public Gamepad gamepad1;
     public Gamepad gamepad2;
@@ -37,10 +38,11 @@ public class DouglasFIRST {
 
     public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
 
-        this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, gamepad2, beginPose);
-        this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
+        this.keybinds = new Keybinds(gamepad1, gamepad2);
+        this.mecanumDrive = new MecanumDrive(hardwareMap, keybinds, beginPose);
+        this.intake = new Intake(hardwareMap, keybinds, telemetry);
         this.telemetry = telemetry;
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, getGoalPosition(hardwareMap), mecanumDrive, intake, turretVelocityMode);
+        this.turret = new Turret(hardwareMap, telemetry, keybinds, getGoalPosition(hardwareMap), mecanumDrive, intake, turretVelocityMode);
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
@@ -48,10 +50,10 @@ public class DouglasFIRST {
     }
 
     public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Vector2d goalPosition, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
-        this.mecanumDrive = new MecanumDrive(hardwareMap, gamepad1, gamepad2, beginPose);
-        this.intake = new Intake(hardwareMap, gamepad1, gamepad2, telemetry);
+        this.mecanumDrive = new MecanumDrive(hardwareMap, keybinds, beginPose);
+        this.intake = new Intake(hardwareMap, keybinds, telemetry);
         this.telemetry = telemetry;
-        this.turret = new Turret(hardwareMap, telemetry, gamepad1, gamepad2, goalPosition, mecanumDrive, intake, turretVelocityMode);
+        this.turret = new Turret(hardwareMap, telemetry, keybinds, goalPosition, mecanumDrive, intake, turretVelocityMode);
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;

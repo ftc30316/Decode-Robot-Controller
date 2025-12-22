@@ -34,7 +34,7 @@ public class Intake {
 
     IntakeState intakeState = IntakeState.ON;
 
-    public Intake(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
+    public Intake(HardwareMap hardwareMap, Keybinds keybinds, Telemetry telemetry) {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 

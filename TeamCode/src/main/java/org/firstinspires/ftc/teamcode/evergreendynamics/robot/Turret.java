@@ -45,10 +45,7 @@ public class Turret {
     private Telemetry telemetry;
 
     public Intake intake;
-
-    public volatile Gamepad gamepad1 = null;
-
-    public volatile Gamepad gamepad2 = null;
+    public Keybinds keybinds;
     DcMotorEx turretMotor;
     private DcMotorEx leftFlywheel;
     private DcMotorEx rightFlywheel;
@@ -67,14 +64,13 @@ public class Turret {
     public ElapsedTime liftWheelTimer = new ElapsedTime();
 
     public Turret(HardwareMap hardwareMap, Telemetry telemetry,
-                  Gamepad gamepad1, Gamepad gamepad2,
-                  Vector2d goalPosition,
-                  MecanumDrive mecanumDrive, Intake intake, TurretVelocityMode turretVelocityMode) {
+                  Keybinds keybinds, Vector2d goalPosition,
+                  MecanumDrive mecanumDrive, Intake intake,
+                  TurretVelocityMode turretVelocityMode) {
 
         this.telemetry = telemetry;
         this.intake = intake;
-        this.gamepad1 = gamepad1;
-        this.gamepad2 = gamepad2;
+        this.keybinds = keybinds;
         this.goalPosition = goalPosition;
         this.mecanumDrive = mecanumDrive;
         this.turretVelocityMode = turretVelocityMode;
@@ -121,14 +117,14 @@ public class Turret {
         // State machine for the FLY wheels
         switch (flywheelState) {
             case ON:
-                if (gamepad1.circleWasPressed()) {
+                if (keybinds.flywheelWasPressed()) {
                     flywheelState = FlywheelState.OFF;
                 }
                 break;
             case OFF:
                 leftFlywheel.setVelocity(0);
                 rightFlywheel.setVelocity(0);
-                if (gamepad1.circleWasPressed()) {
+                if (keybinds.flywheelWasPressed()) {
                     flywheelState = FlywheelState.ON;
                 }
         }
@@ -144,7 +140,7 @@ public class Turret {
             case OFF:
                 leftLiftWheel.setPower(-1.0);
                 rightLiftWheel.setPower(-1.0);
-                if (gamepad1.crossWasPressed() && isInLaunchZone()) {
+                if (keybinds.liftWheelWasPressed() && isInLaunchZone()) {
                     artifactsWhenCrossWasPressed = intake.getNumberOfArtifacts();
                     liftWheelTimer.reset();
                     liftWheelState = LiftWheelState.ON;
@@ -156,7 +152,7 @@ public class Turret {
             case AUTO:
                 turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 adjustTurret();
-                if (gamepad1.dpadLeftWasPressed()) {
+                if (keybinds.turretLockingStateWasPressed()) {
                     turretLockingState = TurretLockingState.MANUAL;
                 }
                 break;
@@ -178,7 +174,7 @@ public class Turret {
                 else {
                     turretMotor.setPower(0);
                 }
-                if (gamepad1.dpadLeftWasPressed()) {
+                if (keybinds.turretLockingStateWasPressed()) {
                     turretLockingState = TurretLockingState.AUTO;
                 }
                 break;
