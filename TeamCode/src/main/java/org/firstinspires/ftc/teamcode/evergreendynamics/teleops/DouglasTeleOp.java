@@ -15,7 +15,7 @@ public class DouglasTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() {
         try {
-            Pose2d startPose = PoseStorage.loadPose(hardwareMap.appContext);
+            Pose2d startPose = new Pose2d(0, 0, 0); //PoseStorage.loadPose(hardwareMap.appContext);
             double turretStartHeadingDeg = PoseStorage.loadTurretHeading(hardwareMap.appContext);
             double robotHeadingDeg = Math.toDegrees(startPose.heading.toDouble());
 
@@ -29,7 +29,7 @@ public class DouglasTeleOp extends LinearOpMode {
 
             waitForStart();
 
-            douglasFIRST.start(robotHeadingDeg, turretStartHeadingDeg);
+            douglasFIRST.start(0, 0);
 
             // Sets up the driving system
             while (opModeIsActive()) {

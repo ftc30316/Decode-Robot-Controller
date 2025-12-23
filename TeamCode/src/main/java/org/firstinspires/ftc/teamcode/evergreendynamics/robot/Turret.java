@@ -137,8 +137,8 @@ public class Turret {
         // State machine for the LIFT wheels
         switch (liftWheelState) {
             case ON:
-                datalog.shootCycleStartTime.set(System.currentTimeMillis());
-                datalog.artifactCounter.set(artifactsWhenCrossWasPressed);
+//                datalog.shootCycleStartTime.set(System.currentTimeMillis());
+//                datalog.artifactCounter.set(artifactsWhenCrossWasPressed);
 
                 leftLiftWheel.setPower(1.0);
                 rightLiftWheel.setPower(1.0);
@@ -147,15 +147,15 @@ public class Turret {
                 }
                 break;
             case OFF:
-                datalog.shootCycleEndTime.set(System.currentTimeMillis());
+                //datalog.shootCycleEndTime.set(System.currentTimeMillis());
                 leftLiftWheel.setPower(-1.0);
                 rightLiftWheel.setPower(-1.0);
-                if (keybinds.liftWheelWasPressed() && isInLaunchZone()) {
+                if (keybinds.liftWheelWasPressed()) { // && isInLaunchZone()
                     artifactsWhenCrossWasPressed = intake.getNumberOfArtifacts();
                     liftWheelTimer.reset();
                     liftWheelState = LiftWheelState.ON;
                 }
-                datalog.writeLine();
+                //datalog.writeLine();
         }
 
         // State machine for turret locking state: Auto or Manual
