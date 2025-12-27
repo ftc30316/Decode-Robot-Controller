@@ -12,7 +12,7 @@ public class InputValues {
     public static final boolean FLYWHEEL_TEST_ON = false;
     public static double FLYWHEEL_TEST_VELOCITY = 500;
     public static double FLYWHEEL_MULTIPLIER = 4.0;
-    public  static int STARTING_VELOCITY = 500;
+    public  static int STARTING_VELOCITY = 750;
     public static int VELOCITY_ADJUSTMENT = 5;
 
     // Lift flywheels
@@ -41,7 +41,7 @@ public class InputValues {
     public static double TICKS_PER_DEGREE = 5.3277777778;
 
     // Goal positions
-    public static Vector2d BLUE_GOAL_POSITION = new Vector2d(-64,-62);
+    public static Vector2d BLUE_GOAL_POSITION = new Vector2d(-64,-60);
 
     public static Vector2d RED_GOAL_POSITION = new Vector2d(-64,60);
 

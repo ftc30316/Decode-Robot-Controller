@@ -16,17 +16,19 @@ public class FlywheelVelocityTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         try {
-            Pose2d startPose = new Pose2d (0, 0, 0);
+            Pose2d startPose = new Pose2d (-24, 24, 0);
             double turretStartHeading = Math.toDegrees(startPose.heading.toDouble()); //PoseStorage.loadTurretHeading(hardwareMap.appContext);
 
             telemetry.addLine("The flywheel velocity changes in increments of 5. To increase, press up on the dpad. To decrease, press down on the dpad.");
 
-            telemetry.update();
+            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.BLUE_GOAL_POSITION, startPose, DouglasFIRST.DriveMode.FIELD_CENTRIC, Turret.TurretVelocityMode.MANUAL);
 
-            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose, DouglasFIRST.DriveMode.FIELD_CENTRIC, Turret.TurretVelocityMode.MANUAL);
+            telemetry.addData("robot pose", douglasFIRST.getCurrentPose());
+            telemetry.addData("turret pose", douglasFIRST.getTurretPose());
 
             waitForStart();
-            douglasFIRST.start(0, 0);
+
+            douglasFIRST.start(startPose.heading.toDouble(), 0); // turret heading is robot centric
 
             // Sets up the driving system
             while (opModeIsActive()) {

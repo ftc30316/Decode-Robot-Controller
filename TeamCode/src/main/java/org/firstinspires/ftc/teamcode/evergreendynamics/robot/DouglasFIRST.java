@@ -148,6 +148,9 @@ public class DouglasFIRST {
         );
 
     }
+    public Vector2d getTurretPose() {
+        return new Vector2d(turret.turretX, turret.turretY);
+    }
 
     public Vector2d getGoalPosition(HardwareMap hardwareMap) {
         Vector2d goalPosition = InputValues.BLUE_GOAL_POSITION;
@@ -197,6 +200,12 @@ public class DouglasFIRST {
                     .build());
             gamepad2.rumble(5000);
         }
+    }
+
+    public void goTo45() {
+            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(getActionBuilder().setTangent(0)
+                    .turnTo(-45)
+                    .build());
     }
 
     public void checkAndRunDriverShortcuts() {

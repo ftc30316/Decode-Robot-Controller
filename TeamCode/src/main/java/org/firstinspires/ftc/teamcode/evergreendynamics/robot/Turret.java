@@ -64,6 +64,9 @@ public class Turret {
     private Servo launchZoneLED;
     Datalog datalog = null;
 
+    public double turretX = 0;
+    public double turretY = 0;
+
 
     TurretVelocityMode turretVelocityMode = TurretVelocityMode.AUTO;
     public ElapsedTime liftWheelTimer = new ElapsedTime();
@@ -137,8 +140,8 @@ public class Turret {
         // State machine for the LIFT wheels
         switch (liftWheelState) {
             case ON:
-                datalog.shootCycleStartTime.set(System.currentTimeMillis());
-                datalog.artifactCounter.set(artifactsWhenCrossWasPressed);
+//                datalog.shootCycleStartTime.set(System.currentTimeMillis());
+//                datalog.artifactCounter.set(artifactsWhenCrossWasPressed);
 
                 leftLiftWheel.setPower(1.0);
                 rightLiftWheel.setPower(1.0);
@@ -147,7 +150,7 @@ public class Turret {
                 }
                 break;
             case OFF:
-                datalog.shootCycleEndTime.set(System.currentTimeMillis());
+                //datalog.shootCycleEndTime.set(System.currentTimeMillis());
                 leftLiftWheel.setPower(-1.0);
                 rightLiftWheel.setPower(-1.0);
                 if (keybinds.liftWheelWasPressed()) { // && isInLaunchZone()
@@ -155,7 +158,7 @@ public class Turret {
                     liftWheelTimer.reset();
                     liftWheelState = LiftWheelState.ON;
                 }
-                datalog.writeLine();
+                //datalog.writeLine();
         }
 
         // State machine for turret locking state: Auto or Manual
@@ -350,8 +353,8 @@ public class Turret {
         double turretOffsetXField = InputValues.TURRET_OFFSET_X * cosH - InputValues.TURRET_OFFSET_Y * sinH;
         double turretOffsetYField = InputValues.TURRET_OFFSET_X * sinH + InputValues.TURRET_OFFSET_Y * cosH;
 
-        double turretX = robotX + turretOffsetXField;
-        double turretY = robotY + turretOffsetYField;
+        turretX = robotX + turretOffsetXField;
+        turretY = robotY + turretOffsetYField;
 
         // --- C) Vector from TURRET to GOAL in field coordinates ---
         double dx = goalPosition.x - turretX;
