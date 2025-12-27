@@ -22,6 +22,7 @@ public class DouglasFIRST {
     public Gamepad gamepad1;
     public Gamepad gamepad2;
     public HardwareMap hardwareMap;
+    Vector2d goalPosition = InputValues.BLUE_GOAL_POSITION;
 
     public enum DriveMode {
         ROBOT_CENTRIC,
@@ -36,7 +37,7 @@ public class DouglasFIRST {
         RED
     }
 
-    Alliance alliance = Alliance.BLUE;
+    public Alliance alliance = Alliance.BLUE;
 
     public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
 
@@ -93,6 +94,20 @@ public class DouglasFIRST {
 
                 if (gamepad2.xWasPressed()) {
                     driveMode = DriveMode.ROBOT_CENTRIC;
+                }
+                break;
+        }
+        switch (alliance) {
+            case BLUE:
+                goalPosition = InputValues.BLUE_GOAL_POSITION;
+                if (gamepad1.squareWasPressed()) {
+                    alliance = Alliance.RED;
+                }
+                break;
+            case RED:
+                goalPosition = InputValues.RED_GOAL_POSITION;
+                if (gamepad1.squareWasPressed()) {
+                    alliance = Alliance.BLUE;
                 }
                 break;
         }

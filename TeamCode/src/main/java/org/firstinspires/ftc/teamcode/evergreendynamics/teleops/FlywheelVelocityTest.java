@@ -33,6 +33,16 @@ public class FlywheelVelocityTest extends LinearOpMode {
             // Sets up the driving system
             while (opModeIsActive()) {
                 douglasFIRST.loop();
+                if (gamepad1.squareWasPressed()) {
+                    if (douglasFIRST.alliance == DouglasFIRST.Alliance.RED) {
+                        douglasFIRST.alliance = DouglasFIRST.Alliance.BLUE;
+                    }
+                    else {
+                        douglasFIRST.alliance = DouglasFIRST.Alliance.RED;
+                    }
+                }
+
+
                 telemetry.update();
             }
 
