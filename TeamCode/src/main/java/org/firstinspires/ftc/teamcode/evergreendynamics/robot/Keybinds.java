@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class Keybinds {
 
-    public Gamepad gamepad1 = null;
+    public Gamepad gamepad1;
 
-    public Gamepad gamepad2 = null;
+    public Gamepad gamepad2;
 
     public Keybinds (Gamepad gamepad1, Gamepad gamepad2) {
 
@@ -38,7 +38,7 @@ public class Keybinds {
         return gamepad1.dpadUpWasPressed();
     }
     public boolean turretManualVelocityDecreaseWasPressed() {
-        return gamepad1.dpadUpWasPressed();
+        return gamepad1.dpadDownWasPressed();
     }
 
     // Intake

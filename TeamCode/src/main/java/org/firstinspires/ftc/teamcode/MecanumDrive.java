@@ -229,7 +229,7 @@ public final class MecanumDrive {
 
     public MecanumDrive(HardwareMap hardwareMap, Keybinds keybinds, Pose2d pose) {
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
-        this.keybinds = keybinds;
+        this.keybinds =  keybinds;
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
