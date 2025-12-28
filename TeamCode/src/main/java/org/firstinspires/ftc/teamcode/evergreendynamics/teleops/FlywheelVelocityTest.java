@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.teleops;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -16,14 +18,24 @@ public class FlywheelVelocityTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         try {
-            Pose2d startPose = new Pose2d (-24, 24, 0);
+            Pose2d startPose = new Pose2d (0, 0, 0);
             double turretStartHeading = Math.toDegrees(startPose.heading.toDouble()); //PoseStorage.loadTurretHeading(hardwareMap.appContext);
+
+            // 1. start robot at 0, 0, 0. turret will lock on blue goal.
+            // 2. driver reports pose information to data recorder
+            // 3. driver shoots artifacts at blue goal with different velocities & reports velocities that work to the data recorder
+            // 4. driver changes turret position to red goal
+            // 5. driver repeats step 3 for red
+            // 6. driver moves robot to different location
+            // 7. driver repeats steps 2 - 5
+
+
 
             telemetry.addLine("The flywheel velocity changes in increments of 5. To increase, press up on the dpad. To decrease, press down on the dpad.");
 
             this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose, DouglasFIRST.DriveMode.FIELD_CENTRIC, Turret.TurretVelocityMode.MANUAL); //startPose);
 
-            telemetry.addData("robot pose", douglasFIRST.getCurrentPose());
+            telemetry.addData("robot pose", douglasFIRST.getCurrentPose()); //TODO: fix telemetry not showing up
             telemetry.addData("turret pose", douglasFIRST.getTurretPose());
 
             waitForStart();
@@ -33,14 +45,18 @@ public class FlywheelVelocityTest extends LinearOpMode {
             // Sets up the driving system
             while (opModeIsActive()) {
                 douglasFIRST.loop();
-                if (gamepad1.squareWasPressed()) {
-                    if (douglasFIRST.alliance == DouglasFIRST.Alliance.RED) {
-                        douglasFIRST.alliance = DouglasFIRST.Alliance.BLUE;
-                    }
-                    else {
-                        douglasFIRST.alliance = DouglasFIRST.Alliance.RED;
-                    }
-                }
+
+
+
+
+//                if (gamepad1.squareWasPressed()) {
+//                    if (douglasFIRST.alliance == DouglasFIRST.Alliance.RED) {
+//                        douglasFIRST.alliance = DouglasFIRST.Alliance.BLUE;
+//                    }
+//                    else {
+//                        douglasFIRST.alliance = DouglasFIRST.Alliance.RED;
+//                    }
+//                }
 
 
                 telemetry.update();

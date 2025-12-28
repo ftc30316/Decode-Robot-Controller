@@ -102,12 +102,14 @@ public class DouglasFIRST {
                 goalPosition = InputValues.BLUE_GOAL_POSITION;
                 if (gamepad1.squareWasPressed()) {
                     alliance = Alliance.RED;
+                    goalPosition = InputValues.RED_GOAL_POSITION;
                 }
                 break;
             case RED:
                 goalPosition = InputValues.RED_GOAL_POSITION;
                 if (gamepad1.squareWasPressed()) {
                     alliance = Alliance.BLUE;
+                    goalPosition = InputValues.BLUE_GOAL_POSITION;
                 }
                 break;
         }
