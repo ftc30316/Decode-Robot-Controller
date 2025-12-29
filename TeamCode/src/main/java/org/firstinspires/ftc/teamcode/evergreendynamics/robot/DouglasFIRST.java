@@ -22,6 +22,7 @@ public class DouglasFIRST {
     public Gamepad gamepad1;
     public Gamepad gamepad2;
     public HardwareMap hardwareMap;
+
     Vector2d goalPosition = InputValues.BLUE_GOAL_POSITION;
 
     public enum DriveMode {
@@ -38,6 +39,7 @@ public class DouglasFIRST {
     }
 
     public Alliance alliance = Alliance.BLUE;
+
 
     public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
 
@@ -80,6 +82,10 @@ public class DouglasFIRST {
     }
 
     public void loop() {
+        telemetry.addData("robot pose", getCurrentPose()); //TODO: fix telemetry not showing up
+        telemetry.addData("turret pose", getTurretPose());
+        telemetry.addData("alliance", getAlliance());
+
         switch (driveMode) {
             case ROBOT_CENTRIC:
                 setRobotCentricDrivePowers();
@@ -94,22 +100,6 @@ public class DouglasFIRST {
 
                 if (gamepad2.xWasPressed()) {
                     driveMode = DriveMode.ROBOT_CENTRIC;
-                }
-                break;
-        }
-        switch (alliance) {
-            case BLUE:
-                goalPosition = InputValues.BLUE_GOAL_POSITION;
-                if (gamepad1.squareWasPressed()) {
-                    alliance = Alliance.RED;
-                    goalPosition = InputValues.RED_GOAL_POSITION;
-                }
-                break;
-            case RED:
-                goalPosition = InputValues.RED_GOAL_POSITION;
-                if (gamepad1.squareWasPressed()) {
-                    alliance = Alliance.BLUE;
-                    goalPosition = InputValues.BLUE_GOAL_POSITION;
                 }
                 break;
         }

@@ -40,6 +40,10 @@ public class Keybinds {
     public boolean turretManualVelocityDecreaseWasPressed() {
         return gamepad1.dpadDownWasPressed();
     }
+    public boolean turretAllianceChangeWasPressed() {
+        return gamepad1.squareWasPressed();
+    }
+
 
     // Intake
     public boolean changeIntakeState() {

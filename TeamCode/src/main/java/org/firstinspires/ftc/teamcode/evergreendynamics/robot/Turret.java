@@ -67,7 +67,12 @@ public class Turret {
     public double turretX = 0;
     public double turretY = 0;
 
+    public enum Alliance {
+        BLUE,
+        RED
+    }
 
+    public Alliance alliance = Alliance.BLUE;
     TurretVelocityMode turretVelocityMode = TurretVelocityMode.AUTO;
     public ElapsedTime liftWheelTimer = new ElapsedTime();
 
@@ -210,6 +215,22 @@ public class Turret {
                     manualVelocity = manualVelocity - InputValues.VELOCITY_ADJUSTMENT;
                     leftFlywheel.setVelocity(manualVelocity);
                     rightFlywheel.setVelocity(manualVelocity);
+                }
+                break;
+        }
+        switch (alliance) {
+            case BLUE:
+                goalPosition = InputValues.BLUE_GOAL_POSITION;
+                adjustTurret();
+                if (keybinds.turretAllianceChangeWasPressed()) {
+                    alliance = Alliance.RED;
+                }
+                break;
+            case RED:
+                goalPosition = InputValues.RED_GOAL_POSITION;
+                adjustTurret();
+                if (keybinds.turretAllianceChangeWasPressed()) {
+                    alliance = Alliance.BLUE;
                 }
                 break;
         }

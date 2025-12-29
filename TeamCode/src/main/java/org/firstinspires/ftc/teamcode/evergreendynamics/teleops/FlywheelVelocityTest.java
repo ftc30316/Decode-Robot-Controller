@@ -35,8 +35,6 @@ public class FlywheelVelocityTest extends LinearOpMode {
 
             this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose, DouglasFIRST.DriveMode.FIELD_CENTRIC, Turret.TurretVelocityMode.MANUAL); //startPose);
 
-            telemetry.addData("robot pose", douglasFIRST.getCurrentPose()); //TODO: fix telemetry not showing up
-            telemetry.addData("turret pose", douglasFIRST.getTurretPose());
 
             waitForStart();
 
@@ -45,19 +43,6 @@ public class FlywheelVelocityTest extends LinearOpMode {
             // Sets up the driving system
             while (opModeIsActive()) {
                 douglasFIRST.loop();
-
-
-
-
-//                if (gamepad1.squareWasPressed()) {
-//                    if (douglasFIRST.alliance == DouglasFIRST.Alliance.RED) {
-//                        douglasFIRST.alliance = DouglasFIRST.Alliance.BLUE;
-//                    }
-//                    else {
-//                        douglasFIRST.alliance = DouglasFIRST.Alliance.RED;
-//                    }
-//                }
-
 
                 telemetry.update();
             }
