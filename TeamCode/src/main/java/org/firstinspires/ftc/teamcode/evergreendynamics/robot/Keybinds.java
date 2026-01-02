@@ -41,7 +41,6 @@ public class Keybinds {
         return gamepad1.dpadDownWasPressed();
     }
     public boolean turretAllianceChangeWasPressed() {
-
         return gamepad1.squareWasPressed();
     }
 

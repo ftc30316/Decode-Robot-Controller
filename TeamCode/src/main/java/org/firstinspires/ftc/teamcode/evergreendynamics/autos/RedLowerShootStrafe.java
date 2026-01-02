@@ -29,13 +29,14 @@ public class RedLowerShootStrafe extends LinearOpMode {
 
             douglasFIRST.start(robotStartHeading, turretStartHeading);
 
+            // Moves inside lower launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
                     .waitSeconds(2)
                     .strafeTo(new Vector2d(52, 12))
                     .build());
             douglasFIRST.savePose();
 
-            //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
+            // Shoots preloaded artifacts
             douglasFIRST.shootArtifacts();
 
             //Moves to upper launch zone

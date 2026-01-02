@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.autos;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -36,17 +37,21 @@ public class RedUpper1Row extends LinearOpMode {
                     .build());
             douglasFIRST.savePose();
 
+            // Shoots preloaded artifacts
             douglasFIRST.shootArtifacts();
 
+            // Collects upper row
             Actions.runBlocking(douglasFIRST.getActionBuilder()
-                    .strafeTo(new Vector2d(-12,54))
+                    .strafeTo(new Vector2d(-12,54), new TranslationalVelConstraint(5.0))
                     .strafeTo(new Vector2d(-12,20))
                     .waitSeconds(2)
                     .build());
             douglasFIRST.savePose();
 
+            // Shoots upper row artifacts
             douglasFIRST.shootArtifacts();
 
+            // Moves off the line
             Actions.runBlocking(douglasFIRST.getActionBuilder()
                     .strafeTo(new Vector2d(-12,50))
                     .build());

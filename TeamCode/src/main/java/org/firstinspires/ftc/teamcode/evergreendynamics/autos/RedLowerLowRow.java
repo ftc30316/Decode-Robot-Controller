@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.autos;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -32,20 +33,24 @@ public class RedLowerLowRow extends LinearOpMode {
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
                     .waitSeconds(2)
                     .build());
+
+            // Shoots preloaded artifacts
             douglasFIRST.shootArtifacts();
 
-            //Moves to upper launch zone
+            // Collects lower row
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .strafeTo(new Vector2d(36, 12))
+                    .strafeTo(new Vector2d(36, 12), new TranslationalVelConstraint(5.0))
                     .strafeTo(new Vector2d(36, 62))
                     .build());
             douglasFIRST.savePose();
 
+            // Moves back to lower launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
                     .strafeTo(new Vector2d(62,12))
                     .build());
             douglasFIRST.savePose();
 
+            // Shoots lower row artifacts
             douglasFIRST.shootArtifacts();
 
             Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)

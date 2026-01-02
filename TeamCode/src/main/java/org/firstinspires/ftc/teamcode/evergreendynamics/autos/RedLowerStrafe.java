@@ -32,13 +32,11 @@ public class RedLowerStrafe extends LinearOpMode {
 
             douglasFIRST.start(robotStartHeading, turretStartHeading);
 
-            //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
-            //sorter.detect();
-
             //Moves to upper launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
                     .strafeTo(new Vector2d(62, 56))
                     .build());
+
             douglasFIRST.savePose();
 
 
