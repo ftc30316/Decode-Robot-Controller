@@ -61,7 +61,7 @@ public class ArtifactCountingTest extends LinearOpMode {
                 telemetry.addLine("THREE IS DETECTING");
             }
 
-            telemetry.update();
+            //telemetry.update();
         }
     }
     public int getNumberOfArtifacts() {

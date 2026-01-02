@@ -19,12 +19,12 @@ public class DouglasTeleOp extends LinearOpMode {
             double turretStartHeadingDeg = PoseStorage.loadTurretHeading(hardwareMap.appContext);
             double robotHeadingDeg = Math.toDegrees(startPose.heading.toDouble());
 
-            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose, DouglasFIRST.DriveMode.FIELD_CENTRIC, Turret.TurretVelocityMode.AUTO); //startPose);
+            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO); //startPose);
 
-            telemetry.addData("auto end pose x", startPose.position.x);
-            telemetry.addData("auto end pose y", startPose.position.y);
-            telemetry.addData("auto end pose heading", Math.toDegrees(startPose.heading.toDouble()));
-            telemetry.addData("auto end turret heading", turretStartHeadingDeg);
+//            telemetry.addData("auto end pose x", startPose.position.x);
+//            telemetry.addData("auto end pose y", startPose.position.y);
+//            telemetry.addData("auto end pose heading", Math.toDegrees(startPose.heading.toDouble()));
+//            telemetry.addData("auto end turret heading", turretStartHeadingDeg);
 
             waitForStart();
 

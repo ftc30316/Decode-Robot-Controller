@@ -41,13 +41,13 @@ public class Keybinds {
         return gamepad1.dpadDownWasPressed();
     }
     public boolean turretAllianceChangeWasPressed() {
+
         return gamepad1.squareWasPressed();
     }
 
-
     // Intake
     public boolean changeIntakeState() {
-        return gamepad1.squareWasPressed();
+        return gamepad1.triangleWasPressed();
     }
 
     // Mecanum drive

@@ -82,9 +82,12 @@ public class DouglasFIRST {
     }
 
     public void loop() {
-        telemetry.addData("robot pose", getCurrentPose()); //TODO: fix telemetry not showing up
+        telemetry.addData("robot x", getCurrentPose().position.x);
+        telemetry.addData("robot y", getCurrentPose().position.y);
+        telemetry.addData("robot heading", getCurrentPose().heading.toDouble());
         telemetry.addData("turret pose", getTurretPose());
         telemetry.addData("alliance", getAlliance());
+        telemetry.addData("drive mode", driveMode);
 
         switch (driveMode) {
             case ROBOT_CENTRIC:
@@ -104,7 +107,6 @@ public class DouglasFIRST {
                 break;
         }
 
-        mecanumDrive.loop();
         intake.loop();
         turret.loop();
         checkAndRunDriverShortcuts();
@@ -139,14 +141,14 @@ public class DouglasFIRST {
 
         Rotation2d negativeHeading = new Rotation2d(-mecanumDrive.localizer.getPose().heading.toDouble(), 0);
 
-    // Create a vector from the gamepad x/y inputs
-    // Then, rotate that vector by the inverse of that heading
+        // Create a vector from the gamepad x/y inputs
+        // Then, rotate that vector by the inverse of that heading
         Vector2d input = negativeHeading.times(new Vector2d(
                 -gamepad1.left_stick_y,
                 -gamepad1.left_stick_x));
 
-// Pass in the rotated input + right stick value for rotation
-// Rotation is not part of the rotated input thus must be passed in separately
+        // Pass in the rotated input + right stick value for rotation
+        // Rotation is not part of the rotated input thus must be passed in separately
         mecanumDrive.setDrivePowers(
                 new PoseVelocity2d(
                         input,
