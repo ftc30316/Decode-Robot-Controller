@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.autos;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -30,17 +32,18 @@ public class BlueLower1Row extends LinearOpMode {
             //Creates background thread
             douglasFIRST.start(robotStartHeading, turretStartHeading);
 
-            //Moves to upper launch zone
+            // strafes to upper launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
                     .strafeTo(new Vector2d(-12, -20))
                     .build());
             douglasFIRST.savePose();
 
+            // shoots preloaded
             douglasFIRST.shootArtifacts();
 
+            // collects first row of artifacts
             Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
-                    //.strafeTo(new Vector2d(-9,-16))
-                    .strafeTo(new Vector2d(-12,-52))
+                    .strafeTo(new Vector2d(-12,-52), new TranslationalVelConstraint(5.0))
                     .strafeTo(new Vector2d(-12,-20))
                     .build());
             douglasFIRST.savePose();
