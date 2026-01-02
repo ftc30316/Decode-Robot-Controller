@@ -1,6 +1,7 @@
 package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
@@ -16,10 +17,11 @@ public class MeepMeepTesting {
                 .build();
 
         // blue lower low row
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(62, 12, Math.toRadians(0)))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(62, -12, Math.toRadians(-90)))
                 .waitSeconds(0.5)
-                .strafeTo(new Vector2d(52, 12))
-                .strafeTo(new Vector2d(52, 56))
+                .strafeTo(new Vector2d(-12, -20))
+                .strafeTo(new Vector2d(-12,-52), new TranslationalVelConstraint(5.0))
+                .strafeTo(new Vector2d(-12,-20))
 
                 .build());
 

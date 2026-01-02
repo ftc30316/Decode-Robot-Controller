@@ -36,7 +36,7 @@ public class BlueLowerOffLine extends LinearOpMode {
             //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
             //sorter.detect();
 
-            //Moves to upper launch zone
+            //Moves off line
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
                     .strafeTo(new Vector2d(30, -12))
                     .build());
