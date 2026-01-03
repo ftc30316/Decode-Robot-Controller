@@ -82,12 +82,11 @@ public class DouglasFIRST {
     }
 
     public void loop() {
-        telemetry.addData("robot x", getCurrentPose().position.x);
-        telemetry.addData("robot y", getCurrentPose().position.y);
+        telemetry.addData("robot pose", getCurrentPose());
         telemetry.addData("robot heading", getCurrentPose().heading.toDouble());
-        telemetry.addData("turret pose", getTurretPose());
-        telemetry.addData("alliance", getAlliance());
-        telemetry.addData("drive mode", driveMode);
+//        telemetry.addData("turret pose", getTurretPose());
+//        telemetry.addData("alliance", getAlliance());
+//        telemetry.addData("drive mode", driveMode);
 
         switch (driveMode) {
             case ROBOT_CENTRIC:

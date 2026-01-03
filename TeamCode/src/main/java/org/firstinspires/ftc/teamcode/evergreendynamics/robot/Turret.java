@@ -124,9 +124,9 @@ public class Turret {
 
     // Starts the flywheel
     public void loop() {
-        telemetry.addData("Flywheel: ", flywheelState);
-        telemetry.addData("Lift: ", liftWheelState);
-        telemetry.addData("Turret: ", turretLockingState);
+//        telemetry.addData("Flywheel: ", flywheelState);
+//        telemetry.addData("Lift: ", liftWheelState);
+//        telemetry.addData("Turret: ", turretLockingState);
         turnOnLEDs();
         // State machine for the FLY wheels
         switch (flywheelState) {
@@ -255,14 +255,14 @@ public class Turret {
         if (robotPose.position.x > 48) {
             double lowerLaunchZoneTopY = robotPose.position.x - 48;
             double lowerLaunchZoneBottomY = -1 * robotPose.position.x + 48;
-            if (robotPose.position.y <= lowerLaunchZoneTopY || robotPose.position.y >= lowerLaunchZoneBottomY) {
+            if (robotPose.position.y <= lowerLaunchZoneTopY && robotPose.position.y >= lowerLaunchZoneBottomY) {
                 inLaunchZone = true;
             }
         }
         if (robotPose.position.x < 0) {
             double upperLaunchZoneTopY = -1 * robotPose.position.x;
             double upperLaunchZoneBottomY = robotPose.position.x;
-            if (robotPose.position.y <= upperLaunchZoneTopY || robotPose.position.y >= upperLaunchZoneBottomY) {
+            if (robotPose.position.y <= upperLaunchZoneTopY && robotPose.position.y >= upperLaunchZoneBottomY) {
                 inLaunchZone = true;
             }
         }
@@ -281,7 +281,7 @@ public class Turret {
 
     public void shoot() {
         artifactsWhenShooting = intake.getNumberOfArtifacts();
-        telemetry.addData("Artifacts when shooting: ", artifactsWhenShooting);
+//        telemetry.addData("Artifacts when shooting: ", artifactsWhenShooting);
         leftLiftWheel.setPower(1.0);
         rightLiftWheel.setPower(1.0);
         Helper.sleep(InputValues.LIFT_WHEEL_WAIT_MILLISECONDS * artifactsWhenShooting);
@@ -290,8 +290,8 @@ public class Turret {
     }
 
     public double getFlywheelVelocity(double distanceToGoal) {
-        double[] D = {         60,   72,   84,  144,  156,  168,  180};
-        double[] velocity = {1440, 1460, 1470, 1475, 1421, 1680, 1695};
+        double[] D = {         93.4,   125,   141}; //,  144,  156,  168,  180};
+        double[] velocity = {  1315,  1485,  2000}; //, 1475, 1421, 1680, 1695};
         int above_index = 0;
         int below_index = 0;
 
@@ -329,9 +329,9 @@ public class Turret {
         double flywheelV = v0 + t * (distanceToGoal - x0);
 
         telemetry.addData("flywheel velocity", flywheelV);
-        telemetry.addData("velocity index", v0);
-        telemetry.addData("distance index", x0);
-        telemetry.addData("index", above_index);
+//        telemetry.addData("velocity index", v0);
+//        telemetry.addData("distance index", x0);
+//        telemetry.addData("index", above_index);
         telemetry.addData("distance from goal", distanceToGoal);
 
         return flywheelV;

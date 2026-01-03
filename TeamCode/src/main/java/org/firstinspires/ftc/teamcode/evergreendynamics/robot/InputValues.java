@@ -16,12 +16,11 @@ public class InputValues {
     public static int VELOCITY_ADJUSTMENT = 5;
 
     // Lift flywheels
-    public static int LIFT_WHEEL_WAIT_MILLISECONDS = 1000;
+    public static int LIFT_WHEEL_WAIT_MILLISECONDS = 1750;
     public static final double LIFT_WHEEL_WAIT_SECONDS = LIFT_WHEEL_WAIT_MILLISECONDS / 1000.0;
 
     // Belt
     public static double INTAKE_SERVO_POWER = 1.0;
-    public static double SLOW_BELT_SERVO_POWER = 0.5;
 
     // Turret aim motor
     public static double TURRET_MOTOR_POWER = 0.8;
@@ -35,7 +34,7 @@ public class InputValues {
     public static double SLOW_INTAKE_SPEED = 1700;
 
     // Distance from sensor to detect artifact
-    public static double ARTIFACT_DISTANCE_DETECTION = 2.6;
+    public static double ARTIFACT_DISTANCE_DETECTION = 3.65;
 
     // Use to compute position for auto aiming turret motor
     public static double TICKS_PER_DEGREE = 5.3277777778;

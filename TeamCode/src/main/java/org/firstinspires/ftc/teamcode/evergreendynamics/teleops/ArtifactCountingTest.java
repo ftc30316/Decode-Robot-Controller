@@ -2,81 +2,90 @@ package org.firstinspires.ftc.teamcode.evergreendynamics.teleops;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.evergreendynamics.robot.DouglasFIRST;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Helper;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
 
 @TeleOp
-@Disabled
 
 public class ArtifactCountingTest extends LinearOpMode {
-    private DistanceSensor firstArtifactSensor;
-    private DistanceSensor secondArtifactSensor;
-    private DistanceSensor thirdArtifactSensor;
+    private DistanceSensor frontArtifactSensor;
+    private DistanceSensor middleArtifactSensor;
+    private DistanceSensor backArtifactSensor;
 
     @Override
     public void runOpMode() {
 
-        firstArtifactSensor = hardwareMap.get(DistanceSensor.class, "firstArtifactSensor");
-        secondArtifactSensor = hardwareMap.get(DistanceSensor.class, "secondArtifactSensor");
-        thirdArtifactSensor = hardwareMap.get(DistanceSensor.class, "thirdArtifactSensor");
+        frontArtifactSensor = hardwareMap.get(DistanceSensor.class, "frontArtifactSensor");
+        middleArtifactSensor = hardwareMap.get(DistanceSensor.class, "middleArtifactSensor");
+        backArtifactSensor = hardwareMap.get(DistanceSensor.class, "backArtifactSensor");
 
         waitForStart();
 
         while (opModeIsActive()) {
 
+            double frontSensorDetection = getAverageDistance(frontArtifactSensor);
+            double middleSensorDetection = getAverageDistance(middleArtifactSensor);
+            double backSensorDetection = getAverageDistance(backArtifactSensor);
+
             TelemetryPacket distanceValues = new TelemetryPacket();
-            distanceValues.put("ONE Distance detected: ", firstArtifactSensor.getDistance(DistanceUnit.INCH));
-            distanceValues.put("TWO Distance detected: ", secondArtifactSensor.getDistance(DistanceUnit.INCH));
-            distanceValues.put("THREE Distance detected: ", thirdArtifactSensor.getDistance(DistanceUnit.INCH));
+            distanceValues.put("FRONT Distance detected: ", frontSensorDetection);
+            distanceValues.put("MIDDLE Distance detected: ", middleSensorDetection);
+            distanceValues.put("BACK Distance detected: ", backSensorDetection);
             distanceValues.put("NUM OF ARTIFACTS: ", getNumberOfArtifacts());
             distanceValues.put("Artifact detecting distance is ", InputValues.ARTIFACT_DISTANCE_DETECTION);
-            if (firstArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
-                distanceValues.addLine("ONE IS DETECTING");
+
+            if (frontSensorDetection < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+                distanceValues.addLine("FRONT IS DETECTING");
+                telemetry.addLine("FRONT IS DETECTING");
             }
-            if (secondArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
-                distanceValues.addLine("TWO IS DETECTING");
+            if (middleSensorDetection < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+                distanceValues.addLine("MIDDLE IS DETECTING");
+                telemetry.addLine("MIDDLE IS DETECTING");
             }
-            if (thirdArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
-                distanceValues.addLine("THREE IS DETECTING");
+            if (backSensorDetection < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+                distanceValues.addLine("BACK IS DETECTING");
+                telemetry.addLine("BACK IS DETECTING");
             }
+
             FtcDashboard.getInstance().sendTelemetryPacket(distanceValues);
-            idle();
 
             telemetry.addData("Number of Artifacts: ", getNumberOfArtifacts());
 
-            if (firstArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
-                telemetry.addLine("ONE IS DETECTING");
-            }
-            if (secondArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
-                telemetry.addLine("TWO IS DETECTING");
-            }
-            if (thirdArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
-                telemetry.addLine("THREE IS DETECTING");
-            }
-
-            //telemetry.update();
+            telemetry.update();
+            idle();
         }
     }
     public int getNumberOfArtifacts() {
 
         int numberOfArtifacts = 0;
 
-        if (firstArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+        if (frontArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
             numberOfArtifacts++;
         }
-        if (secondArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+        if (middleArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
             numberOfArtifacts++;
         }
-        if (thirdArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+        if (backArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
             numberOfArtifacts++;
         }
         return numberOfArtifacts;
+    }
+
+    public double getAverageDistance(DistanceSensor distanceSensor) {
+
+        double sum = 0;
+
+        for(int i = 0; i < 7; i++) {
+            double detection = distanceSensor.getDistance(DistanceUnit.INCH);
+            Helper.sleep(5);
+            sum = sum + detection;
+        }
+
+        return sum / 7;
     }
 }

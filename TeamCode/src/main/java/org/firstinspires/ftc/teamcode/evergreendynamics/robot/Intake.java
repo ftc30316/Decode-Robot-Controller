@@ -34,7 +34,7 @@ public class Intake {
 
     public Intake(HardwareMap hardwareMap, Keybinds keybinds, Telemetry telemetry) {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
-        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.telemetry = telemetry;
         this.keybinds = keybinds;
@@ -56,7 +56,7 @@ public class Intake {
     }
 
     public void loop() {
-        telemetry.addData("Intake state is: ", intakeState);
+//        telemetry.addData("Intake state is: ", intakeState);
         telemetry.addData("Artifacts: ", getNumberOfArtifacts());
         turnOnLEDs();
         switch (intakeState) {
@@ -67,17 +67,17 @@ public class Intake {
                 thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
 
 //                if (getNumberOfArtifacts() == 3) {
-                if (keybinds.changeIntakeState()) {
-                    intakeState = IntakeState.OFF;
-                }
+//                if (keybinds.changeIntakeState()) {
+//                    intakeState = IntakeState.OFF;
+//                }
                 break;
-            case OFF:
-                intakeMotor.setPower(InputValues.INTAKE_POWER_SLOW);
-
-                if (keybinds.changeIntakeState()) {
-                    intakeState = IntakeState.ON;
-                }
-                break;
+//            case OFF:
+//                intakeMotor.setPower(InputValues.INTAKE_POWER_SLOW);
+//
+//                if (keybinds.changeIntakeState()) {
+//                    intakeState = IntakeState.ON;
+//                }
+//                break;
 //
 //                if (getNumberOfArtifacts() < 3) {
 //                    intakeState = IntakeState.ON;
@@ -112,16 +112,16 @@ public class Intake {
 
         int numberOfArtifacts = 0;
 
-        if (firstArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+        if (Helper.getAverageDistance(firstArtifactSensor) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
             numberOfArtifacts++;
         }
-        if (secondArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+        if (Helper.getAverageDistance(secondArtifactSensor) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
             numberOfArtifacts++;
         }
-        if (thirdArtifactSensor.getDistance(DistanceUnit.INCH) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+        if (Helper.getAverageDistance(thirdArtifactSensor) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
             numberOfArtifacts++;
         }
-        return 1;
+        return numberOfArtifacts;
     }
 
 
