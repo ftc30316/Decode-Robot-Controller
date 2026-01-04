@@ -30,7 +30,7 @@ public class BlueLower1Row extends LinearOpMode {
             waitForStart();
 
             //Creates background thread
-            douglasFIRST.start(robotStartHeading, turretStartHeading);
+            douglasFIRST.start(robotStartHeading, turretStartHeading, true);
 
             // strafes to upper launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)

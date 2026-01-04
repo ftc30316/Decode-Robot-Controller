@@ -28,7 +28,8 @@ public class RedLowerLowRow extends LinearOpMode {
 
             waitForStart();
 
-            douglasFIRST.start(robotStartHeading, turretStartHeading);
+            // Creates turret background thread
+            douglasFIRST.start(robotStartHeading, turretStartHeading, true);
 
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
                     .waitSeconds(2)

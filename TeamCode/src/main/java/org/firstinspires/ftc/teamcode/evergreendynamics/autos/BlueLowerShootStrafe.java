@@ -28,7 +28,8 @@ public class BlueLowerShootStrafe extends LinearOpMode {
 
             waitForStart();
 
-            douglasFIRST.start(robotStartHeading, turretStartHeading);
+            // Creates background thread
+            douglasFIRST.start(robotStartHeading, turretStartHeading, true);
 
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
                     .waitSeconds(2)
