@@ -31,10 +31,8 @@ public class BlueLowerOffLine extends LinearOpMode {
 
             waitForStart();
 
-            douglasFIRST.start(robotStartHeading, turretStartHeading);
-
-            //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
-            //sorter.detect();
+            // Creates background thread
+            douglasFIRST.start(robotStartHeading, turretStartHeading, true);
 
             //Moves off line
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)

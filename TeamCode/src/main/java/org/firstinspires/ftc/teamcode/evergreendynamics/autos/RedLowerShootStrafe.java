@@ -27,7 +27,8 @@ public class RedLowerShootStrafe extends LinearOpMode {
 
             waitForStart();
 
-            douglasFIRST.start(robotStartHeading, turretStartHeading);
+            // Creates turret background thread
+            douglasFIRST.start(robotStartHeading, turretStartHeading, true);
 
             // Moves inside lower launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)

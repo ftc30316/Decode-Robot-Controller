@@ -28,10 +28,8 @@ public class BlueLowerStrafe extends LinearOpMode {
 
             waitForStart();
 
-            douglasFIRST.start(robotStartHeading, turretStartHeading);
-
-            //Waits for artifacts to get into divots, goes through detecting, sorting, flicking
-            //sorter.detect();
+            // Creates turret background thread
+            douglasFIRST.start(robotStartHeading, turretStartHeading, true);
 
             //Moves to upper launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
