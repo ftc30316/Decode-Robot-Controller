@@ -62,7 +62,7 @@ public class BlueLowerLowRow extends LinearOpMode {
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
-
+            douglasFIRST.turret.stopTurretBackgroundThread();
         }
     }
 

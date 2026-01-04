@@ -68,10 +68,21 @@ public class DouglasFIRST {
     }
 
     public void start(double robotHeadingDeg, double turretStartHeadingDeg) {
+        start(robotHeadingDeg, turretStartHeadingDeg, true);
+    }
+
+    public void start(double robotHeadingDeg, double turretStartHeadingDeg, boolean useTurretAimBackgroundThread) {
         turret.initialize(robotHeadingDeg, turretStartHeadingDeg);
 
         // Turns on intake
         intake.turnOnIntake();
+
+        if (useTurretAimBackgroundThread){
+            //Creates background thread
+            turret.createTurretBackgroundThread();
+            // Intake motor starts, flywheel starts, turret starts looking for the BLUE goal
+            turret.turretBackgroundThread.start();
+        }
     }
 
     public void createDatalog() {

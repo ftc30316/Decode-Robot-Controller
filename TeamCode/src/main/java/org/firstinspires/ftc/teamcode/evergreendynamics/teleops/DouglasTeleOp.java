@@ -28,7 +28,7 @@ public class DouglasTeleOp extends LinearOpMode {
 
             waitForStart();
 
-            douglasFIRST.start(0, 0);
+            douglasFIRST.start(0, 0, false);
 
             // Sets up the driving system
             while (opModeIsActive()) {

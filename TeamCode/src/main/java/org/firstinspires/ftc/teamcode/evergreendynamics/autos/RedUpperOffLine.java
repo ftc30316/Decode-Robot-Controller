@@ -41,7 +41,7 @@ public class RedUpperOffLine extends LinearOpMode {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-
+            douglasFIRST.turret.stopTurretBackgroundThread();
         }
     }
 }

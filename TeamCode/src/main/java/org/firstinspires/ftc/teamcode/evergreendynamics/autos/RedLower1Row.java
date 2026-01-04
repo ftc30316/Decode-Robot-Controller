@@ -59,7 +59,7 @@ public class RedLower1Row extends LinearOpMode {
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
-
+            douglasFIRST.turret.stopTurretBackgroundThread();
         }
     }
 

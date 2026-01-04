@@ -63,6 +63,8 @@ public class Turret {
     double desiredFieldAngleDeg;
     private Servo launchZoneLED;
     Datalog datalog = null;
+    public Thread turretBackgroundThread;
+    private volatile boolean runAutoAimThread = true;
 
     public double turretX = 0;
     public double turretY = 0;
@@ -341,6 +343,30 @@ public class Turret {
         turretMotor.setTargetPosition(0);
     }
 
+    public void createTurretBackgroundThread() {
+        // Creates a background thread so that while the robot is driving, intaking, and sorting, the turret can always be auto-locked on the goal
+        this.turretBackgroundThread = new Thread(new AutoAimThread());
+    }
+
+    public void stopTurretBackgroundThread() {
+        runAutoAimThread = false;
+    }
+
+    class AutoAimThread implements Runnable {
+        @Override
+        public void run() {
+            try {
+                while (runAutoAimThread) {
+                    adjustTurret();
+                    Helper.sleep(InputValues.TURRET_THREAD_SLEEP_TIME_MILLIS);
+                }
+            } catch (Exception e) {
+
+            } finally {
+                turretMotor.setPower(0);
+            }
+        }
+    }
 
     // Uses the position of the aprilTag to adjust the turret motor and center the aprilTag in the camera view
 
