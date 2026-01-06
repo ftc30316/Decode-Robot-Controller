@@ -112,16 +112,17 @@ public class Intake {
 
         int numberOfArtifacts = 0;
 
-//        if (Helper.getAverageDistance(firstArtifactSensor) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
-//            numberOfArtifacts++;
-//        }
-//        if (Helper.getAverageDistance(secondArtifactSensor) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
-//            numberOfArtifacts++;
-//        }
-//        if (Helper.getAverageDistance(thirdArtifactSensor) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
-//            numberOfArtifacts++;
-//        }
-        return 3;
+        if (Helper.getAverageDistance(firstArtifactSensor) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+            numberOfArtifacts++;
+        }
+        if (Helper.getAverageDistance(secondArtifactSensor) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+            numberOfArtifacts++;
+        }
+        if (Helper.getAverageDistance(thirdArtifactSensor) < InputValues.ARTIFACT_DISTANCE_DETECTION) {
+            numberOfArtifacts++;
+        }
+        return numberOfArtifacts;
+//        return 3;
     }
 
 

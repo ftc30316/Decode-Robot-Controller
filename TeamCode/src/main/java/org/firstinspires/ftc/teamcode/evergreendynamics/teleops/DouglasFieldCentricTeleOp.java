@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.evergreendynamics.robot.PoseStorage;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
 @TeleOp (group = "Evergreen Teleop")
-public class DouglasTeleOp extends LinearOpMode {
+public class DouglasFieldCentricTeleOp extends LinearOpMode {
     public DouglasFIRST douglasFIRST;
 
     @Override
@@ -19,7 +19,7 @@ public class DouglasTeleOp extends LinearOpMode {
             double turretStartHeadingDeg = PoseStorage.loadTurretHeading(hardwareMap.appContext);
             double robotHeadingDeg = Math.toDegrees(startPose.heading.toDouble());
 
-            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO); //startPose);
+            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose, DouglasFIRST.DriveMode.FIELD_CENTRIC, Turret.TurretVelocityMode.AUTO); //startPose);
 
 //            telemetry.addData("auto end pose x", startPose.position.x);
 //            telemetry.addData("auto end pose y", startPose.position.y);

@@ -15,15 +15,16 @@ public class Helper {
     }
 
     public static double getAverageDistance(DistanceSensor distanceSensor) {
+        return distanceSensor.getDistance(DistanceUnit.INCH);
 
-        double sum = 0;
-
-        for(int i = 0; i < 7; i++) {
-            double detection = distanceSensor.getDistance(DistanceUnit.INCH);
-            Helper.sleep(5);
-            sum = sum + detection;
-        }
-
-        return sum / 7;
+//        double sum = 0;
+//
+//        for(int i = 0; i < 7; i++) {
+//            double detection = distanceSensor.getDistance(DistanceUnit.INCH);
+//            Helper.sleep(5);
+//            sum = sum + detection;
+//        }
+//
+//        return sum / 7;
     }
 }
