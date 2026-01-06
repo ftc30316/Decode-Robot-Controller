@@ -71,18 +71,21 @@ public class Intake {
 //                    intakeState = IntakeState.OFF;
 //                }
                 break;
-//            case OFF:
-//                intakeMotor.setPower(InputValues.INTAKE_POWER_SLOW);
-//
+            case OFF:
+                intakeMotor.setPower(0.0);
 //                if (keybinds.changeIntakeState()) {
 //                    intakeState = IntakeState.ON;
 //                }
-//                break;
 //
 //                if (getNumberOfArtifacts() < 3) {
 //                    intakeState = IntakeState.ON;
 //                }
+                break;
         }
+    }
+
+    public void disableIntake() {
+        intakeState = IntakeState.OFF;
     }
 
     public void turnOnIntake() {

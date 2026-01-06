@@ -29,6 +29,8 @@ public class Turret {
     public enum LiftWheelState {
         ON,
 
+        REVERSED,
+
         OFF
     }
     public enum TurretLockingState {
@@ -153,10 +155,10 @@ public class Turret {
                 leftLiftWheel.setPower(1.0);
                 rightLiftWheel.setPower(1.0);
                 if (liftWheelTimer.seconds() > InputValues.LIFT_WHEEL_WAIT_SECONDS * artifactsWhenCrossWasPressed) {
-                    liftWheelState = LiftWheelState.OFF;
+                    liftWheelState = LiftWheelState.REVERSED;
                 }
                 break;
-            case OFF:
+            case REVERSED:
                 //datalog.shootCycleEndTime.set(System.currentTimeMillis());
                 leftLiftWheel.setPower(-1.0);
                 rightLiftWheel.setPower(-1.0);
@@ -166,6 +168,10 @@ public class Turret {
                     liftWheelState = LiftWheelState.ON;
                 }
                 //datalog.writeLine();
+                break;
+            case OFF:
+                leftLiftWheel.setPower(0);
+                rightLiftWheel.setPower(0);
         }
 
         // State machine for turret locking state: Auto or Manual
@@ -236,6 +242,14 @@ public class Turret {
                 }
                 break;
         }
+    }
+
+    public void disableFlywheels() {
+        flywheelState = FlywheelState.OFF;
+    }
+
+    public void disableLiftWheels() {
+        liftWheelState = LiftWheelState.OFF;
     }
 
     // If x is greater than 48

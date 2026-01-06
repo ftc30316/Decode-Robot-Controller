@@ -149,19 +149,36 @@ public class DouglasFIRST {
         // Read pose
         mecanumDrive.updatePoseEstimate();
 
-        Rotation2d negativeHeading = new Rotation2d(-mecanumDrive.localizer.getPose().heading.toDouble(), 0);
+        double headingRad = mecanumDrive.localizer.getPose().heading.toDouble();
+
+        double invertedHeadingRadians = -headingRad;
+
+        float leftStickX = -gamepad1.left_stick_x;
+        float leftStickY = gamepad1.left_stick_y;
+
+        // If on blue alliance, gamepad values are inverted. If on red, they are normal.
+        if (alliance == Alliance.BLUE) {
+            leftStickX *= -1.0f;
+            leftStickY *= -1.0f;
+            invertedHeadingRadians += Math.PI;
+        }
+
+        Rotation2d invHeading = Rotation2d.fromDouble(invertedHeadingRadians);
 
         // Create a vector from the gamepad x/y inputs
         // Then, rotate that vector by the inverse of that heading
-        Vector2d input = negativeHeading.times(new Vector2d(
-                -gamepad1.left_stick_y,
-                -gamepad1.left_stick_x));
+        Vector2d fieldInput = new Vector2d(
+                leftStickX,
+                leftStickY
+        );
+
+        Vector2d robotInput = invHeading.times(fieldInput);
 
         // Pass in the rotated input + right stick value for rotation
         // Rotation is not part of the rotated input thus must be passed in separately
         mecanumDrive.setDrivePowers(
                 new PoseVelocity2d(
-                        input,
+                        robotInput,
                         -gamepad1.right_stick_x
                 )
         );
