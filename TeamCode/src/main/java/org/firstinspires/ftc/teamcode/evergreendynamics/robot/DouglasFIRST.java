@@ -93,11 +93,13 @@ public class DouglasFIRST {
     }
 
     public void loop() {
-        telemetry.addData("robot pose", getCurrentPose());
-        telemetry.addData("robot heading", getCurrentPose().heading.toDouble());
+        Pose2d currentPose = getCurrentPose();
+        telemetry.addData("Alliance", getAlliance());
+        telemetry.addData("Drive Mode", driveMode);
+        telemetry.addData("Robot X", currentPose.position.x);
+        telemetry.addData("Robot Y", currentPose.position.y);
+        telemetry.addData("Robot Heading", currentPose.heading.toDouble());
 //        telemetry.addData("turret pose", getTurretPose());
-//        telemetry.addData("alliance", getAlliance());
-        telemetry.addData("drive mode", driveMode);
 
         switch (driveMode) {
             case ROBOT_CENTRIC:
@@ -115,6 +117,16 @@ public class DouglasFIRST {
                     driveMode = DriveMode.ROBOT_CENTRIC;
                 }
                 break;
+        }
+
+        if (keybinds.turretAllianceChangeWasPressed()) {
+            if (alliance == Alliance.BLUE) {
+                alliance = Alliance.RED;
+                turret.setAlliance(Turret.Alliance.RED);
+            } else {
+                alliance = Alliance.BLUE;
+                turret.setAlliance(Turret.Alliance.BLUE);
+            }
         }
 
         intake.loop();
@@ -153,14 +165,14 @@ public class DouglasFIRST {
 
         double invertedHeadingRadians = -headingRad;
 
-        float leftStickX = -gamepad1.left_stick_x;
-        float leftStickY = gamepad1.left_stick_y;
+        float leftStickX = gamepad1.left_stick_x;
+        float leftStickY = -gamepad1.left_stick_y;
 
         // If on blue alliance, gamepad values are inverted. If on red, they are normal.
         if (alliance == Alliance.BLUE) {
             leftStickX *= -1.0f;
             leftStickY *= -1.0f;
-            invertedHeadingRadians += Math.PI;
+            // invertedHeadingRadians += Math.PI;
         }
 
         Rotation2d invHeading = Rotation2d.fromDouble(invertedHeadingRadians);

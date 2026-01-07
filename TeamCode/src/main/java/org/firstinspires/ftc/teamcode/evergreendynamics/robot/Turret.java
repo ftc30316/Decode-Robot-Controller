@@ -126,6 +126,10 @@ public class Turret {
         turretZeroRelRobotDeg = turretFieldAngleStartDeg - robotHeadingStartDeg;
     }
 
+    public void setAlliance(Alliance alliance) {
+        this.alliance = alliance;
+    }
+
     // Starts the flywheel
     public void loop() {
 //        telemetry.addData("Flywheel: ", flywheelState);
@@ -230,16 +234,10 @@ public class Turret {
             case BLUE:
                 goalPosition = InputValues.BLUE_GOAL_POSITION;
                 adjustTurret();
-                if (keybinds.turretAllianceChangeWasPressed()) {
-                    alliance = Alliance.RED;
-                }
                 break;
             case RED:
                 goalPosition = InputValues.RED_GOAL_POSITION;
                 adjustTurret();
-                if (keybinds.turretAllianceChangeWasPressed()) {
-                    alliance = Alliance.BLUE;
-                }
                 break;
         }
     }
