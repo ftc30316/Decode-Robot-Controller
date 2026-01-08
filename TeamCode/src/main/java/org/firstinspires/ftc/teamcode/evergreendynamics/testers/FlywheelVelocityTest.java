@@ -34,7 +34,7 @@ public class FlywheelVelocityTest extends LinearOpMode {
 
             waitForStart();
 
-            douglasFIRST.start(startPose.heading.toDouble(), 0); // turret heading is robot centric
+            douglasFIRST.start(startPose.heading.toDouble(), 0, false); // turret heading is robot centric
 
             // Sets up the driving system
             while (opModeIsActive()) {
