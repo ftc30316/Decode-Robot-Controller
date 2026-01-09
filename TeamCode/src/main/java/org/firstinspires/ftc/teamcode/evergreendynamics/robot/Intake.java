@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.evergreendynamics.robot;
 import android.renderscript.ScriptGroup;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -35,6 +36,7 @@ public class Intake {
     public Intake(HardwareMap hardwareMap, Keybinds keybinds, Telemetry telemetry) {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         this.telemetry = telemetry;
         this.keybinds = keybinds;
@@ -61,7 +63,8 @@ public class Intake {
         turnOnLEDs();
         switch (intakeState) {
             case ON:
-                intakeMotor.setPower(InputValues.INTAKE_POWER);
+//                intakeMotor.setPower(InputValues.INTAKE_POWER);
+                intakeMotor.setVelocity(InputValues.INTAKE_VELOCITY);
                 firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
                 secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
                 thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);

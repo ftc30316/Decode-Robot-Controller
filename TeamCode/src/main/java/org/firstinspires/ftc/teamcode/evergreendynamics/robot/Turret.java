@@ -44,7 +44,7 @@ public class Turret {
     }
 
     FlywheelState flywheelState = FlywheelState.ON;
-    LiftWheelState liftWheelState = LiftWheelState.OFF;
+    LiftWheelState liftWheelState = LiftWheelState.REVERSED;
     TurretLockingState turretLockingState = TurretLockingState.AUTO;
     private Telemetry telemetry;
 
@@ -126,10 +126,14 @@ public class Turret {
         turretZeroRelRobotDeg = turretFieldAngleStartDeg - robotHeadingStartDeg;
     }
 
+    public void setAlliance(Alliance alliance) {
+        this.alliance = alliance;
+    }
+
     // Starts the flywheel
     public void loop() {
 //        telemetry.addData("Flywheel: ", flywheelState);
-//        telemetry.addData("Lift: ", liftWheelState);
+        telemetry.addData("Lift: ", liftWheelState);
 //        telemetry.addData("Turret: ", turretLockingState);
         turnOnLEDs();
         // State machine for the FLY wheels
@@ -172,6 +176,8 @@ public class Turret {
             case OFF:
                 leftLiftWheel.setPower(0);
                 rightLiftWheel.setPower(0);
+
+                break;
         }
 
         // State machine for turret locking state: Auto or Manual
@@ -230,16 +236,10 @@ public class Turret {
             case BLUE:
                 goalPosition = InputValues.BLUE_GOAL_POSITION;
                 adjustTurret();
-                if (keybinds.turretAllianceChangeWasPressed()) {
-                    alliance = Alliance.RED;
-                }
                 break;
             case RED:
                 goalPosition = InputValues.RED_GOAL_POSITION;
                 adjustTurret();
-                if (keybinds.turretAllianceChangeWasPressed()) {
-                    alliance = Alliance.BLUE;
-                }
                 break;
         }
     }
@@ -306,8 +306,8 @@ public class Turret {
     }
 
     public double getFlywheelVelocity(double distanceToGoal) {
-        double[] D = {         93.4,   125,   141}; //,  144,  156,  168,  180};
-        double[] velocity = {  1315,  1485,  2000}; //, 1475, 1421, 1680, 1695};
+        double[] D = {        59.1, 91.4,   117,  125,   141}; //,  144,  156,  168,  180};
+        double[] velocity = {  950,  950,  1350, 1485,  2000}; //, 1475, 1421, 1680, 1695};
         int above_index = 0;
         int below_index = 0;
 

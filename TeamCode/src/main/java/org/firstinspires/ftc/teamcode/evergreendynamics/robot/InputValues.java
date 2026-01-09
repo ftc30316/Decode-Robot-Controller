@@ -30,6 +30,7 @@ public class InputValues {
 
     // Intake motor
     public static double INTAKE_POWER = 1;
+    public static final double INTAKE_VELOCITY = 2500;
     public static final double INTAKE_POWER_SLOW = 0.1;
     public static double SLOW_INTAKE_SPEED = 1700;
 
