@@ -43,7 +43,7 @@ public class BlueLower1Row extends LinearOpMode {
 
             // collects first row of artifacts
             Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
-                    .strafeTo(new Vector2d(-12,-52), new TranslationalVelConstraint(5.0))
+                    .strafeTo(new Vector2d(-12,-52), new TranslationalVelConstraint(15.0))
                     .strafeTo(new Vector2d(-12,-20))
                     .build());
             douglasFIRST.savePose();
