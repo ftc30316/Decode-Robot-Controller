@@ -57,4 +57,11 @@ public class InputValues {
     public static double YELLOW = 0.33;
     public static double GREEN = 0.45;
 
+    // Alliance enum
+
+    public enum Alliance {
+        BLUE,
+        RED
+    }
+
 }

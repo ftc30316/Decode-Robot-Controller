@@ -33,12 +33,7 @@ public class DouglasFIRST {
     Turret.TurretVelocityMode turretVelocityMode = Turret.TurretVelocityMode.AUTO;
     DriveMode driveMode = DriveMode.ROBOT_CENTRIC;
 
-    public enum Alliance {
-        BLUE,
-        RED
-    }
-
-    public Alliance alliance = Alliance.BLUE;
+    public InputValues.Alliance alliance = InputValues.Alliance.BLUE;
 
 
     public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
@@ -47,7 +42,7 @@ public class DouglasFIRST {
         this.mecanumDrive = new MecanumDrive(hardwareMap, keybinds, beginPose);
         this.intake = new Intake(hardwareMap, keybinds, telemetry);
         this.telemetry = telemetry;
-        this.turret = new Turret(hardwareMap, telemetry, keybinds, getGoalPosition(hardwareMap), mecanumDrive, intake, turretVelocityMode, datalog);
+        this.turret = new Turret(hardwareMap, telemetry, keybinds, detectAlliance(hardwareMap), mecanumDrive, intake, turretVelocityMode, datalog);
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
@@ -55,11 +50,11 @@ public class DouglasFIRST {
         createDatalog();
     }
 
-    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Vector2d goalPosition, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
+    public DouglasFIRST(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, InputValues.Alliance alliance, Pose2d beginPose, DriveMode driveMode, Turret.TurretVelocityMode turretVelocityMode) {
         this.mecanumDrive = new MecanumDrive(hardwareMap, keybinds, beginPose);
         this.intake = new Intake(hardwareMap, keybinds, telemetry);
         this.telemetry = telemetry;
-        this.turret = new Turret(hardwareMap, telemetry, keybinds, goalPosition, mecanumDrive, intake, turretVelocityMode, datalog);
+        this.turret = new Turret(hardwareMap, telemetry, keybinds, alliance, mecanumDrive, intake, turretVelocityMode, datalog);
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
@@ -121,12 +116,12 @@ public class DouglasFIRST {
         }
 
         if (keybinds.turretAllianceChangeWasPressed()) {
-            if (alliance == Alliance.BLUE) {
-                alliance = Alliance.RED;
-                turret.setAlliance(Turret.Alliance.RED);
+            if (alliance == InputValues.Alliance.BLUE) {
+                alliance = InputValues.Alliance.RED;
+                turret.setAlliance(InputValues.Alliance.RED);
             } else {
-                alliance = Alliance.BLUE;
-                turret.setAlliance(Turret.Alliance.BLUE);
+                alliance = InputValues.Alliance.BLUE;
+                turret.setAlliance(InputValues.Alliance.BLUE);
             }
         }
 
@@ -185,7 +180,7 @@ public class DouglasFIRST {
         }
 
         // If on blue alliance, gamepad values are inverted. If on red, they are normal.
-        if (alliance == Alliance.BLUE) {
+        if (alliance == InputValues.Alliance.BLUE) {
             leftStickX *= -1.0f;
             leftStickY *= -1.0f;
             // invertedHeadingRadians += Math.PI;
@@ -216,31 +211,26 @@ public class DouglasFIRST {
         return new Vector2d(turret.turretX, turret.turretY);
     }
 
-    public Vector2d getGoalPosition(HardwareMap hardwareMap) {
-        Vector2d goalPosition = InputValues.BLUE_GOAL_POSITION;
+    public InputValues.Alliance detectAlliance(HardwareMap hardwareMap) {
         mecanumDrive.updatePoseEstimate();
 
         if (mecanumDrive.localizer.getPose().position.y < 0) {
-            alliance = Alliance.BLUE;
-            return goalPosition;
-        }
-        if (mecanumDrive.localizer.getPose().position.y > 0) {
-            goalPosition = InputValues.RED_GOAL_POSITION;
-            alliance = Alliance.RED;
-            return goalPosition;
+            alliance = InputValues.Alliance.BLUE;
+        } else {
+            alliance = InputValues.Alliance.RED;
         }
 
-        return goalPosition;
+        return alliance;
     }
 
     public Vector2d getParkPosition(HardwareMap hardwareMap) {
         Vector2d parkPosition = InputValues.BLUE_PARK_POSITION;
 
-        if (alliance == Alliance.BLUE) {
+        if (alliance == InputValues.Alliance.BLUE) {
             parkPosition = InputValues.BLUE_PARK_POSITION;
             return parkPosition;
         }
-        if (alliance == Alliance.RED) {
+        if (alliance == InputValues.Alliance.RED) {
             parkPosition = InputValues.RED_PARK_POSITION;
             return parkPosition;
         }
@@ -277,7 +267,7 @@ public class DouglasFIRST {
         goToZero();
     }
 
-    public Alliance getAlliance() {
+    public InputValues.Alliance getAlliance() {
         return alliance;
     }
 

@@ -72,24 +72,19 @@ public class Turret {
     public double turretX = 0;
     public double turretY = 0;
 
-    public enum Alliance {
-        BLUE,
-        RED
-    }
-
-    public Alliance alliance = Alliance.BLUE;
+    public InputValues.Alliance alliance = InputValues.Alliance.BLUE;
     TurretVelocityMode turretVelocityMode = TurretVelocityMode.AUTO;
     public ElapsedTime liftWheelTimer = new ElapsedTime();
 
     public Turret(HardwareMap hardwareMap, Telemetry telemetry,
-                  Keybinds keybinds, Vector2d goalPosition,
+                  Keybinds keybinds, InputValues.Alliance alliance,
                   MecanumDrive mecanumDrive, Intake intake,
                   TurretVelocityMode turretVelocityMode, Datalog datalog) {
 
         this.telemetry = telemetry;
         this.intake = intake;
         this.keybinds = keybinds;
-        this.goalPosition = goalPosition;
+        this.alliance = alliance;
         this.mecanumDrive = mecanumDrive;
         this.turretVelocityMode = turretVelocityMode;
         this.datalog = datalog;
@@ -127,7 +122,7 @@ public class Turret {
         turretZeroRelRobotDeg = turretFieldAngleStartDeg - robotHeadingStartDeg;
     }
 
-    public void setAlliance(Alliance alliance) {
+    public void setAlliance(InputValues.Alliance alliance) {
         this.alliance = alliance;
     }
 

@@ -23,7 +23,7 @@ public class BlueUpper1Row extends LinearOpMode {
         float turretStartHeading = 45;
         double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
-        this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.BLUE_GOAL_POSITION, beginPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO);
+        this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.Alliance.BLUE, beginPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO);
 
 
         waitForStart();
