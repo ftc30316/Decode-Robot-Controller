@@ -40,7 +40,8 @@ public class Turret {
 
     public enum TurretVelocityMode {
         AUTO,
-        MANUAL
+        MANUAL,
+        OFF
     }
 
     FlywheelState flywheelState = FlywheelState.ON;
@@ -231,6 +232,10 @@ public class Turret {
                     rightFlywheel.setVelocity(manualVelocity);
                 }
                 break;
+            case OFF:
+                leftFlywheel.setVelocity(0.0);
+                rightFlywheel.setVelocity(0.0);
+                break;
         }
         switch (alliance) {
             case BLUE:
@@ -246,6 +251,7 @@ public class Turret {
 
     public void disableFlywheels() {
         flywheelState = FlywheelState.OFF;
+        turretVelocityMode = TurretVelocityMode.OFF;
     }
 
     public void disableLiftWheels() {

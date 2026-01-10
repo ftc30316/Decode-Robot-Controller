@@ -5,7 +5,7 @@
 // 0.27 and below is off
 // 0.73 and above is white
 
-package org.firstinspires.ftc.teamcode.tuning;
+package org.firstinspires.ftc.teamcode.evergreendynamics.testers;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;

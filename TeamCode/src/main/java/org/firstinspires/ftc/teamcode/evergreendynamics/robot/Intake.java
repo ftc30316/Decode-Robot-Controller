@@ -35,7 +35,7 @@ public class Intake {
 
     public Intake(HardwareMap hardwareMap, Keybinds keybinds, Telemetry telemetry) {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
-        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         this.telemetry = telemetry;
@@ -92,10 +92,12 @@ public class Intake {
     }
 
     public void turnOnIntake() {
-        intakeMotor.setPower(InputValues.INTAKE_POWER);
-        firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
-        secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
-        thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+        if (intakeState == IntakeState.ON) {
+            intakeMotor.setPower(InputValues.INTAKE_POWER);
+            firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+            secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+            thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+        }
     }
 
     public void turnOnLEDs() {

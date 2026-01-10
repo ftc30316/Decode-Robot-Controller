@@ -99,6 +99,7 @@ public class DouglasFIRST {
         telemetry.addData("Robot X", currentPose.position.x);
         telemetry.addData("Robot Y", currentPose.position.y);
         telemetry.addData("Robot Heading", currentPose.heading.toDouble());
+        telemetry.addData("Robot speed", mecanumDrive.drivePowers);
 //        telemetry.addData("turret pose", getTurretPose());
 
         switch (driveMode) {
@@ -134,6 +135,13 @@ public class DouglasFIRST {
         checkAndRunDriverShortcuts();
     }
 
+    public void enableDemoMode() {
+        turret.disableFlywheels();
+        turret.disableLiftWheels();
+        intake.disableIntake();
+        mecanumDrive.disableDrivePowers();
+    }
+
     public void setRobotCentricDrivePowers() {
         if (mecanumDrive.drivePowers == MecanumDrive.DrivePowers.SLOW) {
             telemetry.addData("robot speed", "SLOW");
@@ -145,7 +153,7 @@ public class DouglasFIRST {
                     -gamepad1.right_stick_x * 0.25
             ));
 
-        } else {
+        } else if (mecanumDrive.drivePowers == MecanumDrive.DrivePowers.NORMAL){
             telemetry.addData("robot speed", "FAST");
             mecanumDrive.setDrivePowers(new PoseVelocity2d(
                     new Vector2d(
@@ -167,6 +175,13 @@ public class DouglasFIRST {
 
         float leftStickX = gamepad1.left_stick_x;
         float leftStickY = -gamepad1.left_stick_y;
+        float rightStickX = -gamepad1.right_stick_x;
+
+        if (mecanumDrive.drivePowers == MecanumDrive.DrivePowers.SLOW) {
+            leftStickX *= 0.25f;
+            leftStickY *= 0.25f;
+            rightStickX *= 0.25f;
+        }
 
         // If on blue alliance, gamepad values are inverted. If on red, they are normal.
         if (alliance == Alliance.BLUE) {
@@ -191,7 +206,7 @@ public class DouglasFIRST {
         mecanumDrive.setDrivePowers(
                 new PoseVelocity2d(
                         robotInput,
-                        -gamepad1.right_stick_x
+                        rightStickX
                 )
         );
 

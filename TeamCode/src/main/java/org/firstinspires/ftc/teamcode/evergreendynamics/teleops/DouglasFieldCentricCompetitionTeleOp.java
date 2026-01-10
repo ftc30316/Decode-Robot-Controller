@@ -9,22 +9,26 @@ import org.firstinspires.ftc.teamcode.evergreendynamics.robot.PoseStorage;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
 @TeleOp (group = "Evergreen Teleop")
-public class DemoTeleOp extends LinearOpMode {
+public class DouglasFieldCentricCompetitionTeleOp extends LinearOpMode {
     public DouglasFIRST douglasFIRST;
 
     @Override
     public void runOpMode() {
         try {
-            Pose2d startPose = new Pose2d(0, 0, 0); //PoseStorage.loadPose(hardwareMap.appContext);
+            Pose2d startPose = PoseStorage.loadPose(hardwareMap.appContext);
             double turretStartHeadingDeg = PoseStorage.loadTurretHeading(hardwareMap.appContext);
             double robotHeadingDeg = Math.toDegrees(startPose.heading.toDouble());
 
-            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO);
-            douglasFIRST.enableDemoMode();
+            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose, DouglasFIRST.DriveMode.FIELD_CENTRIC, Turret.TurretVelocityMode.AUTO); //startPose);
+
+//            telemetry.addData("auto end pose x", startPose.position.x);
+//            telemetry.addData("auto end pose y", startPose.position.y);
+//            telemetry.addData("auto end pose heading", Math.toDegrees(startPose.heading.toDouble()));
+//            telemetry.addData("auto end turret heading", turretStartHeadingDeg);
 
             waitForStart();
 
-            douglasFIRST.start(0, 0, false);
+            douglasFIRST.start(robotHeadingDeg, turretStartHeadingDeg, false);
 
             // Sets up the driving system
             while (opModeIsActive()) {
@@ -38,5 +42,6 @@ public class DemoTeleOp extends LinearOpMode {
         } finally {
 
         }
+
     }
 }

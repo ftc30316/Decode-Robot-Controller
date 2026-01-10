@@ -76,7 +76,7 @@ public final class MecanumDrive {
         public double kA = 0.00005;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = 50;
+        public double maxWheelVel = 100;
         public double minProfileAccel = -30;
         public double maxProfileAccel = 50;
 
@@ -95,7 +95,8 @@ public final class MecanumDrive {
     }
     public enum DrivePowers {
         NORMAL,
-        SLOW
+        SLOW,
+        OFF
     }
     public DrivePowers drivePowers = DrivePowers.NORMAL;
     public static Params PARAMS = new Params();
@@ -280,8 +281,12 @@ public final class MecanumDrive {
                 if (keybinds.changeDrivePowersRightWasPressed()) {
                     drivePowers = MecanumDrive.DrivePowers.NORMAL;
                 }
-
+                break;
         }
+    }
+
+    public void disableDrivePowers() {
+        drivePowers = DrivePowers.OFF;
     }
 
     public void setDrivePowers(PoseVelocity2d powers) {

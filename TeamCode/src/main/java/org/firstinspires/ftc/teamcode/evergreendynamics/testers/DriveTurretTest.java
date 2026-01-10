@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.tuning;
+package org.firstinspires.ftc.teamcode.evergreendynamics.testers;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -10,16 +10,17 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.tuning.TuningOpModes;
 
 @TeleOp
 @Disabled
 
-public class EncoderTest extends LinearOpMode {
+public class DriveTurretTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         DcMotorEx turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
-//        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+//        turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
             //MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
@@ -29,13 +30,28 @@ public class EncoderTest extends LinearOpMode {
 
             waitForStart();
             double ticksPerRev = turretMotor.getMotorType().getTicksPerRev();
-            //leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             TelemetryPacket packet = new TelemetryPacket();
             packet.put("velocity", turretMotor.getVelocity());
             packet.put("position", turretMotor.getCurrentPosition());
             packet.put("is at target", !turretMotor.isBusy());
+            packet.put("ticks per rev", ticksPerRev);
             FtcDashboard.getInstance().sendTelemetryPacket(packet);
+
+            sleep(5000);
+
+            //Set the amount of ticks to move
+            turretMotor.setTargetPosition(100);
+
+            // Switch to RUN_TO_POSITION mode
+            turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // Start the motor moving by setting the max velocity to ___ ticks per second
+            turretMotor.setVelocity(10);
+
+
+
 
             while (opModeIsActive()) {
 //                drive.setDrivePowers(new PoseVelocity2d(
@@ -50,13 +66,16 @@ public class EncoderTest extends LinearOpMode {
 //
 //                Pose2d pose = drive.localizer.getPose();
 
+
+
                 packet = new TelemetryPacket();
                 packet.put("velocity", turretMotor.getVelocity());
                 packet.put("position", turretMotor.getCurrentPosition());
                 packet.put("is at target", !turretMotor.isBusy());
+                packet.put("ticks per rev", ticksPerRev);
                 FtcDashboard.getInstance().sendTelemetryPacket(packet);
                 telemetry.update();
-                sleep(200);
+                sleep(50);
             }
         }
         else {
