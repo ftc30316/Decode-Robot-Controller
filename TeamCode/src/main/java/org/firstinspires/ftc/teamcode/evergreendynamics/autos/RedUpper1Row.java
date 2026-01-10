@@ -43,7 +43,7 @@ public class RedUpper1Row extends LinearOpMode {
 
             // Collects upper row
             Actions.runBlocking(douglasFIRST.getActionBuilder()
-                    .strafeTo(new Vector2d(-12,54), new TranslationalVelConstraint(5.0))
+                    .strafeTo(new Vector2d(-12,54), new TranslationalVelConstraint(15.0))
                     .strafeTo(new Vector2d(-12,20))
                     .waitSeconds(2)
                     .build());
