@@ -40,7 +40,7 @@ public class BlueLowerThreeRow extends LinearOpMode {
                     // Lines up with low row
                     .strafeTo(new Vector2d(35, -30))
                     // Collects low row with slow speed
-                    .strafeTo(new Vector2d(35,-60), new TranslationalVelConstraint(15.0))
+                    .strafeTo(new Vector2d(35,-60), new TranslationalVelConstraint(10.0))
                     // Goes to lower launch zone to shoot
                     .strafeTo(new Vector2d(62,-12))
                     .build());
@@ -55,7 +55,7 @@ public class BlueLowerThreeRow extends LinearOpMode {
                     // Lines up with middle row
                     .strafeTo(new Vector2d(11, -30))
                     // Collects middle row with slow speed
-                    .strafeTo(new Vector2d(11, -60), new TranslationalVelConstraint(15.0))
+                    .strafeTo(new Vector2d(11, -60), new TranslationalVelConstraint(10.0))
                     // Backs up
                     .strafeTo(new Vector2d(11, -55))
                     // Goes to upper launch zone to shoot
@@ -72,7 +72,7 @@ public class BlueLowerThreeRow extends LinearOpMode {
                     // Lines up with upper row
                     .strafeTo(new Vector2d(-13, -30))
                     // Collects upper row with slow speed
-                    .strafeTo(new Vector2d(-13, -55), new TranslationalVelConstraint(15.0))
+                    .strafeTo(new Vector2d(-13, -55), new TranslationalVelConstraint(10.0))
                     // Goes to upper launch zone to shoot
                     .strafeTo(new Vector2d(-13, -13))
                     .build());
