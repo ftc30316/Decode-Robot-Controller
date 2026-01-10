@@ -40,8 +40,8 @@ public class RedLowerLowRow extends LinearOpMode {
 
             // Collects lower row
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .strafeTo(new Vector2d(36, 12), new TranslationalVelConstraint(5.0))
-                    .strafeTo(new Vector2d(36, 62))
+                    .strafeTo(new Vector2d(36, 12))
+                    .strafeTo(new Vector2d(36, 62), new TranslationalVelConstraint(5.0))
                     .build());
             douglasFIRST.savePose();
 
