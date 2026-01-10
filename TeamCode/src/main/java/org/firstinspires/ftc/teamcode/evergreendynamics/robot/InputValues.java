@@ -41,9 +41,9 @@ public class InputValues {
     public static double TICKS_PER_DEGREE = 5.3277777778;
 
     // Goal positions
-    public static Vector2d BLUE_GOAL_POSITION = new Vector2d(-66,-62);
+    public static Vector2d BLUE_GOAL_POSITION = new Vector2d(-66,-60);
 
-    public static Vector2d RED_GOAL_POSITION = new Vector2d(-66,62);
+    public static Vector2d RED_GOAL_POSITION = new Vector2d(-66,58);
 
     // Park positions
     public static Vector2d BLUE_PARK_POSITION = new Vector2d(39,34);

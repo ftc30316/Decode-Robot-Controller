@@ -106,6 +106,7 @@ public class Turret {
         leftLiftWheel.setDirection(CRServo.Direction.FORWARD);
         rightLiftWheel.setDirection(CRServo.Direction.REVERSE);
 
+        setUpGoalPosition();
     }
 
     public void initialize(double robotHeadingStartDeg,
@@ -240,6 +241,17 @@ public class Turret {
             case RED:
                 goalPosition = InputValues.RED_GOAL_POSITION;
                 adjustTurret();
+                break;
+        }
+    }
+
+    public void setUpGoalPosition() {
+        switch (alliance) {
+            case BLUE:
+                goalPosition = InputValues.BLUE_GOAL_POSITION;
+                break;
+            case RED:
+                goalPosition = InputValues.RED_GOAL_POSITION;
                 break;
         }
     }

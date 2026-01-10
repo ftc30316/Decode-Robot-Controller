@@ -41,7 +41,6 @@ public class BlueLowerOffLine extends LinearOpMode {
 
             douglasFIRST.savePose();
 
-            sleep(30000);
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
