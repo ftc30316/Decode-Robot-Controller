@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.evergreendynamics.robot.PoseStorage;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
 @TeleOp (group = "Evergreen Teleop")
-public class DouglasFieldCentricCompetitionTeleOp extends LinearOpMode {
+public class CompetitionDouglasFieldCentricTeleOp extends LinearOpMode {
     public DouglasFIRST douglasFIRST;
 
     @Override
