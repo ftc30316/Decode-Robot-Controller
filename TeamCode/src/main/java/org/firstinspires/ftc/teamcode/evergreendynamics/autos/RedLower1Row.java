@@ -42,7 +42,7 @@ public class RedLower1Row extends LinearOpMode {
 
             // Collects upper row
             Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
-                    .strafeTo(new Vector2d(-12,52), new TranslationalVelConstraint(5.0))
+                    .strafeTo(new Vector2d(-12,52))//, new TranslationalVelConstraint(5.0))
                     .strafeTo(new Vector2d(-12,20))
                     .build());
             douglasFIRST.savePose();
