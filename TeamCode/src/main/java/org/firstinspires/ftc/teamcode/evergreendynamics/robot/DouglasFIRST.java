@@ -132,6 +132,7 @@ public class DouglasFIRST {
 
         intake.loop();
         turret.loop();
+        mecanumDrive.loop();
         checkAndRunDriverShortcuts();
     }
 

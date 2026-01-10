@@ -51,6 +51,6 @@ public class Keybinds {
 
     // Mecanum drive
     public boolean changeDrivePowersRightWasPressed() {
-        return gamepad1.dpadRightWasPressed();
+        return gamepad2.dpadRightWasPressed();
     }
 }
