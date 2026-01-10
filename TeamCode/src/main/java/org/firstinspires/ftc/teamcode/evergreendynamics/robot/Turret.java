@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl;
@@ -115,7 +116,9 @@ public class Turret {
         // 1) Reset encoder so current mechanical position = 0 ticks
         turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turretMotor.setTargetPosition(0);
-        turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        PIDFCoefficients pidfNew = new PIDFCoefficients(InputValues.P, InputValues.I, InputValues.D, InputValues.F);
+        turretMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pidfNew);
 
         // 2) Compute turret angle relative to robot body when encoder = 0
         //    K = (turret field angle) - (robot field heading)

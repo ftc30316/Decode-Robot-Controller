@@ -28,6 +28,13 @@ public class InputValues {
     public static double TURRET_OFFSET_X = -5.0;
     public static double TURRET_OFFSET_Y = 0;
 
+    // Turret PIDF values
+
+    public static double P = 10.0;
+    public static double I = 3.0;
+    public static double D = 0.0;
+    public static double F = 12.0;
+
     // Intake motor
     public static double INTAKE_POWER = 1;
     public static final double INTAKE_VELOCITY = 2500;
