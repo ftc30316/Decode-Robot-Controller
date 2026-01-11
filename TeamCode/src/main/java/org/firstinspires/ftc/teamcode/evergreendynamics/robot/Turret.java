@@ -104,6 +104,10 @@ public class Turret {
         leftFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        PIDFCoefficients pidfNew = new PIDFCoefficients(InputValues.P, InputValues.I, InputValues.D, InputValues.F);
+        leftFlywheel.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfNew);
+        rightFlywheel.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfNew);
+
         leftLiftWheel.setDirection(CRServo.Direction.FORWARD);
         rightLiftWheel.setDirection(CRServo.Direction.REVERSE);
 
@@ -116,9 +120,9 @@ public class Turret {
         // 1) Reset encoder so current mechanical position = 0 ticks
         turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turretMotor.setTargetPosition(0);
-        //turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        PIDFCoefficients pidfNew = new PIDFCoefficients(InputValues.P, InputValues.I, InputValues.D, InputValues.F);
-        turretMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pidfNew);
+        turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        PIDFCoefficients pidfNew = new PIDFCoefficients(InputValues.P, InputValues.I, InputValues.D, InputValues.F);
+//        turretMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pidfNew);
 
         // 2) Compute turret angle relative to robot body when encoder = 0
         //    K = (turret field angle) - (robot field heading)
@@ -323,7 +327,7 @@ public class Turret {
 
     public double getFlywheelVelocity(double distanceToGoal) {
         double[] D = {        59.1, 91.4,   117,  125,   141}; //,  144,  156,  168,  180};
-        double[] velocity = {  950,  950,  1350, 1550,  2230}; //, 1475, 1421, 1680, 1695};
+        double[] velocity = {  900,  950,  1350, 1550,  2400}; //, 1475, 1421, 1680, 1695};
         int above_index = 0;
         int below_index = 0;
 
