@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.autos;
 
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.ProfileAccelConstraint;
-import com.acmerobotics.roadrunner.Rotation2d;
-import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -15,7 +12,7 @@ import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
 @Autonomous (group = "Evergreen Autos")
-public class BlueLowerThreeRow extends LinearOpMode {
+public class BlueLowerTwoRow extends LinearOpMode {
     public DouglasFIRST douglasFIRST;
 
     @Override
@@ -50,7 +47,7 @@ public class BlueLowerThreeRow extends LinearOpMode {
                     // Lines up with low row
                     .strafeTo(new Vector2d(35, -30))
                     // Collects low row
-                    .strafeTo(new Vector2d(35,-44))
+                    .strafeTo(new Vector2d(35,-46))
                     // Goes to lower launch zone to shoot
                     .strafeTo(new Vector2d(48,-12))
                     .build());
@@ -68,7 +65,7 @@ public class BlueLowerThreeRow extends LinearOpMode {
                     // Lines up with middle row
                     .strafeTo(new Vector2d(11, -30))
                     // Collects middle row
-                    .strafeTo(new Vector2d(11, -50))
+                    .strafeTo(new Vector2d(11, -52))
                     // Backs up
                     //.strafeTo(new Vector2d(11, -55))
                     // Goes to upper launch zone to shoot
@@ -78,21 +75,6 @@ public class BlueLowerThreeRow extends LinearOpMode {
             douglasFIRST.savePose();
 
             // Shoots middle row
-            douglasFIRST.shootArtifacts();
-
-            // Collects top row and goes back to upper launch zone
-            Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
-                    // Lines up with upper row
-                    .strafeTo(new Vector2d(-13, -30))
-                    // Collects upper row
-                    .strafeTo(new Vector2d(-13, -50))
-                    // Goes to upper launch zone to shoot
-                    .strafeTo(new Vector2d(-13, -13))
-                    .build());
-
-            douglasFIRST.savePose();
-
-            // Shoots top row
             douglasFIRST.shootArtifacts();
 
             // Moves off line
