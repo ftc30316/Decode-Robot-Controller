@@ -327,7 +327,7 @@ public class Turret {
 
     public double getFlywheelVelocity(double distanceToGoal) {
         double[] D = {        59.1,  91.4,   95,  117,  125,   141}; //,  144,  156,  168,  180};
-        double[] velocity = {  1000,  1200, 1350, 2000, 3500,  5000}; //, 1475, 1421, 1680, 1695};
+        double[] velocity = {  1000,  1200, 1350, 2500, 4000,  5000}; //, 1475, 1421, 1680, 1695};
         int above_index = 0;
         int below_index = 0;
 

@@ -33,7 +33,8 @@ public class BlueLowerLowRow extends LinearOpMode {
             douglasFIRST.start(robotStartHeading, turretStartHeading, true);
 
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .waitSeconds(6)
+                    .waitSeconds(3)
+                    .strafeTo(new Vector2d(58, -12))
                     .build());
             douglasFIRST.shootArtifacts();
 
@@ -49,9 +50,9 @@ public class BlueLowerLowRow extends LinearOpMode {
                     .build());
             douglasFIRST.savePose();
 
-            Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .waitSeconds(6)
-                    .build());
+//            Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
+//                    .waitSeconds(6)
+//                    .build());
             // shoots from lower launch zone
             douglasFIRST.shootArtifacts();
 
