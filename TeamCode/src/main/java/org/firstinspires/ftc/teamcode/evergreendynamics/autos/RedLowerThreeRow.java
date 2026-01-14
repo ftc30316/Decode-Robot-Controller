@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.autos;
 
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.ProfileAccelConstraint;
-import com.acmerobotics.roadrunner.Rotation2d;
-import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -15,7 +12,7 @@ import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
 @Autonomous (group = "Evergreen Autos")
-public class BlueLowerThreeRow extends LinearOpMode {
+public class RedLowerThreeRow extends LinearOpMode {
     public DouglasFIRST douglasFIRST;
 
     @Override
@@ -27,7 +24,7 @@ public class BlueLowerThreeRow extends LinearOpMode {
             float turretStartHeading = -90;
             double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
-            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.Alliance.BLUE, beginPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO);
+            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.Alliance.RED, beginPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO);
 
             waitForStart();
 
@@ -40,7 +37,7 @@ public class BlueLowerThreeRow extends LinearOpMode {
                     .build());
 
             // Waits for flywheels to speed up
-            //Helper.sleep(3000);
+            Helper.sleep(3000);
 
             // Shoots preloaded
             douglasFIRST.shootArtifacts();
@@ -58,7 +55,7 @@ public class BlueLowerThreeRow extends LinearOpMode {
             douglasFIRST.savePose();
 
             // Waits for flywheels to speed up
-            //Helper.sleep(2000);
+            Helper.sleep(2000);
 
             // Shoots low row
             douglasFIRST.shootArtifacts();

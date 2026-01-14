@@ -137,7 +137,9 @@ public class Turret {
     // Starts the flywheel
     public void loop() {
 //        telemetry.addData("Flywheel: ", flywheelState);
-        telemetry.addData("Lift: ", liftWheelState);
+        telemetry.addData("Flywheel Velocity", leftFlywheel.getVelocity());
+        telemetry.addData("Flywheel Velocity", rightFlywheel.getVelocity());
+
 //        telemetry.addData("Turret: ", turretLockingState);
         turnOnLEDs();
         // State machine for the FLY wheels
@@ -326,51 +328,56 @@ public class Turret {
     }
 
     public double getFlywheelVelocity(double distanceToGoal) {
-        double[] D = {        59.1,  91.4,   95,  117,  125,   141}; //,  144,  156,  168,  180};
-        double[] velocity = {  1000,  1200, 1350, 2500, 4000,  5000}; //, 1475, 1421, 1680, 1695};
-        int above_index = 0;
-        int below_index = 0;
-
-
-        for(int index = 0; index < D.length; index ++) {
-            if (D[index] > distanceToGoal) {
-                above_index = index;
-                below_index = index - 1;
-                break;
-            }
-        }
+//        double[] D = {          60,    95,    120}; //117,  125,  144,  156,  168,  180};
+//        double[] velocity = {  800,   950,   2300}; //1350, 1550, 1475, 1421, 1680, 1695};
+//        int above_index = 0;
+//        int below_index = 0;
+//
+//
+//        for(int index = 0; index < D.length; index ++) {
+//            if (D[index] > distanceToGoal) {
+//                above_index = index;
+//                below_index = index - 1;
+//                break;
+//            }
+//        }
 
         // Choose whichever index where you are less than it but greater than the last one
         // If you are less than
 
-
-        // Clamp to valid range for interpolation
-        if (below_index <= 0) {
-            below_index = 0;
-            above_index = 1;
-        } else if (above_index >= D.length - 1) {
-            // If we're at or beyond the last point, just return the last velocity
-            return velocity[velocity.length - 1];
+        if (distanceToGoal <= 50) {
+            return 825.0;
+        } else if (50 < distanceToGoal && distanceToGoal <= 110) {
+            return 950.0;
+        } else {
+            return 2360.0;
         }
+//        // Clamp to valid range for interpolation
+//        if (below_index <= 0) {
+//            below_index = 0;
+//            above_index = 1;
+//        } else if (above_index >= D.length - 1) {
+//            // If we're at or beyond the last point, just return the last velocity
+//            return velocity[velocity.length - 1];
+//        }
+//
+//        double x0 = D[below_index];
+//        double x1 = D[above_index];
+//        double v0 = velocity[below_index];
+//        double v1 = velocity[above_index];
+//
+//        // Fraction between the two distance points
+//        double t = (v1 - v0) / (x1 - x0);  // should be between 0 and 1
+//
+//        // Proper linear interpolation: v = v0 + t * (v1 - v0)
+//        double flywheelV = v0 + t * (distanceToGoal - x0);
 
-        double x0 = D[below_index];
-        double x1 = D[above_index];
-        double v0 = velocity[below_index];
-        double v1 = velocity[above_index];
-
-        // Fraction between the two distance points
-        double t = (v1 - v0) / (x1 - x0);  // should be between 0 and 1
-
-        // Proper linear interpolation: v = v0 + t * (v1 - v0)
-        double flywheelV = v0 + t * (distanceToGoal - x0);
-
-        telemetry.addData("flywheel velocity", flywheelV);
 //        telemetry.addData("velocity index", v0);
 //        telemetry.addData("distance index", x0);
 //        telemetry.addData("index", above_index);
-        telemetry.addData("distance from goal", distanceToGoal);
+        //telemetry.addData("distance from goal", distanceToGoal);
 
-        return flywheelV;
+//        return flywheelV;
     }
     public void resetTurretToZero() {
         turretMotor.setPower(0.8);

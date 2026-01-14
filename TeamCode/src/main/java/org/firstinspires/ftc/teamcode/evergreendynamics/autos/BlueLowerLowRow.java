@@ -33,14 +33,14 @@ public class BlueLowerLowRow extends LinearOpMode {
             douglasFIRST.start(robotStartHeading, turretStartHeading, true);
 
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .waitSeconds(3)
+//                    .waitSeconds(3)
                     .strafeTo(new Vector2d(58, -12))
                     .build());
             douglasFIRST.shootArtifacts();
 
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .strafeTo(new Vector2d(40, -12))
-                    .strafeTo(new Vector2d(40, -66), new TranslationalVelConstraint(20.0))
+                    .strafeTo(new Vector2d(38, -12))
+                    .strafeTo(new Vector2d(38, -60), new TranslationalVelConstraint(20.0))
                     .build());
             douglasFIRST.savePose();
 
