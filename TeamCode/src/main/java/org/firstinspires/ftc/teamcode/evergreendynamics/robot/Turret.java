@@ -350,7 +350,7 @@ public class Turret {
         } else if (50 < distanceToGoal && distanceToGoal <= 110) {
             return 950.0;
         } else {
-            return 2360.0;
+            return 2460.0;
         }
 //        // Clamp to valid range for interpolation
 //        if (below_index <= 0) {

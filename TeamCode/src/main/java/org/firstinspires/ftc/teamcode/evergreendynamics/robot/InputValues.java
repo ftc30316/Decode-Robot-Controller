@@ -30,10 +30,10 @@ public class InputValues {
 
     // Turret PIDF values
 
-    public static double P = 10.0;
-    public static double I = 3.0;
+    public static double P = 42.0;
+    public static double I = 0.0;
     public static double D = 0.0;
-    public static double F = 12.0;
+    public static double F = 11.0;
 
     // Intake motor
     public static double INTAKE_POWER = 1;
@@ -48,9 +48,9 @@ public class InputValues {
     public static double TICKS_PER_DEGREE = 5.3277777778;
 
     // Goal positions
-    public static Vector2d BLUE_GOAL_POSITION = new Vector2d(-64,-64);
+    public static Vector2d BLUE_GOAL_POSITION = new Vector2d(-67,-67);
 
-    public static Vector2d RED_GOAL_POSITION = new Vector2d(-64,64);
+    public static Vector2d RED_GOAL_POSITION = new Vector2d(-67,67);
 
     // Park positions
     public static Vector2d BLUE_PARK_POSITION = new Vector2d(39,34);
