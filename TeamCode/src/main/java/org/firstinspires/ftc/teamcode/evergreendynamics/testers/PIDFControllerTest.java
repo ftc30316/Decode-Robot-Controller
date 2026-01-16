@@ -53,7 +53,9 @@ public class PIDFControllerTest extends LinearOpMode {
         // re-read coefficients and verify change.
         //PIDFCoefficients pidfModified = pidfNew; //turretMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        double targetVelocity = 500;
+        double lowVelocity = 0;
+        double highVelocity = 2400;
+        double targetVelocity = lowVelocity;
 
         // display info to user.
         while(opModeIsActive()) {
@@ -80,11 +82,11 @@ public class PIDFControllerTest extends LinearOpMode {
             }
 
             if (gamepad1.dpadDownWasPressed()) {
-                targetVelocity = 500;
+                targetVelocity = lowVelocity;
             }
 
             if (gamepad1.dpadUpWasPressed()) {
-                targetVelocity = 1500;
+                targetVelocity = highVelocity;
             }
 
             leftFlywheel.setVelocity(targetVelocity);

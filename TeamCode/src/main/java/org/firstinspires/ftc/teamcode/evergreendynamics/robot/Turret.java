@@ -474,6 +474,12 @@ public class Turret {
             rightFlywheel.setVelocity(flywheelVelocity);
         }
 
+        telemetry.addData("Goal distance: ", distanceFromGoal);
+        telemetry.addData("Flywheel target velocity", flywheelVelocity);
+        telemetry.addData("Flywheel left velocity", leftFlywheel.getVelocity());
+        telemetry.addData("Flywheel right velocity", rightFlywheel.getVelocity());
+        telemetry.update();
+
         TelemetryPacket turretDistanceAndVelocity = new TelemetryPacket();
         turretDistanceAndVelocity.put("Goal distance: ", distanceFromGoal);
         turretDistanceAndVelocity.put("Flywheel velocity", flywheelVelocity);

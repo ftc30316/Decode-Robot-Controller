@@ -36,10 +36,7 @@ public class InputValues {
     public static double F = 11.0;
 
     // Intake motor
-    public static double INTAKE_POWER = 1;
-    public static final double INTAKE_VELOCITY = 2500;
-    public static final double INTAKE_POWER_SLOW = 0.1;
-    public static double SLOW_INTAKE_SPEED = 1700;
+    public static final double INTAKE_VELOCITY = 1000;
 
     // Distance from sensor to detect artifact
     public static double ARTIFACT_DISTANCE_DETECTION = 3.65;

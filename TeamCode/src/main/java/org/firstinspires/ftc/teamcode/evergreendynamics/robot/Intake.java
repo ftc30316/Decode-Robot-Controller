@@ -63,7 +63,6 @@ public class Intake {
         turnOnLEDs();
         switch (intakeState) {
             case ON:
-//                intakeMotor.setPower(InputValues.INTAKE_POWER);
                 intakeMotor.setVelocity(InputValues.INTAKE_VELOCITY);
                 firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
                 secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
@@ -75,7 +74,7 @@ public class Intake {
 //                }
                 break;
             case OFF:
-                intakeMotor.setPower(0.0);
+                intakeMotor.setVelocity(0);
 //                if (keybinds.changeIntakeState()) {
 //                    intakeState = IntakeState.ON;
 //                }
@@ -93,7 +92,7 @@ public class Intake {
 
     public void turnOnIntake() {
         if (intakeState == IntakeState.ON) {
-            intakeMotor.setPower(InputValues.INTAKE_POWER);
+            intakeMotor.setVelocity(InputValues.INTAKE_VELOCITY);
             firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
             secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
             thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
