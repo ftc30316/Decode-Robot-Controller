@@ -19,8 +19,8 @@ public class RedLowerShootStrafe extends LinearOpMode {
     public void runOpMode() {
         try {
             telemetry.addLine("Running Op Mode");
-            Pose2d beginPose = new Pose2d(62, 12, Math.toRadians(0));
-            float turretStartHeading = 0;
+            Pose2d beginPose = new Pose2d(63.5, 12, Math.toRadians(90));
+            float turretStartHeading = 90;
             double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
             this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.Alliance.RED, beginPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO);
@@ -32,8 +32,8 @@ public class RedLowerShootStrafe extends LinearOpMode {
 
             // Moves inside lower launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .waitSeconds(2)
                     .strafeTo(new Vector2d(52, 12))
+                    .waitSeconds(3)
                     .build());
             douglasFIRST.savePose();
 

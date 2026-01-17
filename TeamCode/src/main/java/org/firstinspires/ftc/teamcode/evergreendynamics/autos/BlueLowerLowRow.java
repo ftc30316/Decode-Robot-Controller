@@ -20,7 +20,7 @@ public class BlueLowerLowRow extends LinearOpMode {
     public void runOpMode() {
         try {
             telemetry.addLine("Running Op Mode");
-            Pose2d beginPose = new Pose2d(66, -12, Math.toRadians(-90));
+            Pose2d beginPose = new Pose2d(63.5, -12, Math.toRadians(-90));
             float turretStartHeading = -90;
             double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
@@ -33,8 +33,8 @@ public class BlueLowerLowRow extends LinearOpMode {
             douglasFIRST.start(robotStartHeading, turretStartHeading, true);
 
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-//                    .waitSeconds(3)
                     .strafeTo(new Vector2d(58, -12))
+                    .waitSeconds(3)
                     .build());
             douglasFIRST.shootArtifacts();
 
@@ -54,6 +54,9 @@ public class BlueLowerLowRow extends LinearOpMode {
 //                    .waitSeconds(6)
 //                    .build());
             // shoots from lower launch zone
+            Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
+                    .waitSeconds(3)
+                    .build());
             douglasFIRST.shootArtifacts();
 
             // moves off line

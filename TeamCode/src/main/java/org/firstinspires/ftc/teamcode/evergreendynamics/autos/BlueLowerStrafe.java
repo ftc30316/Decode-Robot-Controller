@@ -19,7 +19,7 @@ public class BlueLowerStrafe extends LinearOpMode {
     public void runOpMode() {
         try {
             telemetry.addLine("Running Op Mode");
-            Pose2d beginPose = new Pose2d(62, -12, Math.toRadians(90));
+            Pose2d beginPose = new Pose2d(63.5, -12, Math.toRadians(-90));
             float turretStartHeading = -90;
             double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 

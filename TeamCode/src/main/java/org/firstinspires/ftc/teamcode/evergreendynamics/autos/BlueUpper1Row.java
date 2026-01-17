@@ -34,6 +34,7 @@ public class BlueUpper1Row extends LinearOpMode {
         //Moves to upper launch zone
         Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose)
                 .strafeToLinearHeading(new Vector2d(-12, -20), Math.toRadians(-90))
+                .waitSeconds(3)
                 .build());
         douglasFIRST.savePose();
 
@@ -42,6 +43,7 @@ public class BlueUpper1Row extends LinearOpMode {
         Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
                 .strafeTo(new Vector2d(-12,-54))
                 .strafeTo(new Vector2d(-12,-20))
+                .waitSeconds(3)
                 .build());
         douglasFIRST.savePose();
 

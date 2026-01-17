@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.teleops;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.DouglasFIRST;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.PoseStorage;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
-
+@Disabled
 @TeleOp (group = "Evergreen Teleop")
 public class CompetitionDouglasFieldCentricTeleOp extends LinearOpMode {
     public DouglasFIRST douglasFIRST;

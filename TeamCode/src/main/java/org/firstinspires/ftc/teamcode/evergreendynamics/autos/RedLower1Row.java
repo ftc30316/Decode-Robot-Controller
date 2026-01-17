@@ -20,7 +20,7 @@ public class RedLower1Row extends LinearOpMode {
     public void runOpMode() {
         try {
             telemetry.addLine("Running Op Mode");
-            Pose2d beginPose = new Pose2d(62, 12, Math.toRadians(90));
+            Pose2d beginPose = new Pose2d(63.5, 12, Math.toRadians(90));
             float turretStartHeading = 90;
             double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
@@ -34,6 +34,7 @@ public class RedLower1Row extends LinearOpMode {
             //Moves to upper launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
                     .strafeTo(new Vector2d(-12, 20))
+                    .waitSeconds(3)
                     .build());
             douglasFIRST.savePose();
 
@@ -44,6 +45,7 @@ public class RedLower1Row extends LinearOpMode {
             Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
                     .strafeTo(new Vector2d(-12,52), new TranslationalVelConstraint(15.0))
                     .strafeTo(new Vector2d(-12,20))
+                    .waitSeconds(3)
                     .build());
             douglasFIRST.savePose();
 

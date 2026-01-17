@@ -20,7 +20,7 @@ public class BlueLowerTwoRow extends LinearOpMode {
     public void runOpMode() {
         try {
             telemetry.addLine("Running Op Mode");
-            Pose2d beginPose = new Pose2d(62, -12, Math.toRadians(-90));
+            Pose2d beginPose = new Pose2d(63.5, -12, Math.toRadians(-90));
             float turretStartHeading = -90;
             double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
@@ -34,10 +34,8 @@ public class BlueLowerTwoRow extends LinearOpMode {
             // Moves a little closer to goal
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
                     .strafeTo(new Vector2d(48, -12))
+                    .waitSeconds(3)
                     .build());
-
-            // Waits for flywheels to speed up
-            Helper.sleep(3000);
 
             // Shoots preloaded
             douglasFIRST.shootArtifacts();
@@ -50,12 +48,10 @@ public class BlueLowerTwoRow extends LinearOpMode {
                     .strafeTo(new Vector2d(35,-46))
                     // Goes to lower launch zone to shoot
                     .strafeTo(new Vector2d(48,-12))
+                    .waitSeconds(3)
                     .build());
 
             douglasFIRST.savePose();
-
-            // Waits for flywheels to speed up
-            Helper.sleep(2000);
 
             // Shoots low row
             douglasFIRST.shootArtifacts();
@@ -70,6 +66,7 @@ public class BlueLowerTwoRow extends LinearOpMode {
                     //.strafeTo(new Vector2d(11, -55))
                     // Goes to upper launch zone to shoot
                     .strafeTo(new Vector2d(-12, -12))
+                    .waitSeconds(3)
                     .build());
 
             douglasFIRST.savePose();
