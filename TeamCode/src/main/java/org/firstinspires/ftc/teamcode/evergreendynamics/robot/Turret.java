@@ -121,8 +121,8 @@ public class Turret {
         turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turretMotor.setTargetPosition(0);
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        PIDFCoefficients pidfNew = new PIDFCoefficients(InputValues.P, InputValues.I, InputValues.D, InputValues.F);
-//        turretMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pidfNew);
+        PIDFCoefficients pidfTurret = new PIDFCoefficients(InputValues.TURRET_P, 0, 0, 0);
+        turretMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pidfTurret);
 
         // 2) Compute turret angle relative to robot body when encoder = 0
         //    K = (turret field angle) - (robot field heading)
@@ -346,9 +346,9 @@ public class Turret {
         // If you are less than
 
         if (distanceToGoal <= 50) {
-            return 875.0;
-        } else if (50 < distanceToGoal && distanceToGoal <= 110) {
             return 1000.0;
+        } else if (50 < distanceToGoal && distanceToGoal <= 100) {
+            return 1170.0;
         } else {
             return 2600.0;
         }
@@ -467,13 +467,14 @@ public class Turret {
 //        telemetry.addData("Flywheel velocity: ", flywheelVelocity);
 
         turretMotor.setTargetPosition(targetTicks);
-        turretMotor.setPower(0.5); // tune as needed
+        turretMotor.setPower(0.9); // tune as needed
 
         if (turretVelocityMode == TurretVelocityMode.AUTO) {
             leftFlywheel.setVelocity(flywheelVelocity);
             rightFlywheel.setVelocity(flywheelVelocity);
         }
 
+        telemetry.addData("Robot heading", robotHeadingDeg);
         telemetry.addData("Goal distance: ", distanceFromGoal);
         telemetry.addData("Flywheel target velocity", flywheelVelocity);
         telemetry.addData("Flywheel left velocity", leftFlywheel.getVelocity());

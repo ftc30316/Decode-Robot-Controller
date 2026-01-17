@@ -32,7 +32,7 @@ public class BlueLowerShootStrafe extends LinearOpMode {
             douglasFIRST.start(robotStartHeading, turretStartHeading, true);
 
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .strafeTo(new Vector2d(52, -12))
+                    .strafeTo(new Vector2d(51, -12))
                     .waitSeconds(3)
                     .build());
             douglasFIRST.savePose();
@@ -44,9 +44,9 @@ public class BlueLowerShootStrafe extends LinearOpMode {
                     .strafeTo(new Vector2d(62, -12))
                     .build());
 
-            //Moves to upper launch zone
+            //Moves to launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .strafeTo(new Vector2d(58, -56))
+                    .strafeTo(new Vector2d(51, -56))
                     .build());
             douglasFIRST.savePose();
 

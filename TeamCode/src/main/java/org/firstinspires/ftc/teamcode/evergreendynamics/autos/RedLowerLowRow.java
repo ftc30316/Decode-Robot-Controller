@@ -32,6 +32,7 @@ public class RedLowerLowRow extends LinearOpMode {
             douglasFIRST.start(robotStartHeading, turretStartHeading, true);
 
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
+                    .strafeTo(new Vector2d(51, 12))
                     .waitSeconds(3)
                     .build());
 
@@ -40,14 +41,14 @@ public class RedLowerLowRow extends LinearOpMode {
 
             // Collects lower row
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .strafeTo(new Vector2d(36, 12))
-                    .strafeTo(new Vector2d(36, 62), new TranslationalVelConstraint(15.0))//, new TranslationalVelConstraint(5.0))
+                    .strafeTo(new Vector2d(38, 12))
+                    .strafeTo(new Vector2d(38, 62), new TranslationalVelConstraint(15.0))//, new TranslationalVelConstraint(5.0))
                     .build());
             douglasFIRST.savePose();
 
             // Moves back to lower launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
-                    .strafeTo(new Vector2d(62,12))
+                    .strafeTo(new Vector2d(51,8))
                     .build());
             douglasFIRST.savePose();
 

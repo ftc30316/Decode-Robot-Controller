@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 @Config
 public class InputValues {
 
+    public static final double TURRET_P = 15;
     // Shooting flywheels
     public static double FLYWHEEL_SLOPE = 9.3;
     public static double FLYWHEEL_Y_INTERCEPT = 900;
