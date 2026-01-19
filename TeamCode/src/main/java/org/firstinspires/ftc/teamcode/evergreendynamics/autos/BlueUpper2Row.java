@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
 @Autonomous (group = "Evergreen Autos")
-public class RedUpper1Row extends LinearOpMode {
+public class BlueUpper2Row extends LinearOpMode {
     public DouglasFIRST douglasFIRST;
 
     @Override
@@ -20,11 +20,11 @@ public class RedUpper1Row extends LinearOpMode {
     public void runOpMode() {
         try {
             telemetry.addLine("Running Op Mode");
-            Pose2d beginPose = new Pose2d(-52, 52, Math.toRadians(-45));
-            float turretStartHeading = -45;
+            Pose2d beginPose = new Pose2d(-49, -49, Math.toRadians(45));
+            float turretStartHeading = 45;
             double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
-            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.Alliance.RED, beginPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO);
+            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.Alliance.BLUE, beginPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO);
 
             waitForStart();
 
@@ -33,8 +33,8 @@ public class RedUpper1Row extends LinearOpMode {
 
             //Moves to upper launch zone
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                    .strafeToLinearHeading(new Vector2d(-12, 20), Math.toRadians(90))
-                    .waitSeconds(3)
+                    .strafeToLinearHeading(new Vector2d(-12, -20), Math.toRadians(-90))
+                    .waitSeconds(1)
                     .build());
             douglasFIRST.savePose();
 
@@ -43,18 +43,31 @@ public class RedUpper1Row extends LinearOpMode {
 
             // Collects upper row
             Actions.runBlocking(douglasFIRST.getActionBuilder()
-                    .strafeTo(new Vector2d(-12,60), new TranslationalVelConstraint(15.0))
-                    .strafeTo(new Vector2d(-12,20))
-                    .waitSeconds(3)
+                    .strafeTo(new Vector2d(-12,-60), new TranslationalVelConstraint(20.0))
+                    .strafeTo(new Vector2d(-12,-25))
+                    .waitSeconds(1)
                     .build());
             douglasFIRST.savePose();
 
             // Shoots upper row artifacts
             douglasFIRST.shootArtifacts();
 
+            Actions.runBlocking(douglasFIRST.getActionBuilder()
+                    .strafeTo(new Vector2d(13,-25), new TranslationalVelConstraint(15.0))
+                    .strafeTo(new Vector2d(13,-60))
+                    .build());
+            douglasFIRST.savePose();
+
+            Actions.runBlocking(douglasFIRST.getActionBuilder()
+                    .strafeTo(new Vector2d(-12,-25), new TranslationalVelConstraint(15.0))
+                    .waitSeconds(1)
+                    .build());
+
+            douglasFIRST.shootArtifacts();
+
             // Moves off the line
             Actions.runBlocking(douglasFIRST.getActionBuilder()
-                    .strafeTo(new Vector2d(-12,50))
+                    .strafeTo(new Vector2d(-48,-24))
                     .build());
 
             douglasFIRST.savePose();

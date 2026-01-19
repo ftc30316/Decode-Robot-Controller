@@ -346,7 +346,7 @@ public class Turret {
         // If you are less than
 
         if (distanceToGoal <= 50) {
-            return 1000.0;
+            return 1050.0;
         } else if (50 < distanceToGoal && distanceToGoal <= 100) {
             return 1170.0;
         } else {

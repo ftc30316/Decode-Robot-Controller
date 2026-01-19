@@ -19,7 +19,7 @@ public class BlueUpper1Row extends LinearOpMode {
     public void runOpMode() {
         try {
         telemetry.addLine("Running Op Mode");
-        Pose2d beginPose = new Pose2d(-49.25, -49.25, Math.toRadians(45));
+        Pose2d beginPose = new Pose2d(-49, -49, Math.toRadians(45));
         float turretStartHeading = 45;
         double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
@@ -38,14 +38,14 @@ public class BlueUpper1Row extends LinearOpMode {
         douglasFIRST.savePose();
 
         Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
-                .waitSeconds(3)
+                .waitSeconds(1)
                 .build());
         douglasFIRST.shootArtifacts();
 
         Actions.runBlocking(douglasFIRST.getActionBuilder().setTangent(0)
-                .strafeTo(new Vector2d(-12,-58))
-                .strafeTo(new Vector2d(-12,-20))
-                .waitSeconds(3)
+                .strafeTo(new Vector2d(-12,-60))
+                .strafeTo(new Vector2d(-12,-25))
+                .waitSeconds(1)
                 .build());
         douglasFIRST.savePose();
 
