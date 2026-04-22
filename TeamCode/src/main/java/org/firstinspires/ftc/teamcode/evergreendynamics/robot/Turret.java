@@ -45,9 +45,9 @@ public class Turret {
         OFF
     }
 
-    FlywheelState flywheelState = FlywheelState.ON;
-    LiftWheelState liftWheelState = LiftWheelState.REVERSED;
-    TurretLockingState turretLockingState = TurretLockingState.AUTO;
+    FlywheelState flywheelState = FlywheelState.OFF;
+    LiftWheelState liftWheelState = LiftWheelState.OFF;
+    TurretLockingState turretLockingState = TurretLockingState.MANUAL;
     private Telemetry telemetry;
 
     public Intake intake;
@@ -140,7 +140,7 @@ public class Turret {
         telemetry.addData("Flywheel Velocity", leftFlywheel.getVelocity());
         telemetry.addData("Flywheel Velocity", rightFlywheel.getVelocity());
 
-//        telemetry.addData("Turret: ", turretLockingState);
+        telemetry.addData("Turret: ", turretLockingState);
         turnOnLEDs();
         // State machine for the FLY wheels
         switch (flywheelState) {
@@ -211,6 +211,7 @@ public class Turret {
                     turretMotor.setPower(turretJoystickPower);
                 }
                 else {
+                    telemetry.addLine("No adjustment being pressed");
                     turretMotor.setPower(0);
                 }
                 if (keybinds.turretLockingStateWasPressed()) {
@@ -242,16 +243,16 @@ public class Turret {
                 rightFlywheel.setVelocity(0.0);
                 break;
         }
-        switch (alliance) {
-            case BLUE:
-                goalPosition = InputValues.BLUE_GOAL_POSITION;
-                adjustTurret();
-                break;
-            case RED:
-                goalPosition = InputValues.RED_GOAL_POSITION;
-                adjustTurret();
-                break;
-        }
+//        switch (alliance) {
+//            case BLUE:
+//                goalPosition = InputValues.BLUE_GOAL_POSITION;
+//                adjustTurret();
+//                break;
+//            case RED:
+//                goalPosition = InputValues.RED_GOAL_POSITION;
+//                adjustTurret();
+//                break;
+//        }
     }
 
     public void setUpGoalPosition() {

@@ -129,15 +129,17 @@ public class DouglasFIRST {
         intake.loop();
         turret.loop();
         mecanumDrive.loop();
-        checkAndRunDriverShortcuts();
+        //checkAndRunDriverShortcuts();
     }
 
     public void enableDemoMode() {
-        turret.disableFlywheels();
-        turret.disableLiftWheels();
-        intake.disableIntake();
+//        turret.disableFlywheels();
+//        turret.disableLiftWheels();
+//        intake.disableIntake();
         mecanumDrive.disableDrivePowers();
     }
+
+
 
     public void setRobotCentricDrivePowers() {
         if (mecanumDrive.drivePowers == MecanumDrive.DrivePowers.SLOW) {

@@ -31,7 +31,7 @@ public class Intake {
         OFF
     }
 
-    IntakeState intakeState = IntakeState.ON;
+    IntakeState intakeState = IntakeState.OFF;
 
     public Intake(HardwareMap hardwareMap, Keybinds keybinds, Telemetry telemetry) {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
@@ -69,15 +69,15 @@ public class Intake {
                 thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
 
 //                if (getNumberOfArtifacts() == 3) {
-//                if (keybinds.changeIntakeState()) {
-//                    intakeState = IntakeState.OFF;
-//                }
+                if (keybinds.changeIntakeState()) {
+                    intakeState = IntakeState.OFF;
+                }
                 break;
             case OFF:
                 intakeMotor.setVelocity(0);
-//                if (keybinds.changeIntakeState()) {
-//                    intakeState = IntakeState.ON;
-//                }
+                if (keybinds.changeIntakeState()) {
+                    intakeState = IntakeState.ON;
+                }
 //
 //                if (getNumberOfArtifacts() < 3) {
 //                    intakeState = IntakeState.ON;
