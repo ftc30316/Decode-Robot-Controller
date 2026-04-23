@@ -9,12 +9,13 @@ package org.firstinspires.ftc.teamcode.evergreendynamics.testers;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@Disabled
 @TeleOp
-
 public class LEDValueTest extends LinearOpMode {
     private Servo artifactLED;
     private Servo launchZoneLED;

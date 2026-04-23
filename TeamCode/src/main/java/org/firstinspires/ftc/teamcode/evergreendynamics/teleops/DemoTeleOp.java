@@ -22,7 +22,7 @@ public class DemoTeleOp extends LinearOpMode {
             double robotHeadingDeg = Math.toDegrees(startPose.heading.toDouble());
 
             this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO);
-            douglasFIRST.enableDemoMode();
+//            douglasFIRST.enableDemoMode();
 
             waitForStart();
 

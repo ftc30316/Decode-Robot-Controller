@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.testers;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.evergreendynamics.robot.DouglasFIRST;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
+@Disabled
 @TeleOp (group = "Evergreen Testing")
 public class FlywheelVelocityTest extends LinearOpMode {
     public DouglasFIRST douglasFIRST;

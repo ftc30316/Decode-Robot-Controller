@@ -31,7 +31,7 @@ public class Intake {
         OFF
     }
 
-    IntakeState intakeState = IntakeState.OFF;
+    IntakeState intakeState = IntakeState.ON;
 
     public Intake(HardwareMap hardwareMap, Keybinds keybinds, Telemetry telemetry) {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
@@ -63,25 +63,27 @@ public class Intake {
         turnOnLEDs();
         switch (intakeState) {
             case ON:
-                intakeMotor.setVelocity(InputValues.INTAKE_VELOCITY);
-                firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
-                secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
-                thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
 
-//                if (getNumberOfArtifacts() == 3) {
-                if (keybinds.changeIntakeState()) {
-                    intakeState = IntakeState.OFF;
+                if (keybinds.changeIntakeState() || keybinds.liftWheelWasPressed()) {
+                    if (keybinds.changeIntakeState()) {
+                        intakeMotor.setVelocity(InputValues.INTAKE_VELOCITY);
+                    }
+                    firstIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+                    secondIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+                    thirdIntakeServo.setPower(InputValues.INTAKE_SERVO_POWER);
+                } else {
+                    intakeMotor.setVelocity(0);
+                    firstIntakeServo.setPower(0);
+                    secondIntakeServo.setPower(0);
+                    thirdIntakeServo.setPower(0);
                 }
+
                 break;
             case OFF:
                 intakeMotor.setVelocity(0);
                 if (keybinds.changeIntakeState()) {
                     intakeState = IntakeState.ON;
                 }
-//
-//                if (getNumberOfArtifacts() < 3) {
-//                    intakeState = IntakeState.ON;
-//                }
                 break;
         }
     }

@@ -10,6 +10,7 @@ public class InputValues {
     // Shooting flywheels
     public static double FLYWHEEL_SLOPE = 9.3;
     public static double FLYWHEEL_Y_INTERCEPT = 900;
+    public static double FLYWHEEL_MANUAL_SPEED = 1100;
     public static final boolean FLYWHEEL_TEST_ON = false;
     public static double FLYWHEEL_TEST_VELOCITY = 500;
     public static double FLYWHEEL_MULTIPLIER = 4.0;
@@ -24,7 +25,7 @@ public class InputValues {
     public static double INTAKE_SERVO_POWER = 1.0;
 
     // Turret aim motor
-    public static double TURRET_MOTOR_POWER = 0.8;
+    public static double TURRET_MOTOR_POWER = 0.3;
     public static int TURRET_THREAD_SLEEP_TIME_MILLIS = 50;
     public static double TURRET_OFFSET_X = -5.0;
     public static double TURRET_OFFSET_Y = 0;

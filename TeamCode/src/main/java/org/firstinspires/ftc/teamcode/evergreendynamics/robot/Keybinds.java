@@ -17,10 +17,10 @@ public class Keybinds {
 
     // Turret
     public boolean flywheelWasPressed() {
-        return gamepad2.circleWasPressed();
+        return gamepad2.circle;
     }
     public boolean liftWheelWasPressed() {
-        return gamepad1.crossWasPressed();
+        return gamepad1.cross;
     }
     public boolean turretLockingStateWasPressed() {
         return gamepad1.dpadLeftWasPressed();
@@ -46,7 +46,7 @@ public class Keybinds {
 
     // Intake
     public boolean changeIntakeState() {
-        return gamepad2.triangleWasPressed();
+        return gamepad2.cross;
     }
 
     // Mecanum drive

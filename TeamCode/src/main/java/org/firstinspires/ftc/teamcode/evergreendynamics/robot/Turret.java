@@ -142,49 +142,68 @@ public class Turret {
 
         telemetry.addData("Turret: ", turretLockingState);
         turnOnLEDs();
+
+
+        if (keybinds.flywheelWasPressed()) {
+            leftFlywheel.setVelocity(InputValues.FLYWHEEL_MANUAL_SPEED);
+            rightFlywheel.setVelocity(InputValues.FLYWHEEL_MANUAL_SPEED);
+        } else {
+            leftFlywheel.setVelocity(0);
+            rightFlywheel.setVelocity(0);
+        }
+
         // State machine for the FLY wheels
-        switch (flywheelState) {
-            case ON:
-                if (keybinds.flywheelWasPressed()) {
-                    flywheelState = FlywheelState.OFF;
-                }
-                break;
-            case OFF:
-                leftFlywheel.setVelocity(0);
-                rightFlywheel.setVelocity(0);
-                if (keybinds.flywheelWasPressed()) {
-                    flywheelState = FlywheelState.ON;
-                }
+//        switch (flywheelState) {
+//            case ON:
+//                if (keybinds.flywheelWasPressed()) {
+//                    flywheelState = FlywheelState.OFF;
+//                }
+//                break;
+//            case OFF:
+//                leftFlywheel.setVelocity(0);
+//                rightFlywheel.setVelocity(0);
+//                if (keybinds.flywheelWasPressed()) {
+//                    flywheelState = FlywheelState.ON;
+//                }
+//        }
+
+        if (keybinds.liftWheelWasPressed()) {
+            leftLiftWheel.setPower(1);
+            rightLiftWheel.setPower(1);
+        } else {
+            leftLiftWheel.setPower(0);
+            rightLiftWheel.setPower(0);
         }
+
         // State machine for the LIFT wheels
-        switch (liftWheelState) {
-            case ON:
-//                datalog.shootCycleStartTime.set(System.currentTimeMillis());
-//                datalog.artifactCounter.set(artifactsWhenCrossWasPressed);
-
-                leftLiftWheel.setPower(1.0);
-                rightLiftWheel.setPower(1.0);
-                if (liftWheelTimer.seconds() > InputValues.LIFT_WHEEL_WAIT_SECONDS * artifactsWhenCrossWasPressed) {
-                    liftWheelState = LiftWheelState.REVERSED;
-                }
-                break;
-            case REVERSED:
-                //datalog.shootCycleEndTime.set(System.currentTimeMillis());
-                leftLiftWheel.setPower(-1.0);
-                rightLiftWheel.setPower(-1.0);
-                if (keybinds.liftWheelWasPressed()) { // && isInLaunchZone()
-                    artifactsWhenCrossWasPressed = intake.getNumberOfArtifacts();
-                    liftWheelTimer.reset();
-                    liftWheelState = LiftWheelState.ON;
-                }
-                //datalog.writeLine();
-                break;
-            case OFF:
-                leftLiftWheel.setPower(0);
-                rightLiftWheel.setPower(0);
-
-                break;
-        }
+//        switch (liftWheelState) {
+//            case ON:
+////                datalog.shootCycleStartTime.set(System.currentTimeMillis());
+////                datalog.artifactCounter.set(artifactsWhenCrossWasPressed);
+//
+//                leftLiftWheel.setPower(1.0);
+//                rightLiftWheel.setPower(1.0);
+//                if (liftWheelTimer.seconds() > InputValues.LIFT_WHEEL_WAIT_SECONDS * artifactsWhenCrossWasPressed) {
+//                    liftWheelState = LiftWheelState.REVERSED;
+//                }
+//                break;
+//            case REVERSED:
+//                //datalog.shootCycleEndTime.set(System.currentTimeMillis());
+//                leftLiftWheel.setPower(-1.0);
+//                rightLiftWheel.setPower(-1.0);
+//                if (keybinds.liftWheelWasPressed()) { // && isInLaunchZone()
+//                    artifactsWhenCrossWasPressed = intake.getNumberOfArtifacts();
+//                    liftWheelTimer.reset();
+//                    liftWheelState = LiftWheelState.ON;
+//                }
+//                //datalog.writeLine();
+//                break;
+//            case OFF:
+//                leftLiftWheel.setPower(0);
+//                rightLiftWheel.setPower(0);
+//
+//                break;
+//        }
 
         // State machine for turret locking state: Auto or Manual
         switch (turretLockingState) {
@@ -200,11 +219,11 @@ public class Turret {
                 turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 if (keybinds.turretManualAdjustmentLeftBumperIsPressed()) {
                     turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-                    turretMotor.setPower(InputValues.FLYWHEEL_SLOPE);
+                    turretMotor.setPower(InputValues.TURRET_MOTOR_POWER);
                 }
                 else if (keybinds.turretManualAdjustmentRightBumperIsPressed()) {
                     turretMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-                    turretMotor.setPower(InputValues.FLYWHEEL_SLOPE);
+                    turretMotor.setPower(InputValues.TURRET_MOTOR_POWER);
                 }
                 else if (keybinds.turretManualAdjustmentLeftJoystickX() != 0) {
                     double turretJoystickPower = keybinds.turretManualAdjustmentLeftJoystickX();
