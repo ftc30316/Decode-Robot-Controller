@@ -41,56 +41,24 @@ public class LimelightAprilTagDetector extends LinearOpMode {
                 continue;
             }
 
-            Pose3D botpose = result.getBotpose();
-            if (botpose != null) {
-                telemetry.addData("Field Location (m)",
-                        "(%.3f, %.3f)", botpose.getPosition().x, botpose.getPosition().y);
-            }
-
             List<LLResultTypes.FiducialResult> tags = result.getFiducialResults();
             telemetry.addData("Tags Visible", tags.size());
-
-            TelemetryPacket packet = new TelemetryPacket();
 
             for (LLResultTypes.FiducialResult tag : tags) {
                 int id = tag.getFiducialId();
 
-                // Bearing (horizontal angle) and elevation (vertical angle) to tag
-                double bearing=tag.getTargetXDegrees(); // horizontal angle
-                double elevation=tag.getTargetYDegrees(); //vertical angle
+                double bearing=tag.getTargetXDegrees();
+                double elevation=tag.getTargetYDegrees();
 
-                // Trig distance estimate
-                double angleRad = (LIMELIGHT_MOUNT_ANGLE_DEG + elevation) * (Math.PI / 180.0);
+                double angleRad    = (LIMELIGHT_MOUNT_ANGLE_DEG + elevation) * (Math.PI / 180.0);
                 double rangeInches = (GOAL_HEIGHT_IN - LIMELIGHT_LENS_HEIGHT_IN) / Math.tan(angleRad);
-
-                // 3D pose relative to tag (target space): x=strafe, z=forward
-                Pose3D robotPose = tag.getRobotPoseTargetSpace();
-                double strafeMeters = robotPose.getPosition().x;
-                double forwardMeters = robotPose.getPosition().z;
-
-                // Field pose from this tag alone
-                Pose3D fieldPose = tag.getRobotPoseFieldSpace();
 
                 telemetry.addLine("Tag #" + id);
                 telemetry.addData("  Range (in)","%.2f", rangeInches);
                 telemetry.addData("  Bearing (deg)","%.2f", bearing);
                 telemetry.addData("  Elevation (deg)","%.2f", elevation);
-                telemetry.addData("  Strafe (m)","%.3f", strafeMeters);
-                telemetry.addData("  Forward (m)","%.3f", forwardMeters);
-                if (fieldPose != null) {
-                    telemetry.addData("  Field pos (m)",
-                            "(%.3f, %.3f)", fieldPose.getPosition().x, fieldPose.getPosition().y);
-                }
-
-                String pre = "Tag" + id + "/";
-                packet.put(pre + "range_in",rangeInches);
-                packet.put(pre + "bearing_deg",bearing);
-                packet.put(pre + "elevation_deg",elevation);
-                packet.put(pre + "strafe_m",strafeMeters);
-                packet.put(pre + "forward_m",forwardMeters);
             }
 
-            FtcDashboard.getInstance().sendTelemetryPacket(packet);
             telemetry.update();
         }
 
