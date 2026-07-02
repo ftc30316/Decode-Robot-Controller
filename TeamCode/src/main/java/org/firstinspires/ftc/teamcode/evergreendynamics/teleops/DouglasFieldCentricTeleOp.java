@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.evergreendynamics.robot.DouglasFIRST;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.PoseStorage;
 import org.firstinspires.ftc.teamcode.evergreendynamics.robot.Turret;
 
-@Disabled
 @TeleOp (group = "Evergreen Teleop")
 public class DouglasFieldCentricTeleOp extends LinearOpMode {
     public DouglasFIRST douglasFIRST;
