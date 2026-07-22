@@ -240,15 +240,14 @@ public class DouglasFIRST {
         return parkPosition;
     }
 
-    public void park() {
-        if (gamepad2.circleWasPressed()) {
-            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(getActionBuilder().setTangent(0)
-                    .strafeTo(getParkPosition(hardwareMap))
-                    .turnTo(0)
-                    .build());
-            gamepad2.rumble(5000);
-        }
-    }
+//    public void park() {
+//        if (gamepad2.circleWasPressed()) {
+//            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(getActionBuilder().setTangent(0)
+//                    .turnTo(0)
+//                    .build());
+//            gamepad2.rumble(5000);
+//        }
+//    }
 
     public void goToZero() {
         if (gamepad2.circleWasPressed()) {
@@ -258,7 +257,26 @@ public class DouglasFIRST {
             gamepad2.rumble(5000);
         }
     }
+    public double goToNearest90(double currentHeading) {
+//        double currentHeading = getCurrentPose().heading.toDouble();
 
+        double normalize = currentHeading % 90;
+        double angleChange = 0;
+
+        if (normalize < 45) {
+            angleChange = -normalize;
+
+
+        } else{
+            angleChange = 90 - normalize;
+        }
+
+//        com.acmerobotics.roadrunner.ftc.Actions.runBlocking(getActionBuilder().setTangent(0)
+//                .turnTo(currentHeading + angleChange)
+//                .build());
+
+        return currentHeading + angleChange;
+    }
     public void goTo45() {
             com.acmerobotics.roadrunner.ftc.Actions.runBlocking(getActionBuilder().setTangent(0)
                     .turnTo(-45)
@@ -266,7 +284,7 @@ public class DouglasFIRST {
     }
 
     public void checkAndRunDriverShortcuts() {
-        park();
+        //park();
         goToZero();
     }
 

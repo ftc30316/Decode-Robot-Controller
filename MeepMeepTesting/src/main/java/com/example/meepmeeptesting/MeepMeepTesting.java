@@ -8,6 +8,28 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class MeepMeepTesting {
+
+    public static double goToNearest90(double currentHeading) {
+//        double currentHeading = getCurrentPose().heading.toDouble();
+
+        double normalize = currentHeading % 90;
+        double angleChange = 0;
+
+        if (normalize < 45) {
+            angleChange = -normalize;
+
+
+        } else{
+            angleChange = 90 - normalize;
+        }
+
+//        com.acmerobotics.roadrunner.ftc.Actions.runBlocking(getActionBuilder().setTangent(0)
+//                .turnTo(currentHeading + angleChange)
+//                .build());
+
+        return currentHeading + angleChange;
+    }
+
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
@@ -16,15 +38,19 @@ public class MeepMeepTesting {
                 .setConstraints(100, 100, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
-        // blue lower three row
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-49, -49, Math.toRadians(45)))
-                .strafeToLinearHeading(new Vector2d(-11, -20), Math.toRadians(-90))
-                .waitSeconds(1)
-                .strafeTo(new Vector2d(-11,-60))
-                .strafeTo(new Vector2d(-11,-25))
-                .waitSeconds(1)
-                .strafeTo(new Vector2d(-11,-50))
 
+        // blue lower three row
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(0, 0, Math.toRadians(0)))
+                .turnTo(Math.toRadians(1))
+                .waitSeconds(0.5)
+                .turnTo(Math.toRadians(goToNearest90(1)))
+                .waitSeconds(0.5)
+                .turnTo(Math.toRadians(46))
+                .turnTo(Math.toRadians(goToNearest90(46)))
+                .waitSeconds(0.5)
+                .turnTo(Math.toRadians(359))
+                .turnTo(Math.toRadians(goToNearest90(359)))
+                .waitSeconds(0.5)
 
                 .build());
 
