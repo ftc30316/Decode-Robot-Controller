@@ -26,33 +26,37 @@ public class TurnTo90Test extends LinearOpMode {
             float turretStartHeading = -90;
             double robotStartHeading = Math.toDegrees(beginPose.heading.toDouble());
 
-            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.Alliance.BLUE, beginPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO);
-
             waitForStart();
 
-            //Creates background thread
-            douglasFIRST.start(robotStartHeading, turretStartHeading, true);
+            this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, InputValues.Alliance.BLUE, beginPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO);
 
-            // strafes to upper launch zone
+
+
+            //Creates background thread
+            douglasFIRST.start(robotStartHeading, turretStartHeading, false);
+
+            //
             Actions.runBlocking(douglasFIRST.getActionBuilder(beginPose).setTangent(0)
-                            .turnTo(Math.toRadians(1))
-                            .waitSeconds(0.5)
-                            .turnTo(Math.toRadians(douglasFIRST.goToNearest90(1)))
-                            .waitSeconds(0.5)
+                            .turnTo(Math.toRadians(167))
+                            .waitSeconds(1)
+                            .turnTo(Math.toRadians(douglasFIRST.goToNearest90(167)))
+                            .waitSeconds(1)
                             .turnTo(Math.toRadians(46))
                             .turnTo(Math.toRadians(douglasFIRST.goToNearest90(46)))
-                            .waitSeconds(0.5)
+                            .waitSeconds(1)
                             .turnTo(Math.toRadians(359))
                             .turnTo(Math.toRadians(douglasFIRST.goToNearest90(359)))
-                            .waitSeconds(0.5)
+                            .waitSeconds(1)
                             .build());
+
+            //sleep(5000);
 
             douglasFIRST.savePose();
 
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
-            douglasFIRST.turret.stopTurretBackgroundThread();
+            //douglasFIRST.turret.stopTurretBackgroundThread();
         }
     }
 

@@ -32,6 +32,7 @@ public class DemoTeleOp extends LinearOpMode {
             while (opModeIsActive()) {
                 telemetry.clearAll();
                 douglasFIRST.loop();
+                douglasFIRST.checkSnapToNearest90();
 
                 telemetry.update();
             }

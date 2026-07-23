@@ -44,6 +44,9 @@ public class Keybinds {
         return gamepad1.squareWasPressed();
     }
 
+    public boolean snapToNearest90WasPressed() {
+        return gamepad1.triangleWasPressed();
+    }
     // Intake
     public boolean changeIntakeState() {
         return gamepad2.cross;
