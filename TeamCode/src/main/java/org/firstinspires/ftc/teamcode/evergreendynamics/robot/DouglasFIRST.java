@@ -93,7 +93,7 @@ public class DouglasFIRST {
         telemetry.addData("Drive Mode", driveMode);
         telemetry.addData("Robot X", currentPose.position.x);
         telemetry.addData("Robot Y", currentPose.position.y);
-        telemetry.addData("Robot Heading", currentPose.heading.toDouble());
+        telemetry.addData("Robot Heading", Math.toDegrees(currentPose.heading.toDouble()));
         telemetry.addData("Robot speed", mecanumDrive.drivePowers);
 
 //        telemetry.addData("turret pose", getTurretPose());
@@ -240,15 +240,14 @@ public class DouglasFIRST {
         return parkPosition;
     }
 
-    public void park() {
-        if (gamepad2.circleWasPressed()) {
-            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(getActionBuilder().setTangent(0)
-                    .strafeTo(getParkPosition(hardwareMap))
-                    .turnTo(0)
-                    .build());
-            gamepad2.rumble(5000);
-        }
-    }
+//    public void park() {
+//        if (gamepad2.circleWasPressed()) {
+//            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(getActionBuilder().setTangent(0)
+//                    .turnTo(0)
+//                    .build());
+//            gamepad2.rumble(5000);
+//        }
+//    }
 
     public void goToZero() {
         if (gamepad2.circleWasPressed()) {
@@ -259,6 +258,41 @@ public class DouglasFIRST {
         }
     }
 
+    public void checkSnapToNearest90 (){
+        double currentHeading = Math.toDegrees(getCurrentPose().heading.toDouble());
+        double newHeading = goToNearest90(currentHeading);
+
+        telemetry.addData("Robot Heading", currentHeading);
+        telemetry.addData("snap to 90 new heading", newHeading);
+
+        if (keybinds.snapToNearest90WasPressed()){
+        com.acmerobotics.roadrunner.ftc.Actions.runBlocking(getActionBuilder().setTangent(0)
+                .turnTo(Math.toRadians(newHeading))
+                .build());
+        }
+    }
+
+    public double goToNearest90(double currentHeading) {
+
+        if (currentHeading < 0) {
+            currentHeading = currentHeading + 360;
+        }
+
+        double normalize = currentHeading % 90;
+        double angleChange = 0;
+
+        if (normalize < 45) {
+            angleChange = -normalize;
+
+
+        } else{
+            angleChange = 90 - normalize;
+        }
+
+
+        return currentHeading + angleChange;
+    }
+
     public void goTo45() {
             com.acmerobotics.roadrunner.ftc.Actions.runBlocking(getActionBuilder().setTangent(0)
                     .turnTo(-45)
@@ -266,7 +300,7 @@ public class DouglasFIRST {
     }
 
     public void checkAndRunDriverShortcuts() {
-        park();
+        //park();
         goToZero();
     }
 
