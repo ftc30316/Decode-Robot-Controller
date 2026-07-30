@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.evergreendynamics.testers;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
-
+@TeleOp
 public class ColorTestEvergreen extends LinearOpMode {
     enum LightColor {
         RED,
@@ -27,8 +28,8 @@ public class ColorTestEvergreen extends LinearOpMode {
         Servo colorServo = hardwareMap.get(Servo.class, "servo");
         waitForStart();
         while(opModeIsActive()){
-            lightColor = GetLightColor();
-            UpdateLightColor(lightColor);
+            lightColor = getLightColor();
+            updateLightColor(lightColor, colorServo);
             telemetry.addData("Color", lightColor);
             telemetry.update();
 
@@ -36,7 +37,7 @@ public class ColorTestEvergreen extends LinearOpMode {
 
     }
 
-    private LightColor GetLightColor(){
+    private LightColor getLightColor(){
         if (gamepad1.dpadUpWasPressed()){
             switch (lightColor){
                 case RED: return LightColor.PURPLE;
@@ -67,7 +68,7 @@ public class ColorTestEvergreen extends LinearOpMode {
         return lightColor;
 
     }
-    private void UpdateLightColor(LightColor newColor){
+    private void updateLightColor(LightColor newColor, Servo colorServo){
 
         switch (newColor){
             case RED:
