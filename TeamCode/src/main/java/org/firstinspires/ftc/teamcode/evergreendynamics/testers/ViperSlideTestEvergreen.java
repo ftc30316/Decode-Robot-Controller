@@ -23,19 +23,15 @@ public class ViperSlideTestEvergreen extends LinearOpMode {
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(0.8);
         waitForStart();
+
+        int viperSlideUpTicks = 200;
+
         while(opModeIsActive()){
             int currentTicks = motor.getCurrentPosition();
             telemetry.addData("Current Position Is: ", currentTicks);
-            telemetry.update();
 
-            int viperSlideUpTicks = 200;
 
-            if (gamepad1.dpadUpWasPressed()) {
-                viperSlideUpTicks += 10;
-            }
-            if (gamepad1.dpadDownWasPressed()) {
-                viperSlideUpTicks -= 10;
-            }
+
 
             switch (viperSlideState) {
                 case DOWN:
@@ -46,13 +42,24 @@ public class ViperSlideTestEvergreen extends LinearOpMode {
                     }
                     break;
                 case UP:
+                    if (gamepad1.leftBumperWasPressed()) {
+                        viperSlideUpTicks += 10;
+                        motor.setTargetPosition(viperSlideUpTicks);
+
+                    }
+                    if (gamepad1.rightBumperWasPressed()) {
+                        viperSlideUpTicks -= 10;
+                        motor.setTargetPosition(viperSlideUpTicks);
+
+                    }
                     motor.setTargetPosition(viperSlideUpTicks);
                     motor.setPower(0.8);
                     if (gamepad1.crossWasPressed()) {
                         viperSlideState = ViperSlideState.DOWN;
                     }
             }
-
+            telemetry.addData("Change in ticks", viperSlideUpTicks - 200);
+            telemetry.update();
         }
 
     }
