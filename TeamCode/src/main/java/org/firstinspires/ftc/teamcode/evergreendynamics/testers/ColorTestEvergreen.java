@@ -19,7 +19,6 @@ public class ColorTestEvergreen extends LinearOpMode {
 
     }
     Servo colorServo = hardwareMap.get(Servo.class, "servo");
-
     LightColor lightColor = LightColor.RED;
 
     @Override
