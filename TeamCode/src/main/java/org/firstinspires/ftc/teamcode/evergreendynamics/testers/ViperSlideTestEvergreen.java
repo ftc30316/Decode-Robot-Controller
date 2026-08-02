@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import org.firstinspires.ftc.teamcode.evergreendynamics.robot.InputValues;
 @TeleOp
 public class ViperSlideTestEvergreen extends LinearOpMode {
     enum ViperSlideState {
@@ -15,11 +16,11 @@ public class ViperSlideTestEvergreen extends LinearOpMode {
 
     private int viperSlideRangeValidValue(int viperSlideUpTicks){
         //Minimum value for viper slide is 0 and maximum value is assumed to be 200
-        if (viperSlideUpTicks < 0){
-            viperSlideUpTicks = 0;
+        if (viperSlideUpTicks < InputValues.VIPER_SLIDE_MIN_RANGE){
+            viperSlideUpTicks = InputValues.VIPER_SLIDE_MIN_RANGE;
         }
-        if (viperSlideUpTicks > 200){
-            viperSlideUpTicks = 200;
+        if (viperSlideUpTicks > InputValues.VIPER_SLIDE_MAX_RANGE){
+            viperSlideUpTicks = InputValues.VIPER_SLIDE_MAX_RANGE;
         }
         return viperSlideUpTicks;
     }
@@ -30,12 +31,12 @@ public class ViperSlideTestEvergreen extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         DcMotorEx motor = hardwareMap.get(DcMotorEx.class, "motor");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setTargetPosition(0);
+        motor.setTargetPosition(InputValues.VIPER_SLIDE_MIN_RANGE);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(0.8);
         waitForStart();
 
-        int viperSlideUpTicks = 200;
+        int viperSlideUpTicks = InputValues.VIPER_SLIDE_MAX_RANGE;
 
         while(opModeIsActive()){
             int currentTicks = motor.getCurrentPosition();
@@ -46,7 +47,7 @@ public class ViperSlideTestEvergreen extends LinearOpMode {
 
             switch (viperSlideState) {
                 case DOWN:
-                    motor.setTargetPosition(0);
+                    motor.setTargetPosition(InputValues.VIPER_SLIDE_MIN_RANGE);
                     motor.setPower(0.8);
                     if (gamepad1.crossWasPressed()) {
                         viperSlideState = ViperSlideState.UP;
@@ -54,11 +55,11 @@ public class ViperSlideTestEvergreen extends LinearOpMode {
                     break;
                 case UP:
                     if (gamepad1.leftBumperWasPressed()) {
-                        viperSlideUpTicks += 10;
+                        viperSlideUpTicks += InputValues.VIPER_SLIDE_STEP_SIZE;
 
                     }
                     if (gamepad1.rightBumperWasPressed()) {
-                        viperSlideUpTicks -= 10;
+                        viperSlideUpTicks -= InputValues.VIPER_SLIDE_STEP_SIZE;
 
                     }
                     viperSlideUpTicks = viperSlideRangeValidValue(viperSlideUpTicks);
@@ -68,7 +69,7 @@ public class ViperSlideTestEvergreen extends LinearOpMode {
                         viperSlideState = ViperSlideState.DOWN;
                     }
             }
-            telemetry.addData("Change in ticks", viperSlideUpTicks - 200);
+            telemetry.addData("Change in ticks", viperSlideUpTicks - InputValues.VIPER_SLIDE_MAX_RANGE);
             telemetry.update();
         }
 

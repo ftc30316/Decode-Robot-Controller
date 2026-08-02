@@ -69,5 +69,12 @@ public class InputValues {
         BLUE,
         RED
     }
+    //Viper slide configurations
+    public static int VIPER_SLIDE_MIN_RANGE = 0;
+    public static int VIPER_SLIDE_MAX_RANGE = 500;
+    public static int VIPER_SLIDE_STEP_SIZE = 50;
+
+
+
 
 }
