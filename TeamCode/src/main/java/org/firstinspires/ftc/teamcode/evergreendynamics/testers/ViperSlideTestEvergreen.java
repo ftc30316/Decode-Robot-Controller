@@ -13,6 +13,17 @@ public class ViperSlideTestEvergreen extends LinearOpMode {
         UP
     }
 
+    private int viperSlideRangeValidValue(int viperSlideUpTicks){
+        //Minimum value for viper slide is 0 and maximum value is assumed to be 200
+        if (viperSlideUpTicks < 0){
+            viperSlideUpTicks = 0;
+        }
+        if (viperSlideUpTicks > 200){
+            viperSlideUpTicks = 200;
+        }
+        return viperSlideUpTicks;
+    }
+
     ViperSlideState viperSlideState = ViperSlideState.DOWN;
     @Override
 
@@ -44,14 +55,13 @@ public class ViperSlideTestEvergreen extends LinearOpMode {
                 case UP:
                     if (gamepad1.leftBumperWasPressed()) {
                         viperSlideUpTicks += 10;
-                        motor.setTargetPosition(viperSlideUpTicks);
 
                     }
                     if (gamepad1.rightBumperWasPressed()) {
                         viperSlideUpTicks -= 10;
-                        motor.setTargetPosition(viperSlideUpTicks);
 
                     }
+                    viperSlideUpTicks = viperSlideRangeValidValue(viperSlideUpTicks);
                     motor.setTargetPosition(viperSlideUpTicks);
                     motor.setPower(0.8);
                     if (gamepad1.crossWasPressed()) {
