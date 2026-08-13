@@ -47,7 +47,6 @@ public class TurretAutoAimTest extends LinearOpMode {
     public static double MAX_TURRET_ANGLE_DEG = 90.0;
 
     private Limelight3A limelight;
-    private MecanumDrive drive;
     private DcMotorEx turretMotor;
 
     private boolean tagVisible = false;
@@ -59,11 +58,6 @@ public class TurretAutoAimTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
-        drive = new MecanumDrive(hardwareMap,
-                new Pose2d(START_X, START_Y, Math.toRadians(START_HEADING_DEG)));
-
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(PIPELINE);
         limelight.setPollRateHz(100);
@@ -83,21 +77,18 @@ public class TurretAutoAimTest extends LinearOpMode {
         limelight.start();
 
         while (opModeIsActive()) {
-            drive.updatePoseEstimate();
-            Pose2d pose = drive.localizer.getPose();
-
             updateTagTracking();
-
-            drive.setDrivePowers(new PoseVelocity2d(
-                    new Vector2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x),
-                    -gamepad1.right_stick_x));
 
             if (tagVisible) {
                 double clampedAngleDeg = Math.max(-MAX_TURRET_ANGLE_DEG,
                         Math.min(MAX_TURRET_ANGLE_DEG, tagBearingDeg));
                 int targetTicks = (int) Math.round(clampedAngleDeg * InputValues.TICKS_PER_DEGREE);
+                turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 turretMotor.setTargetPosition(targetTicks);
                 turretMotor.setPower(TURRET_POWER);
+            } else {
+                turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                turretMotor.setPower(0.1);
             }
 
             telemetry.addData("Turret ticks (target/current)",
@@ -108,16 +99,7 @@ public class TurretAutoAimTest extends LinearOpMode {
                 telemetry.addData("Target distance (in)", tagRangeIn);
                 telemetry.addData("Turret angle rel. robot (deg)", tagBearingDeg);
             }
-            telemetry.addData("Robot X", pose.position.x);
-            telemetry.addData("Robot Y", pose.position.y);
-            telemetry.addData("Robot Heading", Math.toDegrees(pose.heading.toDouble()));
             telemetry.update();
-
-            TelemetryPacket packet = new TelemetryPacket();
-            Canvas canvas = packet.fieldOverlay();
-            canvas.setStroke("#3F51B5");
-            Drawing.drawRobot(canvas, pose);
-            FtcDashboard.getInstance().sendTelemetryPacket(packet);
         }
 
         limelight.stop();
