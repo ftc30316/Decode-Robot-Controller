@@ -45,7 +45,8 @@ public class Turret {
         OFF
     }
 
-    FlywheelState flywheelState = FlywheelState.OFF;
+    FlywheelState flywheelState = FlywheelState.ON
+            ;
     LiftWheelState liftWheelState = LiftWheelState.OFF;
     TurretLockingState turretLockingState = TurretLockingState.MANUAL;
     private Telemetry telemetry;
@@ -144,33 +145,36 @@ public class Turret {
         turnOnLEDs();
 
 
-        if (keybinds.flywheelWasPressed()) {
-            leftFlywheel.setVelocity(InputValues.FLYWHEEL_MANUAL_SPEED);
-            rightFlywheel.setVelocity(InputValues.FLYWHEEL_MANUAL_SPEED);
-        } else {
-            leftFlywheel.setVelocity(0);
-            rightFlywheel.setVelocity(0);
-        }
+//        if (keybinds.flywheelWasPressed()) {
+//            leftFlywheel.setVelocity(InputValues.FLYWHEEL_MANUAL_SPEED);
+//            rightFlywheel.setVelocity(InputValues.FLYWHEEL_MANUAL_SPEED);
+//        } else {
+//            leftFlywheel.setVelocity(0);
+//            rightFlywheel.setVelocity(0);
+//        }
 
         // State machine for the FLY wheels
-//        switch (flywheelState) {
-//            case ON:
-//                if (keybinds.flywheelWasPressed()) {
-//                    flywheelState = FlywheelState.OFF;
-//                }
-//                break;
-//            case OFF:
-//                leftFlywheel.setVelocity(0);
-//                rightFlywheel.setVelocity(0);
-//                if (keybinds.flywheelWasPressed()) {
-//                    flywheelState = FlywheelState.ON;
-//                }
-//        }
+        switch (flywheelState) {
+            case ON:
+                leftFlywheel.setVelocity(InputValues.FLYWHEEL_MANUAL_SPEED);
+                rightFlywheel.setVelocity(InputValues.FLYWHEEL_MANUAL_SPEED);
+                if (keybinds.flywheelWasPressed()) {
+                    flywheelState = FlywheelState.OFF;
+                }
+                break;
+            case OFF:
+                leftFlywheel.setVelocity(0);
+                rightFlywheel.setVelocity(0);
+                if (keybinds.flywheelWasPressed()) {
+                    flywheelState = FlywheelState.ON;
+                }
+        }
 
         if (keybinds.liftWheelWasPressed()) {
             leftLiftWheel.setPower(1);
             rightLiftWheel.setPower(1);
-        } else {
+            liftWheelTimer.reset();
+        } else if (liftWheelTimer.milliseconds()>InputValues.LIFT_WHEEL_WAIT_MILLISECONDS){
             leftLiftWheel.setPower(0);
             rightLiftWheel.setPower(0);
         }
@@ -339,6 +343,11 @@ public class Turret {
 
     public void shoot() {
         artifactsWhenShooting = intake.getNumberOfArtifacts();
+        if(artifactsWhenShooting<1) {
+            return;
+        }
+        // For fair demo, we are restricting to one artifact per shot. For comp, we would reset to however many artifacts we have
+        artifactsWhenShooting=1;
 //        telemetry.addData("Artifacts when shooting: ", artifactsWhenShooting);
         leftLiftWheel.setPower(1.0);
         rightLiftWheel.setPower(1.0);

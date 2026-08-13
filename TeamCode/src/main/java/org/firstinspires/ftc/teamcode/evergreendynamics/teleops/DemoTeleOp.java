@@ -18,13 +18,15 @@ public class DemoTeleOp extends LinearOpMode {
     public void runOpMode() {
         try {
             Pose2d startPose = new Pose2d(0, 0, 0); //PoseStorage.loadPose(hardwareMap.appContext);
-            double turretStartHeadingDeg = PoseStorage.loadTurretHeading(hardwareMap.appContext);
-            double robotHeadingDeg = Math.toDegrees(startPose.heading.toDouble());
+//            double turretStartHeadingDeg = PoseStorage.loadTurretHeading(hardwareMap.appContext);
+//            double robotHeadingDeg = Math.toDegrees(startPose.heading.toDouble());
+
+            waitForStart();
 
             this.douglasFIRST = new DouglasFIRST(hardwareMap, gamepad1, gamepad2, telemetry, startPose, DouglasFIRST.DriveMode.ROBOT_CENTRIC, Turret.TurretVelocityMode.AUTO);
 //            douglasFIRST.enableDemoMode();
 
-            waitForStart();
+
 
             douglasFIRST.start(0, 0, false);
 
@@ -32,7 +34,7 @@ public class DemoTeleOp extends LinearOpMode {
             while (opModeIsActive()) {
                 telemetry.clearAll();
                 douglasFIRST.loop();
-                douglasFIRST.checkSnapToNearest90();
+                //douglasFIRST.checkSnapToNearest90();
 
                 telemetry.update();
             }
