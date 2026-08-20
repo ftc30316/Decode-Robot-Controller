@@ -89,12 +89,12 @@ public class DouglasFIRST {
 
     public void loop() {
         Pose2d currentPose = getCurrentPose();
-        telemetry.addData("Alliance", getAlliance());
-        telemetry.addData("Drive Mode", driveMode);
-        telemetry.addData("Robot X", currentPose.position.x);
-        telemetry.addData("Robot Y", currentPose.position.y);
-        telemetry.addData("Robot Heading", Math.toDegrees(currentPose.heading.toDouble()));
-        telemetry.addData("Robot speed", mecanumDrive.drivePowers);
+//        telemetry.addData("Alliance", getAlliance());
+//        telemetry.addData("Drive Mode", driveMode);
+//        telemetry.addData("Robot X", currentPose.position.x);
+//        telemetry.addData("Robot Y", currentPose.position.y);
+//        telemetry.addData("Robot Heading", Math.toDegrees(currentPose.heading.toDouble()));
+//        telemetry.addData("Robot speed", mecanumDrive.drivePowers);
 
 //        telemetry.addData("turret pose", getTurretPose());
 
@@ -143,7 +143,7 @@ public class DouglasFIRST {
 
     public void setRobotCentricDrivePowers() {
         if (mecanumDrive.drivePowers == MecanumDrive.DrivePowers.SLOW) {
-            telemetry.addData("robot speed", "SLOW");
+//            telemetry.addData("robot speed", "SLOW");
             mecanumDrive.setDrivePowers(new PoseVelocity2d(
                     new Vector2d(
                             -gamepad1.left_stick_y * 0.25,
@@ -153,7 +153,7 @@ public class DouglasFIRST {
             ));
 
         } else if (mecanumDrive.drivePowers == MecanumDrive.DrivePowers.NORMAL){
-            telemetry.addData("robot speed", "FAST");
+//            telemetry.addData("robot speed", "FAST");
             mecanumDrive.setDrivePowers(new PoseVelocity2d(
                     new Vector2d(
                             -gamepad1.left_stick_y,

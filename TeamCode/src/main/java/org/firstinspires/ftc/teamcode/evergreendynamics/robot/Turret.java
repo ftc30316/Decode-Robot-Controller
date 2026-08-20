@@ -134,14 +134,15 @@ public class Turret {
     public void setAlliance(InputValues.Alliance alliance) {
         this.alliance = alliance;
     }
+    private double flywheelManualSpeed = InputValues.FLYWHEEL_MANUAL_SPEED;
 
     // Starts the flywheel
     public void loop() {
 //        telemetry.addData("Flywheel: ", flywheelState);
-        telemetry.addData("Flywheel Velocity", leftFlywheel.getVelocity());
-        telemetry.addData("Flywheel Velocity", rightFlywheel.getVelocity());
+//        telemetry.addData("Flywheel Velocity", leftFlywheel.getVelocity());
+//        telemetry.addData("Flywheel Velocity", rightFlywheel.getVelocity());
 
-        telemetry.addData("Turret: ", turretLockingState);
+       // telemetry.addData("Turret: ", turretLockingState);
         turnOnLEDs();
 
 
@@ -152,12 +153,20 @@ public class Turret {
 //            leftFlywheel.setVelocity(0);
 //            rightFlywheel.setVelocity(0);
 //        }
-
         // State machine for the FLY wheels
         switch (flywheelState) {
             case ON:
-                leftFlywheel.setVelocity(InputValues.FLYWHEEL_MANUAL_SPEED);
-                rightFlywheel.setVelocity(InputValues.FLYWHEEL_MANUAL_SPEED);
+                if (keybinds.turretManualVelocityIncreaseWasPressed()){
+                    flywheelManualSpeed += 30;
+                }
+                if (keybinds.turretManualVelocityDecreaseWasPressed()){
+                    flywheelManualSpeed -= 30;
+                }
+
+                leftFlywheel.setVelocity(flywheelManualSpeed);
+                rightFlywheel.setVelocity(flywheelManualSpeed);
+                telemetry.addData("Shooting power", flywheelManualSpeed);
+                telemetry.addLine();
                 if (keybinds.flywheelWasPressed()) {
                     flywheelState = FlywheelState.OFF;
                 }
@@ -234,7 +243,7 @@ public class Turret {
                     turretMotor.setPower(turretJoystickPower);
                 }
                 else {
-                    telemetry.addLine("No adjustment being pressed");
+                    //telemetry.addLine("No adjustment being pressed");
                     turretMotor.setPower(0);
                 }
                 if (keybinds.turretLockingStateWasPressed()) {

@@ -18,7 +18,7 @@ public class InputValues {
     public static int VELOCITY_ADJUSTMENT = 5;
 
     // Lift flywheels
-    public static int LIFT_WHEEL_WAIT_MILLISECONDS = 1750/2;
+    public static int LIFT_WHEEL_WAIT_MILLISECONDS = 500;
     public static final double LIFT_WHEEL_WAIT_SECONDS = LIFT_WHEEL_WAIT_MILLISECONDS / 1000.0;
 
     // Belt

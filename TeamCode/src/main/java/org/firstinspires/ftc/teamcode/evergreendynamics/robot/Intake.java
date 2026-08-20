@@ -59,7 +59,7 @@ public class Intake {
 
     public void loop() {
 //        telemetry.addData("Intake state is: ", intakeState);
-        telemetry.addData("Artifacts: ", getNumberOfArtifacts());
+       // telemetry.addData("Artifacts: ", getNumberOfArtifacts());
         turnOnLEDs();
         switch (intakeState) {
             case ON:

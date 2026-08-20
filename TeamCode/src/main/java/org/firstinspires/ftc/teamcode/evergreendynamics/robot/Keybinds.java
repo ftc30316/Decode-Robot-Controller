@@ -23,7 +23,8 @@ public class Keybinds {
         return gamepad2.cross;
     }
     public boolean turretLockingStateWasPressed() {
-        return gamepad1.dpadLeftWasPressed();
+        //return gamepad1.dpadLeftWasPressed();
+        return false;
     }
     public boolean turretManualAdjustmentLeftBumperIsPressed() {
         return gamepad2.left_bumper;
