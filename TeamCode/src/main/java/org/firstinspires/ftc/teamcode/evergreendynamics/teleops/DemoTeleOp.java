@@ -35,6 +35,10 @@ public class DemoTeleOp extends LinearOpMode {
                 telemetry.clearAll();
                 douglasFIRST.loop();
                 //douglasFIRST.checkSnapToNearest90();
+                telemetry.addLine("Controller 1 left joystick to drive");
+                telemetry.addLine("Controller 1 right joystick to turn");
+                telemetry.addLine("Controller 2 left and right bumpers to aim");
+                telemetry.addLine("Controller 2 X button to shoot");
 
                 telemetry.update();
             }
