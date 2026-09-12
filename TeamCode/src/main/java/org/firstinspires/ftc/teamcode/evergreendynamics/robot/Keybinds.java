@@ -50,7 +50,7 @@ public class Keybinds {
     }
     // Intake
     public boolean changeIntakeState() {
-        return gamepad2.dpadDownWasPressed();
+        return gamepad1.crossWasPressed();
     }
 
     // Mecanum drive
