@@ -19,13 +19,15 @@ public class Robot {
     private OuttakeComponent outtake;
     private HardwareMapping hardwareMapping;
     private Config config;
+    private Telemetry telemetry;
     public Robot (HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose){
         this.config = new Config();
         this.hardwareMapping = new HardwareMapping(config, hardwareMap);
         Keybinds keybinds = new Keybinds(gamepad1, gamepad2);
         this.mecanumDrive = new MecanumDrive(hardwareMap, keybinds, beginPose);
         this.intake = new IntakeComponent(config, hardwareMapping, keybinds);
-        this.outtake = new OuttakeComponent(config, hardwareMapping, keybinds);
+        this.outtake = new OuttakeComponent(config, hardwareMapping, keybinds, telemetry);
+        this.telemetry = telemetry;
     }
 
     public void init(){
@@ -44,6 +46,8 @@ public class Robot {
         mecanumDrive.loop();
         intake.loop();
         outtake.loop();
+
+        telemetry.update();
 
     }
     public Pose2d getCurrentPose() {
