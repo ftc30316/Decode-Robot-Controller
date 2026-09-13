@@ -16,6 +16,7 @@ public class Robot {
 
     private MecanumDrive mecanumDrive;
     private IntakeComponent intake;
+    private OuttakeComponent outtake;
     private HardwareMapping hardwareMapping;
     private Config config;
     public Robot (HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose2d beginPose){
@@ -24,6 +25,7 @@ public class Robot {
         Keybinds keybinds = new Keybinds(gamepad1, gamepad2);
         this.mecanumDrive = new MecanumDrive(hardwareMap, keybinds, beginPose);
         this.intake = new IntakeComponent(config, hardwareMapping, keybinds);
+        this.outtake = new OuttakeComponent(config, hardwareMapping, keybinds);
     }
 
     public void init(){
@@ -31,9 +33,9 @@ public class Robot {
         OuttakeFlywheelMotor.setVelocity(config.OuttakeFlywheelMotorDefaultVelocity);
     }
     public void loop() {
-        DcMotorEx OuttakeFlywheelMotor = this.hardwareMapping.getOuttakeFlywheelMotor();
+       // DcMotorEx OuttakeFlywheelMotor = this.hardwareMapping.getOuttakeFlywheelMotor();
 
-        Pose2d currentPose = getCurrentPose();
+       // Pose2d currentPose = getCurrentPose();
 //        telemetry.addData("Robot X", currentPose.position.x);
 //        telemetry.addData("Robot Y", currentPose.position.y);
 //        telemetry.addData("Robot Heading", Math.toDegrees(currentPose.heading.toDouble()));
@@ -41,6 +43,8 @@ public class Robot {
 
         mecanumDrive.loop();
         intake.loop();
+        outtake.loop();
+
     }
     public Pose2d getCurrentPose() {
         mecanumDrive.updatePoseEstimate();
