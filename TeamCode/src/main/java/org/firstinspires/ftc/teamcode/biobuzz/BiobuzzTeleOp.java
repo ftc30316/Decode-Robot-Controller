@@ -23,12 +23,14 @@ public class BiobuzzTeleOp extends LinearOpMode {
 
             this.robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, startPose);
 
-//            telemetry.addData("auto end pose x", startPose.position.x);
+            //            telemetry.addData("auto end pose x", startPose.position.x);
 //            telemetry.addData("auto end pose y", startPose.position.y);
 //            telemetry.addData("auto end pose heading", Math.toDegrees(startPose.heading.toDouble()));
 //            telemetry.addData("auto end turret heading", turretStartHeadingDeg);
 
             waitForStart();
+
+            this.robot.init();
 
             // Sets up the driving system
             while (opModeIsActive()) {

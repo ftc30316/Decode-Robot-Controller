@@ -22,16 +22,17 @@ public class OuttakeComponent {
 
         if (keybinds.changeOuttakeState()) {
             CRServo OuttakeServo = this.hardwareMapping.getOuttakeServo();
-            DcMotorEx OuttakeFlywheelMotor = this.hardwareMapping.getOuttakeFlywheelMotor();
+//            DcMotorEx OuttakeFlywheelMotor = this.hardwareMapping.getOuttakeFlywheelMotor();
+
             switch (outtakeState) {
                 case OFF:
                     OuttakeServo.setPower(1);
-                    OuttakeFlywheelMotor.setVelocity(config.OuttakeFlywheelMotorDefaultVelocity);
+                    //OuttakeFlywheelMotor.setVelocity(config.OuttakeFlywheelMotorDefaultVelocity);
                     outtakeState = OuttakeState.ON;
                     break;
                 case ON:
                     OuttakeServo.setPower(0);
-                    OuttakeFlywheelMotor.setVelocity(0);
+                    //OuttakeFlywheelMotor.setVelocity(0);
                     outtakeState = OuttakeState.OFF;
                     break;
             }
