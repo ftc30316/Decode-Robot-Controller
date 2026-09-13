@@ -29,18 +29,23 @@ public class IntakeMotorTest extends LinearOpMode {
         motor.setVelocity(0);
         waitForStart();
 
-        MotorDirection motorDirection = MotorDirection.FORWARD;
+        MotorDirection motorDirection = MotorDirection.BACKWARD;
         MotorState motorState = MotorState.OFF;
 
         while(opModeIsActive()){
             double currentVelocity = motor.getVelocity();
             telemetry.addData("Current Velocity Is: ", currentVelocity);
 
-            if (gamepad1.dpadLeftWasPressed()){
-                motor.setVelocity(motor.getVelocity() - 100);
-
-            } else if (gamepad1.dpadRightWasPressed()) {
-                motor.setVelocity(motor.getVelocity() + 100);
+//            if (gamepad1.dpadLeftWasPressed()){
+//                motor.setVelocity(currentVelocity - 100);
+//
+//            } else if (gamepad1.dpadRightWasPressed()) {
+//                motor.setVelocity(currentVelocity + 100);
+//            }
+            telemetry.addLine("Code executing");
+            if (gamepad1.circleWasPressed()) {
+                currentVelocity = ((currentVelocity + 100) % 3000);
+                motor.setVelocity(currentVelocity);
             }
 
             switch (motorState) {
@@ -52,7 +57,7 @@ public class IntakeMotorTest extends LinearOpMode {
                     }
                     break;
                 case ON:
-                    motor.setVelocity(3000);
+                    motor.setVelocity(1250);
 
                     //TODO: determine direction and run motor in that direction
                     if (gamepad1.crossWasPressed()) {
