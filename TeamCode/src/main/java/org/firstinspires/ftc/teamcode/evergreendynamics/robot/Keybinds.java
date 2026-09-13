@@ -42,7 +42,7 @@ public class Keybinds {
         return gamepad1.dpadDownWasPressed();
     }
     public boolean turretAllianceChangeWasPressed() {
-        return gamepad1.squareWasPressed();
+        return gamepad2.squareWasPressed();
     }
 
     public boolean snapToNearest90WasPressed() {
@@ -51,6 +51,9 @@ public class Keybinds {
     // Intake
     public boolean changeIntakeState() {
         return gamepad1.crossWasPressed();
+    }
+    public boolean changeOuttakeState() {
+        return gamepad1.squareWasPressed();
     }
 
     // Mecanum drive
