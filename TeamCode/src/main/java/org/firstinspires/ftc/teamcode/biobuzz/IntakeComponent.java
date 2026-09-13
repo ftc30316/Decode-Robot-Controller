@@ -25,14 +25,14 @@ public class IntakeComponent {
             DcMotorEx IntakeSweeperMotor = this.hardwareMapping.getIntakeSweeperMotor();
             switch (intakeState) {
                 case OFF:
-                    IntakeServo.setPower(0);
-                    IntakeSweeperMotor.setVelocity(0);
+                    IntakeServo.setPower(1);
+                    IntakeSweeperMotor.setVelocity(config.IntakeDefaultSweeperMotorVelocity);
                     intakeState = IntakeState.ON;
                     break;
                 case ON:
-                    IntakeServo.setPower(1);
+                    IntakeServo.setPower(0);
+                    IntakeSweeperMotor.setVelocity(0);
                     intakeState = IntakeState.OFF;
-                    IntakeSweeperMotor.setVelocity(config.IntakeDefaultSweeperMotorVelocity);
                     break;
             }
         }
