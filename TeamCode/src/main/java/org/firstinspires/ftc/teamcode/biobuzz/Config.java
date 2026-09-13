@@ -8,7 +8,7 @@ public class Config {
     public IntakeState IntakeDefultState = IntakeState.OFF;
     public Double IntakeDefaultSweeperMotorVelocity = 500.0;
     public OuttakeState OuttakeDefaultState = OuttakeState.OFF;
-    public Double OuttakeFlywheelMotorDefaultVelocity = 1200.0;
+    public Double OuttakeFlywheelMotorDefaultVelocity = 1250.0;
     public String OuttakeServoName = "OuttakeServo";
     public String OuttakeFlywheelMotorName = "OuttakeFlywheelMotor";
 }
