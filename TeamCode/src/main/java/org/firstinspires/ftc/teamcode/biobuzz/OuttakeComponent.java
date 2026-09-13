@@ -25,13 +25,13 @@ public class OuttakeComponent {
             DcMotorEx OuttakeFlywheelMotor = this.hardwareMapping.getOuttakeFlywheelMotor();
             switch (outtakeState) {
                 case OFF:
-                    OuttakeServo.setPower(0);
-                    OuttakeFlywheelMotor.setVelocity(0);
+                    OuttakeServo.setPower(1);
+                    OuttakeFlywheelMotor.setVelocity(config.OuttakeFlywheelMotorDefaultVelocity);
                     outtakeState = OuttakeState.ON;
                     break;
                 case ON:
-                    OuttakeServo.setPower(1);
-                    OuttakeFlywheelMotor.setVelocity(config.OuttakeFlywheelMotorDefaultVelocity);
+                    OuttakeServo.setPower(0);
+                    OuttakeFlywheelMotor.setVelocity(0);
                     outtakeState = OuttakeState.OFF;
                     break;
             }
