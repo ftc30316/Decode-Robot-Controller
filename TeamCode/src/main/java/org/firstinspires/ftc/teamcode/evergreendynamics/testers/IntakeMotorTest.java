@@ -18,6 +18,7 @@ enum MotorDirection{
     FORWARD,
     BACKWARD
 }
+
 @TeleOp
 public class IntakeMotorTest extends LinearOpMode {
     @Override
@@ -35,6 +36,13 @@ public class IntakeMotorTest extends LinearOpMode {
             double currentVelocity = motor.getVelocity();
             telemetry.addData("Current Velocity Is: ", currentVelocity);
 
+            if (gamepad1.dpadLeftWasPressed()){
+                motor.setVelocity(motor.getVelocity() - 100);
+
+            } else if (gamepad1.dpadRightWasPressed()) {
+                motor.setVelocity(motor.getVelocity() + 100);
+            }
+
             switch (motorState) {
                 case OFF:
                     motor.setVelocity(0);
@@ -44,7 +52,7 @@ public class IntakeMotorTest extends LinearOpMode {
                     }
                     break;
                 case ON:
-                    motor.setVelocity(1000);
+                    motor.setVelocity(3000);
 
                     //TODO: determine direction and run motor in that direction
                     if (gamepad1.crossWasPressed()) {
